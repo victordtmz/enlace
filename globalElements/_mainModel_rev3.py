@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import imp
-from setup import load
-load()
+
 from abc import abstractmethod
 import sys
 from PyQt6 import QtWidgets as qtw 

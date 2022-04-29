@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-from setup import load
-load()
+
 import constants
 from gf import formatPhoneNo
 # from datetime import time
