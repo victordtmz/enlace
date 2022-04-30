@@ -2,8 +2,13 @@ import os
 
 #program paths
 oneDrive = os.path.expanduser('~\OneDrive')
-rootDb = f'{oneDrive}/db'
-dbOth =f'{rootDb}/oth'
+rootDb = f'{oneDrive}\db'
+othFolder =f'{rootDb}\oth'
+# iconsFolder = f'{othFolder}/icons'
+
+#avdt DB
+avdtDB = ('u210833393_AVDT', 'u210833393_victorMtz', 'Abogado2020$')
+avdOld = ('u210833393_AVD','u210833393_VictorMartinez','Abogado2020')
 
 #icons
 #----------------------------------------------
@@ -40,3 +45,4 @@ iconCustomer = f"{iconsFolder}customer.png"
 iconRoad = f"{iconsFolder}road.png"
 iconWarehouse = f"{iconsFolder}warehouse.png"
 iconIfta = f"{iconsFolder}IFTA.png"
+

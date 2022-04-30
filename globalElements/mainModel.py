@@ -6,14 +6,11 @@ import sys
 from PyQt6 import QtWidgets as qtw 
 from PyQt6 import QtGui as qtg
 from PyQt6 import QtCore as qtc
-from globalElements.treeview import treeviewSearchBox
-from gw import (deleteWarningBox)
-from filesTree import filesTree
-import db
-import gf 
+from globalElements.treeview import treeviewSearchBox, filesTree
+from globalElements.widgets import buttonWidget, labelWidget,  deleteWarningBox
 import html2text
-from globalElements import db, constants
-from globalElements.gwRev import buttonWidget, labelWidget, textEditRich, textEdit
+from globalElements import DB, constants, functions as gf
+
 
 
 class main(qtw.QMainWindow):
@@ -26,7 +23,7 @@ class main(qtw.QMainWindow):
     def initUi(self):
         self.setConstants()
         self.setGlobalVariables()
-        self.sqlFolder = f"oth/sql/{self.sqlFolderName}"
+        # self.sqlFolder = f"oth/sql/{self.sqlFolderName}"
         if self.size_ == "h2":
             self.setH2Settings()
         else: 
@@ -45,12 +42,15 @@ class main(qtw.QMainWindow):
         self.titleText = ""
         self.idColumn = ''#o! 
         self.tableVar = ''#o! 
-        self.sqlFolderName = "AVDT_accounting"
         self.listWidth = 1
         self.formWidth = 1
         self.listHiddenItems = ()
         self.listColumnWidth = ()
         self.listTableValuesIndexes = []
+        dbLogin = constants.avdtDB
+        self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+    
+
     
     def setH2Settings(self):
         # LIST INFO
@@ -90,8 +90,9 @@ class main(qtw.QMainWindow):
         self.logo = labelWidget(
             align="center",
             backColor="#002142", 
-            padding="6px") 
-        self.imageAVD = qtg.QPixmap('oth/icons/LOGO_WORLD.png')
+            padding="6px")
+        logo = f'{constants.iconsFolder}enlace.png'
+        self.imageAVD = qtg.QPixmap(logo)
         self.imageAVD = self.imageAVD.scaled(60,60,qtc.Qt.AspectRatioMode.KeepAspectRatio)
         self.logo.setPixmap(self.imageAVD)
 
@@ -105,6 +106,7 @@ class main(qtw.QMainWindow):
 
     def setConstants(self):
         self.evaluateSaveIndex = (1,)
+        self.andOr = "and"
         self.size_ = "h1"
         self.onNewFocusWidget = 1
         self.formItems = []
@@ -114,6 +116,10 @@ class main(qtw.QMainWindow):
         self.listTableValues = [] 
         self.formTableValues = []
         self.horizontalLabels = ["Id"]
+        self.selectFile = "selectAll.sql"
+        self.newRecordSql = "insertNewRecord.sql"
+        
+
         
 
     def set_connections(self):
@@ -241,10 +247,7 @@ class main(qtw.QMainWindow):
         if self.list.filtros.txt.getInfo():
             self.list.filtros.txt.clear()
 
-    #C! LIST FUNCTIONS ^^^^^^^^^^ LIST FUNCTIONS ^^^^^^^^^^ LIST FUNCTIONS ^^^^^^^^^^ LIST FUNCTIONS 
-#P! LIST ^^^^^^^^^^ LIST ^^^^^^^^^^ LIST ^^^^^^^^^^ LIST ^^^^^^^^^^ LIST ^^^^^^^^^^ LIST ^^^^^^^^^^
-
-#P! FORM >>>>>>>>>> FORM >>>>>>>>>> FORM >>>>>>>>> FORM >>>>>>>>>> FORM >>>>>>>>>>> FORM >>>>>>>>>> 
+  
     def initForm(self):
         self.form = qtw.QWidget()
         self.formButtons()
@@ -409,7 +412,7 @@ class main(qtw.QMainWindow):
     def getDBInfo(self):
         '''
         Goes through the form values and collects the neccesary data
-        to save to the db. 
+        to save to the db
         '''
         evaluateItems = []
         if self.formToDBItems:
@@ -461,25 +464,23 @@ class main(qtw.QMainWindow):
         return
 
     def selectAll(self, parameters=0):
-        sql = self.getSQL("selectAll.sql")#make sure sql has no ending statement
+        sql = self.getSQL(self.selectFile)#make sure sql has no ending statement
         parameters = parameters
-        records = db.DB_MySql.query_records(sql,parameters)
-        records = db.DB_MySql.clearNull(records)
-        self.horizontalLabels = db.DB_MySql.cursor.column_names
-        # print(self.horizontalLabels)
+        records = self.db.get_records_clearNull(sql,parameters)
+        self.horizontalLabels = self.db.cursor.column_names
         return records 
     
     def insertNewRecord(self, record):
         r = gf.insertNewRecord(record)
-        sql = self.getSQL("insertNewRecord.sql")
+        sql = self.getSQL(self.newRecordSql)
         sql = f"{sql} ({r});"
-        idVar = db.DB_MySql.insertNewRecord(sql)
+        idVar = self.db.insertNewRecord(sql)
 
         return idVar
     
     def getSQL(self, file):
-        filePath = f"{self.sqlFolder}/{file}"
-        sqlFile = open(filePath, "r")
+        # filePath = f"{self.sqlFolder}/{file}"
+        sqlFile = open(file, "r")
         sqlFileText = sqlFile.read()
         sqlFile.close()
         return sqlFileText
@@ -494,7 +495,7 @@ class main(qtw.QMainWindow):
                 
                 self.save_record_main(True,False)
                 # values_ = (IdVar,)
-                db.DB_MySql.deleteOne(self.tableVar, self.idColumn, idVar)
+                self.db.deleteOne(self.tableVar, self.idColumn, idVar)
                 #find row of standard model to delete regarldess of filter
                 #clear list values to avoid saving after deletion because selection will change
                 self.listTableValues.clear()
@@ -513,11 +514,10 @@ class main(qtw.QMainWindow):
             #to avoid this problems, set both lists to form values when saving. 
             #Codigo especifico en form para evaluar si se han alterado o no los campos
             saveRecord = False
-            if self.evaluateNewRcdSave(self.evaluateSaveIndex):
+            if self.evaluateNewRcdSave(self.evaluateSaveIndex, self.andOr):
                 self.save_record_toDb(True)#y! this will save the record, no return
                 # get all values from form and make them the same for list and formValues
                 if updateList:
-                    #list will only be updated if form will remain open, now worth adding process when closing
                     record = self.updateListFormValues()
                     self.list.addRecords((record,))
                     # find the row of the item with filters applied - 
@@ -535,17 +535,11 @@ class main(qtw.QMainWindow):
             saveRecord = self.compareValues()#Returns Tru or False for Save or is New Record
         
         if saveRecord:
-            # print("updating Record info")
-            # messageBox = gw.saveMessageBox()#r! Delete when tested
-            # messageBox.exec()#r! Delete when tested
             #get the record with the new Id if saved as new
             self.save_record_toDb(False)
             #Keep going if list must be updated
             if updateList:
                 #list will only be updated if form will remain open, now worth adding process when closing
-                # record = self.form.getListInfo()# this will return all values of list
-                # self.listTableValues = record.copy()
-                # self.form.formValues = record.copy()
                 record = self.updateListFormValues()
                 # find the row of the item with filters applied - 
                 if changedSelection:
@@ -563,8 +557,9 @@ class main(qtw.QMainWindow):
         else:
             indexes = self.list.treeview.selectionModel().selectedIndexes()
             c = 0
+            items = len(record) - 1
             for i in indexes:
-                if len(record)-1 >= c:
+                if items >= c:
                     self.list.proxyModel.setData(i,record[c])
                 c += 1
             self.setFilesFolder()
@@ -576,7 +571,6 @@ class main(qtw.QMainWindow):
         
         if itemsIndex[0] == 0:
             return False
-        
         #get the values of the items provided
         values = []
         for i in itemsIndex:
@@ -584,38 +578,26 @@ class main(qtw.QMainWindow):
             values.append(iValue)
         
         #if there is only one value, evaluate and return true to save
-        if len(values) <= 1:
-            #Evaluate if there is only one value
-            if values[0]:
-                return True
+        # if len(values) <= 1:
+        #     #Evaluate if there is only one value
+        #     if values[0]:
+        #         return True
         
-        #if there is more than one value ...
-        else:
+        # #if there is more than one value ...
+        # else:
             # if the or operator was provited, go through every item, if any are present, return true to save
-            if andOr == "or":
-                for i in values:
-                    # or statement - if any of the values are present, it will return True and save will occur
-                    if i: 
-                        return True
-            # if the add operator is applied, go through every item, if any of them is missing, return false
-            elif andOr == "and":
-                returnValue = False
-                for i in values:
-                    # and statement, all values must be existent or true
-                    if i:
-                        returnValue = True
-                    else:
-                        #if just one of the values is not present, false will be returned. 
-                        return False
+        if andOr == "or":
+            return any(values)
 
-                return returnValue
+        elif andOr == "and":
+            return all(values)
 
     
     def save_record_toDb(self, newRecord):
         #O! LIMPIAR TODOS LOS ELEMENTOS ANTES DE SUBIR A BASE DE DATOS
         record = self.getDBInfo()
         queryRecord = record.copy()
-        queryRecord = constants.recordToSQL(queryRecord)
+        queryRecord = gf.recordToSQL(queryRecord)
 
         if newRecord:
             idVar = self.insertNewRecord(queryRecord)

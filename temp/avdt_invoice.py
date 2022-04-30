@@ -3,7 +3,7 @@ from globalElements import constants
 
 class PDF(FPDF):
     def configureElements(self):
-        self.add_font('orbitron','',f'{constants.dbOth}/fonts/orbitron/Orbitron-Regular.ttf')
+        self.add_font('orbitron','',f'{constants.othFolder}/fonts/orbitron/Orbitron-Regular.ttf')
     
     def header(self):
         logo = f'{constants.rootDb}/oth/icons/enlace.png'

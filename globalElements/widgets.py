@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import constants
-from gf import formatPhoneNo
+from functions import formatPhoneNo
 # from datetime import time
 import re
 import winsound
@@ -124,7 +124,8 @@ class buttonWidget(qtw.QPushButton):
             self.setFixedSize(27,27)
     
     def getCSS(self, file):
-        filePath = f"oth/css/buttons/{file}"
+        root = constants.othFolder
+        filePath = f"{root}/css/buttons/{file}"
         sqlFile = open(filePath, "r")
         sqlFileText = sqlFile.read()
         sqlFile.close()
@@ -490,7 +491,7 @@ class lineEditPhone(lineEdit):
         self.textChanged.connect(self.format)
         
     
-    def getText(self):
+    def getInfo(self):
         currentNo = ''.join(re.findall(r'\d',self.text()))
         return currentNo
         
@@ -931,3 +932,18 @@ class standardItem(qtg.QStandardItem):
         self.setText(str(txt))
         self.setForeground(qtg.QColor(colorVar))
         self.setSizeHint(qtc.QSize(20,rowHeight))
+
+
+class deleteWarningBox(qtw.QMessageBox):
+    def __init__(self, text='', fontSize=13):
+        super().__init__()
+        self.iconAVD = qtg.QIcon( f'{constants.othFolder}\icons\enlace.png')
+        self.setWindowTitle('Eliminar registro')
+        self.setWindowIcon(qtg.QIcon('oth/icons/LOGO_WORLD.png'))
+        self.setText(text)
+        # self.setStyleSheet("QLabel{min-width: 200px;}")
+        self.setInformativeText('Continue?')
+        globalFont_.setPointSize(fontSize)
+        self.setFont(globalFont_)
+        self.setStandardButtons(qtw.QMessageBox.StandardButton.Yes|qtw.QMessageBox.StandardButton.No)
+        self.setIcon(qtw.QMessageBox.Icon.Warning)

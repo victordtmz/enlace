@@ -1,19 +1,21 @@
 #!/usr/bin/python3
 
-import queue
 from mysql.connector import errors
 import mysql.connector as mysql
 from mysql.connector.locales.eng import client_error
 
 class DB():
-    def __init__(self):
+    def __init__(self, db, user, pwd):
         super().__init__()
+        self.db = db
+        self.user = user
+        self.pwd = pwd
         self.createConnection()
     def createConnection(self):
         self.dbConnection = mysql.connect(host='sql535.main-hosting.eu',
-                                database='u210833393_AVD',
-                                user='u210833393_VictorMartinez',
-                                password='Abogado2020')
+                                database = self.db,
+                                user = self.user,
+                                password = self.pwd)
         self.cursor = self.dbConnection.cursor(buffered=True)
     
     def query(self, sql, parameters=""):
@@ -34,7 +36,13 @@ class DB():
             else:
                 self.cursor.execute(sql)   # ERRO IS HERE / NOT EXCEPTING
     
-    def query_records(self,sql, parameters=""):
+    def get_records_clearNull(self, sql, parameters=""):
+        records = self.get_records(sql, parameters)
+        records = self.clearNull(records)
+        return records
+
+    
+    def get_records(self,sql, parameters=""):
         self.query(sql, parameters)
         records = self.cursor.fetchall()
         return records
@@ -48,7 +56,7 @@ class DB():
         '''record is passed as a tuple with id'''
         self.run_sql_commit(sql)
         sql = '''SELECT LAST_INSERT_ID();'''
-        idVar = self.query_records(sql)
+        idVar = self.get_records(sql)
         # idVar = db.DB_MySQL.cursor.fetchall()
         idVar = idVar[0][0]
         
@@ -61,7 +69,6 @@ class DB():
     def clearNull(self, records): #O! updated 
         recordsList = []
         for record in records:
-            # recordsList.append(list(map(lambda i: '' if (i is None or i == "None") else str(i),record)))
             recordsList.append(list(map(lambda i: '' if (i is None) else str(i),record)))
         return recordsList
 
@@ -70,11 +77,6 @@ class DB():
             sql = sqlInput
         else:
             sql = f'SELECT * FROM {table};'
-        records = self.query_records(sql)
+        records = self.get_records(sql)
         recordsList = self.clearNull(records)
         return recordsList
-
-    
-
-DB_MySql = DB()
-
