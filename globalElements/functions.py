@@ -71,13 +71,15 @@ def formatPhoneNo(currentNo):
 
 def recordToSQL(record = ["",]):
     '''Set code for html SQL output'''
+    
     newRecord = []
     for i in record:
-        i = i.replace("'",'\'\'')
-        i = i.replace('"','\"')
-        i = i.replace('%','\%')
-        i = i.replace('_','\_')
-        i = i.replace('\\','\\\\')
+        if type(i) == str:
+            i = i.replace("'",'\'\'')
+            i = i.replace('"','\"')
+            i = i.replace('%','\%')
+            i = i.replace('_','\_')
+            i = i.replace('\\','\\\\')
         newRecord.append(i)
     return newRecord
         

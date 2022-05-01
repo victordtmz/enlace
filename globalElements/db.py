@@ -10,7 +10,6 @@ class DB():
         self.db = db
         self.user = user
         self.pwd = pwd
-        # self.createConnection()
     
     def createConnection(self):
         self.dbConnection = mysql.connect(host='sql535.main-hosting.eu',

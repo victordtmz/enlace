@@ -1,4 +1,10 @@
 import os
+from globalElements import DB
+
+#prepare mysqlDb
+avdtDB = ('u210833393_AVDT', 'u210833393_victorMtz', 'Abogado2020$')
+avdOld = ('u210833393_AVD','u210833393_VictorMartinez','Abogado2020')
+mysqlDB = DB.DB(avdtDB[0], avdtDB[1], avdtDB[2])
 
 #program paths
 oneDrive = os.path.expanduser('~\OneDrive')
@@ -10,8 +16,7 @@ rootAVDT = f'{oneDrive}\AVDTrucking'
 # iconsFolder = f'{othFolder}/icons'
 
 #avdt DB
-avdtDB = ('u210833393_AVDT', 'u210833393_victorMtz', 'Abogado2020$')
-avdOld = ('u210833393_AVD','u210833393_VictorMartinez','Abogado2020')
+
 
 #icons
 #----------------------------------------------
@@ -49,3 +54,18 @@ iconRoad = f"{iconsFolder}road.png"
 iconWarehouse = f"{iconsFolder}warehouse.png"
 iconIfta = f"{iconsFolder}IFTA.png"
 
+carriersDict = {}
+carriersList = []
+def queryCarriers():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(name_,'')
+            FROM carriers 
+        ;'''
+    records = mysqlDB.get_records(sql)
+    carriersDict.clear()
+    carriersDict[""] = ""
+    for i in records:
+        
+        carriersDict[i[1]] = i[0]
+        carriersList.append(i[1])

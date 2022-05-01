@@ -1,15 +1,10 @@
-INSERT INTO carriers (
-    name_,
-    mc,
-    usdot,
-    ein,
-    agent,
-    phone,
-    address,
-    address1,
-    city,
-    state,
-    zip,
+INSERT INTO trailers (
+    idCarrier,
+    no_,
+    vin,
+    year_,
+    make,
+    model,
     notes
   )
-VALUES 
+VALUES

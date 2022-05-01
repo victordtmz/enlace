@@ -438,14 +438,24 @@ class main(qtw.QMainWindow):
         This is the general use function, to be used, table db values and form items must match by index exactly
         any discrepancies wont work and the method must be modified when an instance is created. 
         '''
-        record = self.getDBInfo()
-        return record
+        evaluateItems = []
+        if self.formToDBItems:
+            for i in range(self.formToDBItems):
+                widget = self.formItems[i]
+                evaluateItems.append(widget)
+        else: 
+            evaluateItems = self.formItems.copy()
+        infoList = []
+        for i in evaluateItems:
+            info = i.getInfo()
+            infoList.append(info)
+        return infoList
  
     #updates the values on all list used for evaluation 
     def updateListFormValues(self):
         record = self.getListInfo()
-        self.listTableValues = self.getDBInfo()# record.copy()
-        self.formTableValues = self.listTableValues.copy()# record.copy()
+        self.listTableValues = record.copy()# record.copy()
+        self.formTableValues = record.copy()# record.copy()
         return record
 
 #g! LIST DATA MANIPULATION -----------------------------------------------------------------------

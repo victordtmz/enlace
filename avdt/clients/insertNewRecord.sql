@@ -1,5 +1,4 @@
 INSERT INTO clients (
-    id,
     name_,
     mc,
     usdot,
