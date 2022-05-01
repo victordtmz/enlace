@@ -54,6 +54,8 @@ iconRoad = f"{iconsFolder}road.png"
 iconWarehouse = f"{iconsFolder}warehouse.png"
 iconIfta = f"{iconsFolder}IFTA.png"
 
+# Carriers
+# ------------------------------------------------------------
 carriersDict = {}
 carriersList = []
 def queryCarriers():
@@ -69,3 +71,20 @@ def queryCarriers():
         
         carriersDict[i[1]] = i[0]
         carriersList.append(i[1])
+
+# clientsAgents
+# ------------------------------------------------------------
+clientsDict = {}
+clientsList = []
+def queryClients():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(name_,'')
+            FROM clients 
+        ;'''
+    records = mysqlDB.get_records(sql)
+    clientsDict.clear()
+    clientsDict[""] = ""
+    for i in records:
+        clientsDict[i[1]] = i[0]
+        clientsList.append(i[1])
