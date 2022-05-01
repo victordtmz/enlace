@@ -378,7 +378,7 @@ class incomeExpenseRadioButtons(radioButtons):
 #w! RADIO BUTTONS ------------------------- END
 
 #w! DATE  ------------------------- START
-class date(qtw.QDateEdit):
+class dateEdit(qtw.QDateEdit):
     def __init__(self, fontSize = 13):
         super().__init__()
         self.setCalendarPopup(True)
@@ -407,7 +407,7 @@ class date(qtw.QDateEdit):
 class dateWidget(qtw.QWidget):
     def __init__(self, fontSize = 13):
         super().__init__()
-        self.dateEdit = date(fontSize) 
+        self.dateEdit = dateEdit(fontSize) 
         self.btnToday = buttonWidget(size="icon", icon=constants.iconToday)
         self.btnToday.setMinimumHeight(30)
 

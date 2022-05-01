@@ -12,15 +12,15 @@ class mainUs(QWidget):
 
     def initUi(self):
         self.db = zipsSqlite.DB()
+        self.states = self.db.selectStates()
+        self.states.insert(0, "")
         self.initElements()
         # self.populateState()
 
     def initElements(self):
         self.zip = lineEdit(self.fontSize)
         self.zip.editingFinished.connect(self.setCityAndState)
-        states = self.db.selectStates()
-        states.insert(0, "")
-        self.state = cbo(self.fontSize, states)
+        self.state = cbo(self.fontSize, self.states)
         self.state.currentIndexChanged.connect(self.populateCity)
         self.city = cbo(self.fontSize)
     
