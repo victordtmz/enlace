@@ -16,7 +16,7 @@ from globalElements import DB, constants, functions as gf
 class main(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.iconAVD = qtg.QIcon('oth/icons/LOGO_WORLD.png')
+        self.iconAVD = qtg.QIcon('oth/icons/LOGO_WORLD.png')#o!modify
         # when selection changes, we need this before saving, in case of a requery
         self.newSelectionId = ""
         
@@ -314,6 +314,7 @@ class main(qtw.QMainWindow):
         Includes the files tree in the current layout - Adds it to the top
         '''
         self.formLayoutStraight()
+        self.initFilesFolder()
         self.spacer = qtw.QSpacerItem(0,20)
         self.layoutForm.insertRow(0,self.filesFolder)
 

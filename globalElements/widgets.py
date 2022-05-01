@@ -468,10 +468,15 @@ class dateTimeEdit(qtw.QDateTimeEdit):
 
 #w! LINEEDIT  ------------------------- START
 class lineEdit(qtw.QLineEdit):
-    def __init__(self, fontSize = 13):
+    def __init__(self, fontSize = 13, hightLight=False):
         super().__init__()
         globalFont_.setPointSize(fontSize)
         self.setFont(globalFont_)
+        if hightLight:
+            self.setStyleSheet("QLineEdit"
+                        "{"
+                        "background : #ffeeda;"
+                        "}")
         
     # def setConnection(self,e):
     #     self.textChanged.connect(e)

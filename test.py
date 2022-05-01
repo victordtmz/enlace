@@ -3,12 +3,19 @@ load()
 import sys
 from PyQt6.QtWidgets import (QApplication)
 
-from globalElements import mainModel, treeview
-from avdt.carriers import carriers
+from globalElements import (mainModel, treeview, functions,
+    zipsWidget)
+from avdt.clients import main
+from sqlite import sqliteDB
+from sqlite.zipCodes import zipsSqlite 
+
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    mw = carriers.main()
+    mw = main.main()
     mw.show()
     sys.exit(app.exec())
+    # app = cloneDb.Clone()
+    # app.cloneDB()  
+  

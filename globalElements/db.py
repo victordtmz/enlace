@@ -10,7 +10,8 @@ class DB():
         self.db = db
         self.user = user
         self.pwd = pwd
-        self.createConnection()
+        # self.createConnection()
+    
     def createConnection(self):
         self.dbConnection = mysql.connect(host='sql535.main-hosting.eu',
                                 database = self.db,
@@ -21,6 +22,8 @@ class DB():
     def query(self, sql, parameters=""):
         '''PARA EJECUTAR SQL CUANDO NO EXISTEN VARIABLES - INFORMACION QUE CAMBIA SEGUN SE REQUIERA'''
         parameters = parameters
+        if not hasattr(self, 'cursor'):
+            self.createConnection()
         try:
             self.cursor
             self.dbConnection

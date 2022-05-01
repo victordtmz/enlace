@@ -4,6 +4,9 @@ import os
 oneDrive = os.path.expanduser('~\OneDrive')
 rootDb = f'{oneDrive}\db'
 othFolder =f'{rootDb}\oth'
+#AVDT Root folders
+rootAVDT = f'{oneDrive}\AVDTrucking'
+# rootCarriersAVDT = f'{rootAVDT}\Carriers'
 # iconsFolder = f'{othFolder}/icons'
 
 #avdt DB

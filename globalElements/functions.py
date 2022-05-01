@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import csv
 import re
 import winsound
 
@@ -81,4 +81,14 @@ def recordToSQL(record = ["",]):
         newRecord.append(i)
     return newRecord
         
-        
+def getRecordsFromCSV(fileName):
+    with open(file=fileName, mode='r', newline="", encoding="utf-8") as f:
+        csvRecords = csv.reader(f)
+        header = next(csvRecords)
+        records = [record for record in csvRecords]
+        records = str(records)
+        records = records.replace('[','(')
+        records = records.replace(']',')')
+        records = records[1:-1]
+    
+    return records, header
