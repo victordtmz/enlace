@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (QApplication)
 
 from globalElements import (mainModel, treeview, functions,
     zipsWidget)
-from avdt.trailers import main, cloneDb
+from avdt.trucks import main, cloneDb
 from sqlite import sqliteDB
 from sqlite.zipCodes import zipsSqlite 
 
