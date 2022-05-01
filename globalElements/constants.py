@@ -72,7 +72,7 @@ def queryCarriers():
         carriersDict[i[1]] = i[0]
         carriersList.append(i[1])
 
-# clientsAgents
+# clients
 # ------------------------------------------------------------
 clientsDict = {}
 clientsList = []
@@ -88,3 +88,72 @@ def queryClients():
     for i in records:
         clientsDict[i[1]] = i[0]
         clientsList.append(i[1])
+
+# trucks
+# ------------------------------------------------------------
+trucksDict = {}
+trucksList = []
+def queryTrucks():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(no_,'')
+            FROM trucks 
+        ;'''
+    records = mysqlDB.get_records(sql)
+    trucksDict.clear()
+    trucksDict[""] = ""
+    for i in records:
+        trucksDict[i[1]] = i[0]
+        trucksList.append(i[1])
+
+# trailers
+# ------------------------------------------------------------
+trailersDict = {}
+trailersList = []
+def queryTrailers():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(no_,'')
+            FROM trailers 
+        ;'''
+    records = mysqlDB.get_records(sql)
+    trailersDict.clear()
+    trailersDict[""] = ""
+    for i in records:
+        trailersDict[i[1]] = i[0]
+        trailersList.append(i[1])
+
+# drivers
+# ------------------------------------------------------------
+driversDict = {}
+driversList = []
+def queryDrivers():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(name_,'')
+            FROM drivers 
+        ;'''
+    records = mysqlDB.get_records(sql)
+    driversDict.clear()
+    driversDict[""] = ""
+    for i in records:
+        driversDict[i[1]] = i[0]
+        driversList.append(i[1])
+
+# agents
+# ------------------------------------------------------------
+agentsDict = {}
+agentsList = []
+def queryAgents():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(name_,'')
+            FROM clients_agents 
+        ;'''
+    records = mysqlDB.get_records(sql)
+    agentsDict.clear()
+    agentsDict[""] = ""
+    for i in records:
+        agentsDict[i[1]] = i[0]
+        agentsList.append(i[1])
+

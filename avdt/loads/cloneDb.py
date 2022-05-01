@@ -11,7 +11,7 @@ class Clone():
         sql = f'''
             SELECT 
                 *
-            FROM AVDT_Drivers;
+            FROM AVDT_Loads;
         '''
         records = dataBase.get_records_clearNull(sql)
         
@@ -21,10 +21,11 @@ class Clone():
         records = records.replace('[','(')
         records = records.replace(']',')')
         records = records[1:-1]
+        
         # print(records)
         # print(type(records))
         #o! CHANGE FOLDER NAME
-        sql = self.getSQL("avdt/drivers/insertNewRecord.sql")
+        sql = self.getSQL("avdt/loads/insertNewRecord.sql")
         sql = f'{sql} {records};'
         dbLogin = constants.avdtDB
         dataBase = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])

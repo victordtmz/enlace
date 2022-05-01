@@ -34,12 +34,12 @@ class main(mainModel.main):
         self.size_ = "h1"
         self.idColumn = 'id' 
         self.tableVar = 'clients_agents'
-        self.listTableValuesIndexes = (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+        self.listTableValuesIndexes = (0,1,2,3,4,5,6)
         # self.formToDBItems = 4
         self.titleText = "CLIENTS CONTACTS"
         self.listWidth = 1
         self.formWidth = 1
-        self.listHiddenItems = (0,3,4,5,6,7,8,9,10,11,12,13,14)#(4,5,6,7,8,9,10,11,12)
+        self.listHiddenItems = (0,3,4,5,6)#(4,5,6,7,8,9,10,11,12)
         self.listColumnWidth = ((1,230),(2,220))
         self.sortColumn = 2
         self.onNewFocusWidget = 1

@@ -1,18 +1,21 @@
-INSERT INTO drivers (
-    id,
-    idCarrier,
-    name_,
-    dob,
-    phone,
-    address,
-    address1,
-    city,
-    state,
-    zip,
-    licNo,
-    licIss,
-    licExp,
-    licState,
-    notes
+INSERT INTO loads (
+    idContracting,
+    idHauling,
+    idTruck,
+    idTrailer,
+    idDriver,
+    idClient,
+    idClientAgent,
+    contractDate,
+    referenceNo,
+    rate,
+    amountPaid,
+    datePaid,
+    notes,
+    delivered,
+    invoiced,
+    paid,
+    paidHCarrier,
+    completed
   )
 VALUES 

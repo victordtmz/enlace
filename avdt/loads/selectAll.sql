@@ -1,20 +1,31 @@
 SELECT 
-  drivers.id, 
-  carriers.name_ AS "Carrier",
-  drivers.name_ AS "Name",
-  dob AS "Date of Birth",
-  drivers.phone AS "Phone",
-  drivers.address AS "Address",
-  drivers.address1 AS "Address",
-  drivers.city as "City",
-  drivers.state AS "State",
-  drivers.zip AS "Zip",
-  licNo AS "No. Licencia", 
-  licIss AS "Expedicion",
-  licExp AS "Vencimiento",
-  licState AS "Estado",
-  drivers.notes AS "Notes"
-  FROM drivers
-  LEFT JOIN carriers ON carriers.id = drivers.idCarrier
-  ORDER BY drivers.name_
+  loads.id, 
+  contracting.name_ AS "Contractin",
+  hauling.name_ AS "Hauling",
+  trucks.no_ AS "Truck",
+  trailers.no_ AS "Trailer",
+  drivers.name_ AS "Driver",
+  loads.contractDate AS "Date",
+  clients.name_ AS "Client",
+  agents.name_ AS "Clients Agent",
+  loads.referenceNo AS "Reference",
+  loads.rate AS "Rate",
+  loads.dateInvoice AS "Invoice Date",
+  loads.amountPaid AS "Amount Paid",
+  loads.datePaid AS "Date Paid",
+  loads.notes AS "Notes",
+  loads.delivered AS "Delivered",
+  loads.invoiced AS "invoiced",
+  loads.paid AS "Paid",
+  loads.paidHCarrier AS "Paid H Carrier",
+  loads.completed AS "Completed"
+  FROM loads
+  LEFT JOIN carriers contracting ON contracting.id = loads.idContracting
+  LEFT JOIN carriers hauling ON hauling.id = loads.idHauling
+  LEFT JOIN trucks ON trucks.id = loads.idTruck
+  LEFT JOIN trailers ON trailers.id = loads.idTrailer
+  LEFT JOIN drivers ON drivers.id = loads.idDriver
+  LEFT JOIN clients ON clients.id = loads.idClient
+  LEFT JOIN clients_agents agents ON agents.id = loads.idClientAgent
+  ORDER BY loads.contractDate DESC
   ;

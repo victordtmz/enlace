@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 from globalElements import DB, constants, mainModel
-from globalElements.widgets import dateWidget, dateEdit, labelWidget,  lineEditCurrency, textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone
+from globalElements.widgets import (dateWidget, dateEdit, labelWidget,  lineEditCurrency, 
+    textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone, truFalseRadioButtons, checkBox)
 from globalElements.zipsWidget import mainUs as UsZipsWidget
 import sys
 import os
@@ -22,6 +23,7 @@ class main(mainModel.main):
         self.initUi()
         self.configure_form()
         self.setConnections()
+        self.listFontSize = 10
         # self.setTotalsElements()
         self.requery()
         
@@ -33,44 +35,60 @@ class main(mainModel.main):
         # DB INFO
         self.size_ = "h1"
         self.idColumn = 'id' 
-        self.tableVar = 'drivers'
-        self.listTableValuesIndexes = (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+        self.tableVar = 'loads'
+        self.listTableValuesIndexes = (0,1,2,3,4,5,7,8,6,9,10,11,12,13,14,15,16,17,18,19)
         # self.formToDBItems = 4
-        self.titleText = "DRIVERS"
+        self.titleText = "LOADS"
         self.listWidth = 1
-        self.formWidth = 1
-        self.listHiddenItems = (0,3,4,5,6,7,8,9,10,11,12,13,14)#(4,5,6,7,8,9,10,11,12)
-        self.listColumnWidth = ((1,230),(2,220))
+        self.formWidth = 3
+        self.listHiddenItems = (1,2,3,4,5,8,9,10,11,12,13,14,15,16,17,18,19)
+        self.listColumnWidth = ((0,50),(6,80),(7,220))
         self.sortColumn = 2
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        sqlFiles = 'avdt\\drivers'
+        sqlFiles = 'avdt\\loads'
         self.selectFile = f'{sqlFiles}\selectAll.sql'
         self.newRecordSql = f'{sqlFiles}\insertNewRecord.sql'
         
+        
         # self.evaluateSaveIndex = (1,)
         # self.andOr = "and"
-        if not constants.carriersList:
+        if not constants.carriersList: 
             constants.queryCarriers()
+        if not constants.trucksList: 
+            constants.queryTrucks()
+        if not constants.trailersList: 
+            constants.queryTrailers()
+        if not constants.driversList: 
+            constants.queryDrivers()
+        if not constants.clientsList: 
+            constants.queryClients()
+        if not constants.agentsList: 
+            constants.queryAgents()
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 
-                idCarrier = '{record[1]}',
-                name_ = '{record[2]}',
-                dob = '{record[3]}',
-                phone = '{record[4]}',
-                address = '{record[5]}',
-                address1 = '{record[6]}',
-                city = '{record[7]}',
-                state = '{record[8]}',
-                zip = '{record[9]}',
-                licNo = '{record[10]}',
-                licIss = '{record[11]}',
-                licExp = '{record[12]}',
-                licState = '{record[13]}',
-                notes = '{record[14]}'
+                idContracting = '{record[1]}',
+                idHauling = '{record[2]}',
+                idTruck = '{record[3]}',
+                idTrailer = '{record[4]}',
+                idDriver = '{record[5]}',
+                idClient = '{record[6]}',
+                idClientAgent = '{record[7]}',
+                contractDate = '{record[8]}',
+                referenceNo = '{record[9]}',
+                rate = '{record[10]}',
+                dateInvoice = '{record[11]}',
+                amountPaid = '{record[12]}',
+                datePaid = '{record[13]}',
+                notes = '{record[14]}',
+                delivered = '{record[15]}',
+                invoiced = '{record[16]}',
+                paid = '{record[17]}',
+                paidHCarrier = '{record[18]}',
+                completed = '{record[19]}'
                 WHERE id =  {record[0]};'''
         self.db.run_sql_commit(sql)
 
@@ -94,7 +112,7 @@ class main(mainModel.main):
         #Verificar si hay registro seleccionado
         if record:
             idVar = self.id_.text()
-            no = self.name.getInfo()
+            no = self.reference.getInfo()
             
 
             text = f'''Eliminar el registro:
@@ -117,72 +135,123 @@ class main(mainModel.main):
     def setFormElements(self):#p! Form elements
         self.id_ = lineEdit(self.fontSize)#
         self.id_.setReadOnly(True)
-        self.carrier = cboFilterGroup(self.fontSize, 
+        
+        self.contracting = cboFilterGroup(self.fontSize, 
             refreshable=True,
             items=constants.carriersDict,
-            requeryFunc=constants.queryCarriers) #lineEdit(self.fontSize)
-        self.name = lineEdit(self.fontSize)
-        self.dob = dateEdit(self.fontSize)
-        self.phone = lineEditPhone(self.fontSize)
-        self.address = lineEdit(self.fontSize)
-        self.address1 = lineEdit(self.fontSize)
-        self.location = UsZipsWidget(self.fontSize)
-        self.city = self.location.city
-        self.state = self.location.state
-        self.zip = self.location.zip
-        self.licNo = lineEdit(self.fontSize)
-        self.licIss = dateWidget(self.fontSize)
-        self.licExp = dateWidget(self.fontSize)
-        self.licState = cboFilterGroup(self.fontSize,
-            items=self.location.states)
+            requeryFunc=constants.queryCarriers,
+            clearFilter=False) 
+        
+        self.hauling = cboFilterGroup(self.fontSize, 
+            refreshable=True,
+            items=constants.carriersDict,
+            requeryFunc=constants.queryCarriers,
+            clearFilter=False) 
+
+        self.truck = cboFilterGroup(self.fontSize, 
+            refreshable=True,
+            items=constants.trucksDict,
+            requeryFunc=constants.queryTrucks,
+            clearFilter=False) 
+        
+        self.trailer = cboFilterGroup(self.fontSize, 
+            refreshable=True,
+            items=constants.trailersDict,
+            requeryFunc=constants.queryTrailers,
+            clearFilter=False) 
+        
+        self.driver = cboFilterGroup(self.fontSize, 
+            refreshable=True,
+            items=constants.driversDict,
+            requeryFunc=constants.queryDrivers,
+            clearFilter=False) 
+        
+        self.client = cboFilterGroup(self.fontSize, 
+            refreshable=True,
+            items=constants.clientsDict,
+            requeryFunc=constants.queryClients,
+            clearFilter=False) 
+        
+        self.agent = cboFilterGroup(self.fontSize, 
+            refreshable=True,
+            items=constants.agentsDict,
+            requeryFunc=constants.queryAgents,
+            clearFilter=False) 
+        
+        self.contractDate = dateWidget(self.fontSize)
+
+        self.reference = lineEdit(self.fontSize)
+        self.rate = lineEditCurrency(self.fontSize)
+        
+        self.invoiceDate = dateWidget(self.fontSize)
+        self.amountPaid = lineEditCurrency(self.fontSize)
+        self.datePaid = dateWidget(self.fontSize)
         self.notes = textEdit(self.fontSize)
 
+        self.delivered = checkBox()
+        self.invoiced = checkBox()
+        self.paid = checkBox()
+        self.paidHCarrier = checkBox()
+        self.completed = checkBox()
+
         #o! ALL DB ITEMS THAT NEED TO BE POPULATED
-        self.formItems = [self.id_, self.carrier, self.name, self.dob, self.phone, 
-            self.address, self.address1, self.city, self.state , self.zip, self.licNo, 
-            self.licIss, self.licExp, self.licState, self.notes]
+        self.formItems = [self.id_, self.contracting, self.hauling, self.truck,
+            self.trailer, self.driver, self.client, self.agent, self.contractDate,
+            self.reference, self.rate, self.invoiceDate, self.amountPaid, 
+            self.datePaid,self.notes, self.delivered, self.invoiced, self.paid, 
+            self.paidHCarrier, self.completed]
         
         self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
-        self.layoutForm.addRow(labelWidget('Carrier:', self.fontSize), self.carrier)
-        self.layoutForm.addRow(labelWidget('Name:', self.fontSize),self.name)
-        self.layoutForm.addRow(labelWidget('DOB:', self.fontSize), self.dob)
-        self.layoutForm.addRow(labelWidget('Phone:', self.fontSize), self.phone)
-        self.layoutForm.addRow(labelWidget('Address:', self.fontSize), self.address)
-        self.layoutForm.addRow(labelWidget('Address:', self.fontSize), self.address1)
-        self.layoutForm.addRow(labelWidget('Zip:', self.fontSize), self.zip)
-        self.layoutForm.addRow(labelWidget('State:', self.fontSize), self.state)
-        self.layoutForm.addRow(labelWidget('City:', self.fontSize), self.city)
-        self.layoutForm.addRow(labelWidget('Licencia:', 14,True,align="center"))
-        self.layoutForm.addRow(labelWidget('No.:', self.fontSize), self.licNo)
-        self.layoutForm.addRow(labelWidget('Issued:', self.fontSize), self.licIss)
-        self.layoutForm.addRow(labelWidget('Expires:', self.fontSize), self.licExp)
-        self.layoutForm.addRow(labelWidget('State:', self.fontSize), self.licState)
+        self.layoutForm.addRow(labelWidget('Contracting:', self.fontSize), self.contracting)
+        self.layoutForm.addRow(labelWidget('Hauling:', self.fontSize), self.hauling)
+        self.layoutForm.addRow(labelWidget('Truck:', self.fontSize), self.truck)
+        self.layoutForm.addRow(labelWidget('Trailer:', self.fontSize), self.trailer)
+        self.layoutForm.addRow(labelWidget('Driver:', self.fontSize), self.driver)
+        self.layoutForm.addRow(labelWidget('Client:', self.fontSize), self.client)
+        self.layoutForm.addRow(labelWidget('Agent:', self.fontSize), self.agent)
+        self.layoutForm.addRow(labelWidget('Contracted:', self.fontSize), self.contractDate)
+        self.layoutForm.addRow(labelWidget('Reference:', self.fontSize),self.reference)
+        self.layoutForm.addRow(labelWidget('Rate:', self.fontSize),self.rate)
+        self.layoutForm.addRow(labelWidget('Invoiced:', self.fontSize), self.invoiceDate)
+        self.layoutForm.addRow(labelWidget('$ Paid:', self.fontSize), self.amountPaid)
+        self.layoutForm.addRow(labelWidget('Paid:', self.fontSize), self.datePaid)
+        self.layoutForm.addRow(labelWidget('Delivered:', self.fontSize), self.delivered)
+        self.layoutForm.addRow(labelWidget('Invoiced:', self.fontSize), self.invoiced)
+        self.layoutForm.addRow(labelWidget('Paid:', self.fontSize), self.paid)
+        self.layoutForm.addRow(labelWidget('Paid Hauler:', self.fontSize), self.paidHCarrier)
+        self.layoutForm.addRow(labelWidget('Completed:', self.fontSize), self.completed)
         self.layoutForm.addRow(labelWidget('Notes:', 14,True,align="center"))
         self.layoutForm.addRow(self.notes)
         
 
     def setConnections(self):
         self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
-        self.carrier.cbo.currentTextChanged.connect(lambda: self.formDirty(1,self.carrier.getInfo()))
-        self.name.textChanged.connect(lambda: self.formDirty(2,self.name.getInfo()))
-        self.dob.dateChanged.connect(lambda: self.formDirty(3,self.dob.getInfo()))
-        self.phone.textChanged.connect(lambda: self.formDirty(4,self.phone.getInfo()))
-        self.address.textChanged.connect(lambda: self.formDirty(5,self.address.getInfo()))
-        self.address1.textChanged.connect(lambda: self.formDirty(6,self.address1.getInfo()))
-        self.city.currentTextChanged.connect(lambda: self.formDirty(7,self.city.getInfo()))
-        self.state.currentTextChanged.connect(lambda: self.formDirty(8,self.state.getInfo()))
-        self.zip.textChanged.connect(lambda: self.formDirty(9,self.zip.getInfo()))
-        self.licNo.textChanged.connect(lambda: self.formDirty(10,self.licNo.getInfo()))
-        self.licIss.dateEdit.dateChanged.connect(lambda: self.formDirty(11,self.licIss.getInfo()))
-        self.licExp.dateEdit.dateChanged.connect(lambda: self.formDirty(12,self.licExp.getInfo()))
-        self.licState.cbo.currentTextChanged.connect(lambda: self.formDirty(13,self.licState.getInfo()))
+        self.contracting.cbo.currentTextChanged.connect(lambda: self.formDirty(1,self.contracting.getInfo()))
+        self.hauling.cbo.currentTextChanged.connect(lambda: self.formDirty(2,self.hauling.getInfo()))
+        self.truck.cbo.currentTextChanged.connect(lambda: self.formDirty(3,self.truck.getInfo()))
+        self.trailer.cbo.currentTextChanged.connect(lambda: self.formDirty(4,self.trailer.getInfo()))
+        self.driver.cbo.currentTextChanged.connect(lambda: self.formDirty(5,self.driver.getInfo()))
+        self.client.cbo.currentTextChanged.connect(lambda: self.formDirty(6,self.client.getInfo()))
+        self.agent.cbo.currentTextChanged.connect(lambda: self.formDirty(7,self.agent.getInfo()))
+        self.contractDate.dateEdit.dateChanged.connect(lambda: self.formDirty(8,self.contractDate.getInfo()))
+        self.reference.textChanged.connect(lambda: self.formDirty(9,self.reference.getInfo()))
+        self.rate.textChanged.connect(lambda: self.formDirty(10,self.rate.getInfo()))
+        self.invoiceDate.dateEdit.dateChanged.connect(lambda: self.formDirty(11,self.contracting.getInfo()))
+        self.amountPaid.textChanged.connect(lambda: self.formDirty(12,self.amountPaid.getInfo()))
+        self.datePaid.dateEdit.dateChanged.connect(lambda: self.formDirty(13,self.datePaid.getInfo()))
         self.notes.textChanged.connect(lambda: self.formDirty(14,self.notes.getInfo()))
+        self.delivered.toggled.connect(lambda: self.formDirty(15, self.delivered.getInfo()))
+        self.invoiced.toggled.connect(lambda: self.formDirty(16, self.invoiced.getInfo()))
+        self.paid.toggled.connect(lambda: self.formDirty(17, self.paid.getInfo()))
+        self.paidHCarrier.toggled.connect(lambda: self.formDirty(18, self.paidHCarrier.getInfo()))
+        self.completed.toggled.connect(lambda: self.formDirty(19, self.completed.getInfo()))
 
     def setFilesFolder(self):
-        carrier = self.carrier.getInfo()
-        driver = self.name.getInfo()
-        if carrier and driver:
-            folderPath = f'{self.filesFolder.root}\{carrier}\drivers\{driver}'
+        carrier = self.contracting.getInfo()
+        date_ = self.contractDate.getInfo()
+        client = self.client.getInfo()
+        if carrier and client and date_:
+            folderPath = f'{self.filesFolder.root}\{carrier}\Loads\{date_}_{client}'
             self.filesFolder.txtFilePath.setText(folderPath)
             folder = pathlib.Path(folderPath)
             if not folder.exists():

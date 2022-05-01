@@ -1,5 +1,4 @@
 INSERT INTO drivers (
-    id,
     idCarrier,
     name_,
     dob,

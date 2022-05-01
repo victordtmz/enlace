@@ -1,5 +1,4 @@
 INSERT INTO trucks (
-    id,
     idCarrier,
     no_,
     vin,

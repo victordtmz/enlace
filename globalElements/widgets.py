@@ -842,9 +842,9 @@ class webWidget(lineEditCopy):
             webbrowser.open(link)
 
 class checkBox(qtw.QCheckBox):
-    def __init__(self, text=''):
+    def __init__(self):
         super().__init__()
-        self.setText(text)
+        # self.setText(text)
     
     def populate(self, value):
         if value == '1' or value.lower() == "true":
