@@ -1,5 +1,5 @@
 from ast import Return
-from sqlite import sqliteDB
+from localDB import sqliteDB
 class DB(sqliteDB.DB):
     def __init__(self):
         super().__init__()

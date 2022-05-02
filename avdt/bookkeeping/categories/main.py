@@ -7,7 +7,7 @@ from globalElements.zipsWidget import mainUs as UsZipsWidget
 import sys
 import os
 import pathlib
-from sqlite.scheduleC.main import scheduleCbo
+from localDB.scheduleC.main import scheduleCbo
 from PyQt6 import QtWidgets as qtw 
 from PyQt6 import QtCore as qtc
 from PyQt6 import QtGui as qtg 

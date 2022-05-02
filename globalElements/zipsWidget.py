@@ -1,6 +1,6 @@
 
 from globalElements.widgets import cbo, labelWidget, lineEdit
-from sqlite.zipCodes import zipsSqlite
+from localDB.zipCodes import zipsSqlite
 from PyQt6.QtWidgets import (QWidget, QFormLayout, QCompleter)
 from PyQt6.QtCore import Qt
 

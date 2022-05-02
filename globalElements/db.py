@@ -4,6 +4,8 @@ from mysql.connector import errors
 import mysql.connector as mysql
 from mysql.connector.locales.eng import client_error
 
+from globalElements import functions
+
 class DB():
     def __init__(self, db, user, pwd):
         super().__init__()
@@ -40,7 +42,7 @@ class DB():
     
     def get_records_clearNull(self, sql, parameters=""):
         records = self.get_records(sql, parameters)
-        records = self.clearNull(records)
+        records = functions.setNullToString(records)
         return records
 
     
@@ -62,17 +64,18 @@ class DB():
         # idVar = db.DB_MySQL.cursor.fetchall()
         idVar = idVar[0][0]
         
-        return idVar
+        return idVar 
     
     def deleteOne(self, table, idName, id_):
         sql = f'''DELETE FROM {table} WHERE {idName} = {id_};'''
         self.run_sql_commit(sql)
 
-    def clearNull(self, records): #O! updated 
-        recordsList = []
-        for record in records:
-            recordsList.append(list(map(lambda i: '' if (i is None) else str(i),record)))
-        return recordsList
+    # def clearNull(self, records): #O! updated 
+    #     functions.setNullToString()
+        # recordsList = []
+        # for record in records:
+        #     recordsList.append(list(map(lambda i: '' if (i is None) else str(i),record)))
+        # return recordsList
 
     def selectAll(self, table, sqlInput=''): #O! updated
         if sqlInput:
@@ -80,5 +83,5 @@ class DB():
         else:
             sql = f'SELECT * FROM {table};'
         records = self.get_records(sql)
-        recordsList = self.clearNull(records)
+        recordsList = functions.setNullToString(records)
         return recordsList

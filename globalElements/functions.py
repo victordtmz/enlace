@@ -94,3 +94,9 @@ def getRecordsFromCSV(fileName):
         records = records[1:-1]
     
     return records, header
+
+def setNullToString(self, records):
+    recordsList = []
+    for record in records:
+        recordsList.append(list(map(lambda i: '' if (i is None) else str(i),record)))
+    return recordsList

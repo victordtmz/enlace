@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 import imp
-
+from localDB import sqliteDB
 from abc import abstractmethod
-import sys
+import sys 
 from PyQt6 import QtWidgets as qtw 
 from PyQt6 import QtGui as qtg
 from PyQt6 import QtCore as qtc
 from globalElements.treeview import treeviewSearchBox, filesTree
 from globalElements.widgets import buttonWidget, labelWidget,  deleteWarningBox, tabWidget
 import html2text
-from globalElements import DB, constants, functions as gf
+from globalElements import constants, functions as gf
+
+from globalElements import mainModel
 
 
 class spacer(qtw.QLabel):
@@ -41,6 +43,7 @@ class titleBox(qtw.QWidget):
             self.setStyleSheet('''
             QWidget {background-color:#0053a7}
             ''')
+
 class main(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -64,21 +67,22 @@ class main(qtw.QMainWindow):
 
 #G!GLOBAL CONFIGURATION --------------------------------
     @abstractmethod
+    def setDBConnection(self):
+        self.db = sqliteDB.DB()
+
+    @abstractmethod
     def setGlobalVariables(self):
         '''set all variables as needed, including costants'''
         # DB INFO
         self.titleText = ""
         self.idColumn = ''#o! 
         self.tableVar = ''#o! 
+        self.dbName = ''#o! 
         self.listWidth = 1
         self.formWidth = 1
         self.listHiddenItems = ()
         self.listColumnWidth = ()
         self.listTableValuesIndexes = []
-        dbLogin = constants.avdtDB
-        self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-    
-
     
     def setH2Settings(self):
         # LIST INFO
@@ -141,13 +145,11 @@ class main(qtw.QMainWindow):
         self.titleLayout.setContentsMargins(0,0,0,0)
         self.titleLayout.addWidget(self.spacerLeft)
         self.titleLayout.addWidget(self.logo)
-        self.titleLayout.addWidget(self.title,1)
-        
+        self.titleLayout.addWidget(self.spacer1)
         self.titleLayout.addWidget(self.btnNew)
         self.titleLayout.addWidget(self.spacer2)
         self.titleLayout.addWidget(self.btnDelete)
-        self.titleLayout.addWidget(self.spacer1)
-        
+        self.titleLayout.addWidget(self.title,1)
         self.titleLayout.addWidget(self.btn_cerrar)
         self.titleLayout.addWidget(self.spacerRight)
         
@@ -546,26 +548,27 @@ class main(qtw.QMainWindow):
         return
 
     def selectAll(self, parameters=0):
-        sql = self.getSQL(self.selectFile)#make sure sql has no ending statement
-        parameters = parameters
-        records = self.db.get_records_clearNull(sql,parameters)
-        self.horizontalLabels = self.db.cursor.column_names
+        sql = self.db.getSQL(self.selectFile)#make sure sql has no ending statement
+        records, labels = self.db.selectRecordsAndLabels(sql)
+        self.horizontalLabels = labels
         return records 
     
     def insertNewRecord(self, record):
         r = gf.insertNewRecord(record)
-        sql = self.getSQL(self.newRecordSql)
+        # record = str(record)
+        # record = record[1:-1]
+        sql = self.db.getSQL(self.newRecordSql)
         sql = f"{sql} ({r});"
         idVar = self.db.insertNewRecord(sql)
 
         return idVar
     
-    def getSQL(self, file):
-        # filePath = f"{self.sqlFolder}/{file}"
-        sqlFile = open(file, "r")
-        sqlFileText = sqlFile.read()
-        sqlFile.close()
-        return sqlFileText
+    # def getSQL(self, file):
+    #     # filePath = f"{self.sqlFolder}/{file}"
+    #     sqlFile = open(file, "r")
+    #     sqlFileText = sqlFile.read()
+    #     sqlFile.close()
+    #     return sqlFileText
 
     def deleteRecord(self, text = ''): 
         if self.list.treeview.selectionModel().hasSelection():
