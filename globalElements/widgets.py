@@ -71,6 +71,8 @@ class labelWidget(qtw.QLabel):
 class buttonWidget(qtw.QPushButton):
     def __init__(self, text="", size="h1", icon=""):
         super().__init__()
+        cursor = qtg.QCursor(qtc.Qt.CursorShape.PointingHandCursor)
+        self.setCursor(cursor)
         
         if icon:
             icon = qtg.QIcon(icon)
@@ -96,8 +98,9 @@ class buttonWidget(qtw.QPushButton):
             # font_.setBold(True)
             self.setFont(globalFont_)
             self.reSetFont()
-            self.setMinimumHeight(35)
+            # self.setMinimumHeight(35)
             # self.setFixedSize(130,35)
+            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
             css = self.getCSS("h1.css")
             self.setStyleSheet(css)
 
@@ -148,7 +151,7 @@ class cbo(qtw.QComboBox):
         
         self.sourceType = type(items)
         self.items = items
-        
+         
         if items:
             items = sorted(items)
             self.clear()
@@ -892,38 +895,26 @@ class spinbox(qtw.QSpinBox):
     def reSet(self):
         self.setValue(1)
 
-class tabWidgetH2(qtw.QTabWidget):
-    def __init__(self, fontSize=10,selectedSize=16):
+class tabWidget(qtw.QTabWidget):
+    def __init__(self, size="h1"):#self, fontSize=10, selectedSize=16
         super().__init__()
         self.setContentsMargins(0,0,0,0)
         self.setTabsClosable(True)
         self.setMinimumHeight(170)
         self.setTabBarAutoHide(True)
-        self.setStyleSheet('''
-            
-            QTabBar:tab {
-                background-color:#B85410;
-                color: #e9eaeb;
-                font-size: %spx;
-                border-radius: 1px;
-                
-                padding-top: 2px;
-                padding-right: 20px;
-                padding-left: 20px;
-                padding-bottom: 2px;
-                }
-            QTabBar:tab:selected {
-                background-color:#642D08;
-                color: white;
-                font-size: %spx;
-                padding-top: 2px;
-                padding-right: 20px;
-                padding-left: 20px;
-                padding-bottom: 2px;
-                }
-        ''' % (fontSize,selectedSize))
+        css = self.getCSS(f'{size}.css')
+        self.setStyleSheet(css)
+
         self.tabCloseRequested.connect(self.close_tab_requested)
     
+    def getCSS(self, file):
+        root = constants.othFolder
+        filePath = f"{root}/css/tabWidgets/{file}"
+        sqlFile = open(filePath, "r")
+        sqlFileText = sqlFile.read()
+        sqlFile.close()
+        return sqlFileText
+
     def close_tab_requested(self, intVar):
         self.widget(intVar).deleteLater()
 

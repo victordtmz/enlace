@@ -5,8 +5,8 @@ from PyQt6.QtWidgets import (QApplication)
 
 from globalElements import (mainModel, treeview, functions,
     zipsWidget)
-from avdt.loads import main, cloneDb
-from sqlite import sqliteDB
+from avdt.bookkeeping.categories import main, cloneDb
+from sqlite.scheduleC import main as schedulec
 from sqlite.zipCodes import zipsSqlite 
 
 
@@ -18,4 +18,10 @@ if __name__ == '__main__':
     sys.exit(app.exec())
     # app = cloneDb.Clone()
     # app.cloneDB()  
+    #o! SQLITE TESTING
+    # db = schedulec.DB()
+    # db.selectAll()
+    
+
+
   

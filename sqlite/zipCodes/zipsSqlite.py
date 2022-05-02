@@ -1,13 +1,10 @@
-from select import select
-import sqlite3
-from globalElements import constants
+from ast import Return
 from sqlite import sqliteDB
-
 class DB(sqliteDB.DB):
     def __init__(self):
         super().__init__()
-        # ['zip', 'stateName', 'stateId', 
-        # 'city', 'county', 'lat', 'lng']
+        pass
+        # ['zip-0', 'stateName-1', 'stateId-2', 'city-3', 'county-4', 'lat-5', 'lng-6']
         self.sqlFolder = 'sqlite\zipCodes'
         self.database = 'zips.avd'
 
@@ -39,12 +36,8 @@ class DB(sqliteDB.DB):
         records = list(map(lambda x: x[0], records))
         return (records)
 
-
-
-
 if __name__ == '__main__':
     db = DB()
-    # records = db.getSQL('createTable.sql')
-    # print(records)
+    
 
     

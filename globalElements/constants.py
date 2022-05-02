@@ -157,3 +157,32 @@ def queryAgents():
         agentsDict[i[1]] = i[0]
         agentsList.append(i[1])
 
+# bookkeeping categories
+# ------------------------------------------------------------
+bookkeepingTruckingCategoriesDict = {}
+bookkeepingTruckingCategoriesList = []
+def querybookkeepingTruckingCategories():
+    sql = f'''SELECT 
+            id, 
+            IFNULL(categorie,'')
+            FROM bookkeeping_categories 
+            WHERE industry = "Trucking"
+        ;'''
+    records = mysqlDB.get_records(sql)
+    bookkeepingTruckingCategoriesDict.clear()
+    bookkeepingTruckingCategoriesDict[""] = ""
+    for i in records:
+        bookkeepingTruckingCategoriesDict[i[1]] = i[0]
+        bookkeepingTruckingCategoriesList.append(i[1])
+
+# bookkeeping Industries
+# ------------------------------------------------------------
+bookkeepingTruckingIndustries = []
+def querybookkeepingTruckingIndustries():
+    sql = f'''SELECT DISTINCT
+            IFNULL(industry,'')
+            FROM bookkeeping_categories;'''
+    records = mysqlDB.get_records(sql)
+    for i in records:
+        bookkeepingTruckingIndustries.append(i[0])
+

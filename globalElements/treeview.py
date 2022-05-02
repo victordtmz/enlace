@@ -66,7 +66,8 @@ class treeviewSearchBox(QMainWindow):
         self.treeview = QTreeView()
         self.treeview.setUniformRowHeights(True)
         self.treeview.setSortingEnabled(True )
-        self.standardModel = QStandardItemModel() #w! Create object model - it can be directly assigned as model to treeview - no filterig capabilities
+        self.standardModel = QStandardItemModel() 
+        # self.standardModel.invisibleRootItem().setText("")
         self.proxyModel = QSortFilterProxyModel() #w! Create filtering model 
         self.proxyModel.setSourceModel(self.standardModel)
         self.treeview.setModel(self.proxyModel)#w! Assign object model to tree
@@ -131,7 +132,7 @@ class treeviewSearchBox(QMainWindow):
         self.layout_.addWidget(self.treeview)
         
         self.layout_.setSpacing(0)
-        self.layout_.setContentsMargins(0,0,0,0)
+        self.layout_.setContentsMargins(0,5,0,0)
         self.layoutBox = QWidget()
         self.layoutBox.setLayout(self.layout_)
 
@@ -332,7 +333,7 @@ class treeviewSearchBox(QMainWindow):
             for item in records: 
                 
                 stdItemItem = list(map(lambda x: standardItem(str(x),fontSize,rowHeight,colorVar),item))
-                self.standardModel.invisibleRootItem().appendRow(stdItemItem)
+                self.rootNode.insertRow(0, stdItemItem)
     
     def addRecordsCarriers(self, records,carrierColumn, fontSize, rowHeight, accounting = False):
         ungrouped = [] 
@@ -388,7 +389,7 @@ class treeviewSearchBox(QMainWindow):
                     else:
                         stdItemsRow.append(standardItem(str(item), fontSize, rowHeight, colorVar))
                     itemNo += 1
-                self.standardModel.invisibleRootItem().appendRow(stdItemsRow)
+                self.rootNode.insertRow(0, stdItemsRow)
 
     def requery(self, records, sizeVar=13, rowHeight=42, colorVar ='#000000'):
         self.removeAllRows()
@@ -596,12 +597,14 @@ class filesTree(QMainWindow):
         # self.copyBtn = gw.btn_copyIcon()
         self.layout_files = QGridLayout()
         self.layout_files.setSpacing(0)
+        # self.layout_files.setContentsMargins(0,50,0,0)
         # self.layout_files.addWidget(self.filesLabel,0,0)
         # self.layout_files.addWidget(self.txtFilePath,0,1)
         # self.layout_files.addWidget(self.copyBtn,0,2)
         self.layout_files.addWidget(self.filesTree,1,0,1,3)
         self.layout_files_box = QWidget()
         self.layout_files_box.setLayout(self.layout_files)
+        # self.layout().setContentsMargins(0,800,0,0)
         self.setCentralWidget(self.layout_files_box)
 
         # self.copyBtn.pressed.connect(self.copyPath)

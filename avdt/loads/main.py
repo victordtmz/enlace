@@ -26,6 +26,8 @@ class main(mainModel.main):
         self.listFontSize = 10
         # self.setTotalsElements()
         self.requery()
+        self.showMaximized()
+        self.splitter.setSizes([360,1000])
         
         # self.getIdLoad()
 
@@ -39,7 +41,7 @@ class main(mainModel.main):
         self.listTableValuesIndexes = (0,1,2,3,4,5,7,8,6,9,10,11,12,13,14,15,16,17,18,19)
         # self.formToDBItems = 4
         self.titleText = "LOADS"
-        self.listWidth = 1
+        self.listWidth = 0
         self.formWidth = 3
         self.listHiddenItems = (1,2,3,4,5,8,9,10,11,12,13,14,15,16,17,18,19)
         self.listColumnWidth = ((0,50),(6,80),(7,220))
@@ -124,7 +126,7 @@ class main(mainModel.main):
             self.clearForm()
         
     def configure_form(self): 
-        self.formLayoutSideFilesTree()
+        self.formLayoutTabsFilesTree()
         self.layoutFormBox.setMinimumWidth(450)
         self.layoutFormBox.setMaximumWidth(500)
         self.filesFolder.root = f'{constants.rootAVDT}\Carriers'

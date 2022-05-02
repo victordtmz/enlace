@@ -3,8 +3,11 @@ from globalElements import constants
 
 class DB():
     def __init__(self):
-        self.sqlFolder = 'sqliteDB'
-        self.database = 'zips.avd'
+        self.configDB()
+        
+    def configDB(self):
+        self.sqlFolder = 'sqlite\zipCodes'
+        self.database = 'name.avd'
     
     def createSqliteConnection(self, db):
         dbFolder = f'{constants.othFolder}\localDB'
