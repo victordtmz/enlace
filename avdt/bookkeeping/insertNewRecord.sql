@@ -1,15 +1,12 @@
-INSERT INTO clients (
-    name_,
-    mc,
-    usdot,
-    phone,
-    address,
-    address1,
-    city,
-    state,
-    zip,
-    notes,
-    invoiceEmail,
-    invoiceNotes
+INSERT INTO bookkeeping (
+    idCarrier,
+    idCategorie,
+    account_,
+    date_,
+    amount,
+    isIncome,
+    description_,
+    anexo,
+    isBusiness
   )
 VALUES 

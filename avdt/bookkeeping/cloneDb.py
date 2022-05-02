@@ -9,20 +9,8 @@ class Clone():
         dataBase = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
         sql = f'''
             SELECT 
-                idClient,
-                name_,
-                MC,
-                USDOT,
-                phone, 
-                address_,
-                address_1,
-                city,
-                state_, 
-                zip,
-                notes,
-                invoiceEmail,
-                invoiceNotes
-            FROM AVDT_Clients;
+                *
+            FROM AVDT_Accounting;
         '''
         records = dataBase.get_records_clearNull(sql)
 
@@ -38,7 +26,7 @@ class Clone():
         records = records[1:-1]
         # print(records)
         # print(type(records))
-        sql = self.getSQL("avdt/clients/insertNewRecord.sql")
+        sql = self.getSQL("avdt/bookkeeping/insertNewRecord.sql")
         sql = f'{sql} {records};'
         dbLogin = constants.avdtDB
         dataBase = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
