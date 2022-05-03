@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (QApplication)
 
 # from globalElements import (mainModel, treeview, functions,
 #     zipsWidget)
-from avdt.miles.miles_loads import main, cloneDb 
+from avdt.stops.loads_stops import main, cloneDb 
 # from localDB.bAccounts import main 
 # from localDB.zipCodes import zipsSqlite 
 
