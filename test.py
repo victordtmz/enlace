@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (QApplication)
 
 # from globalElements import (mainModel, treeview, functions,
 #     zipsWidget)
-from avdt.bookkeeping import main, cloneDb 
+from avdt.bookkeeping.bookkeeping_diesel import main, cloneDb 
 # from localDB.bAccounts import main 
 # from localDB.zipCodes import zipsSqlite 
 
@@ -13,12 +13,12 @@ from avdt.bookkeeping import main, cloneDb
 if __name__ == '__main__':
     # db = main.main()
     # db.createDB()
-    app = QApplication(sys.argv)
-    mw = main.main()
-    mw.show()
-    sys.exit(app.exec())
-    # app = cloneDb.Clone()
-    # app.cloneDB() 
+    # app = QApplication(sys.argv)
+    # mw = main.main()
+    # mw.show()
+    # sys.exit(app.exec())
+    app = cloneDb.Clone()
+    app.cloneDB() 
     #o! SQLITE TESTING
-    db = main.DB()
-    db.createDB()
+    # db = main.DB()
+    # db.createDB()
