@@ -1,5 +1,6 @@
 import os
 from globalElements import DB
+from localDB.sqliteDB import avdtLocalDB 
 
 #prepare mysqlDb
 avdtDB = ('u210833393_AVDT', 'u210833393_victorMtz', 'Abogado2020$')
@@ -54,23 +55,23 @@ iconRoad = f"{iconsFolder}road.png"
 iconWarehouse = f"{iconsFolder}warehouse.png"
 iconIfta = f"{iconsFolder}IFTA.png"
 
-# Carriers
-# ------------------------------------------------------------
-carriersDict = {}
-carriersList = []
-def queryCarriers():
-    sql = f'''SELECT 
-            id, 
-            IFNULL(name_,'')
-            FROM carriers 
-        ;'''
-    records = mysqlDB.get_records(sql)
-    carriersDict.clear()
-    carriersDict[""] = ""
-    for i in records:
+# # Carriers
+# # ------------------------------------------------------------
+# carriersDict = {}
+# carriersList = []
+# def queryCarriers():
+#     sql = f'''SELECT 
+#             id, 
+#             IFNULL(name_,'')
+#             FROM carriers 
+#         ;'''
+#     records = mysqlDB.get_records(sql)
+#     carriersDict.clear()
+#     carriersDict[""] = 0
+#     for i in records:
         
-        carriersDict[i[1]] = i[0]
-        carriersList.append(i[1])
+#         carriersDict[i[1]] = i[0]
+#         carriersList.append(i[1])
 
 # clients
 # ------------------------------------------------------------
@@ -185,4 +186,80 @@ def querybookkeepingTruckingIndustries():
     records = mysqlDB.get_records(sql)
     for i in records:
         bookkeepingTruckingIndustries.append(i[0])
+
+
+#g! Local db items
+#--------------------------------------------------------------
+localDB = avdtLocalDB()
+# Schedule C
+scheduleItems = []
+scheduleDict = {}
+scheduleCompleteDict = {}
+def queryScheduleC():
+    sql = f'''
+        SELECT * FROM scheduleC;
+    '''
+    records = localDB.selectRecords(sql)
+    scheduleItems.append('')
+    scheduleDict[''] = ''
+    for i in records:
+        scheduleItems.append(i[1])
+        scheduleDict[i[1]] = i[0]
+        scheduleCompleteDict[0] = [i[1],i[2],i[3]]
+
+# Accounts
+accountsItems = []
+accountsDict = {}
+def queryAccounts():
+    sql = f'''
+        SELECT idCarrier, account FROM bAccounts;
+    '''
+    records = localDB.selectRecords(sql)
+    accountsItems.append('')
+    accountsDict[''] = ['']
+    for i in records:
+        accountsItems.append(i[1])
+        if i[0] not in accountsDict.keys():
+            accountsDict[i[0]] = [i[1]]
+        else:
+            accountsDict[i[0]].append(i[1])
+
+# carriers
+carriersItems = []
+carriersDict = {}
+def queryCarriers():
+    sql = f'''
+        SELECT idCarrier, carrier FROM carriers;
+    '''
+    records = localDB.selectRecords(sql)
+    carriersItems.append('')
+    carriersDict[''] = ''
+    for i in records:
+        carriersItems.append(i[1])
+        carriersDict[i[1]] = i[0]
+
+# months
+monthsItems = []
+def queryMonths():
+    sql = f'''
+        SELECT * FROM months_;
+    '''
+    records = localDB.selectRecords(sql)
+    monthsItems.append('')
+    for i in records:
+        monthsItems.append(i[0])
+
+# years
+yearsItems = []
+def queryYears():
+    sql = f'''
+        SELECT * FROM years_;
+    '''
+    records = localDB.selectRecords(sql)
+    for i in records:
+        yearsItems.insert(0, i[0])
+    yearsItems.insert(1, '')
+
+
+
 

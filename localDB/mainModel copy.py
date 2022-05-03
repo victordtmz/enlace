@@ -68,7 +68,7 @@ class main(qtw.QMainWindow):
 #G!GLOBAL CONFIGURATION --------------------------------
     @abstractmethod
     def setDBConnection(self):
-        self.db = sqliteDB.DB()
+        self.db = sqliteDB.avdtLocalDB()
 
     @abstractmethod
     def setGlobalVariables(self):

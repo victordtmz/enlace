@@ -39,7 +39,7 @@ class scheduleCbo(cbo):
         info = self.db.selectRecords(sql)[0][0]
         return info
 
-class DB(sqliteDB.DB):
+class DB(sqliteDB.avdtLocalDB):
     def __init__(self):
         super().__init__()
         # self.configDB()
@@ -54,7 +54,7 @@ class DB(sqliteDB.DB):
     
     def configDB(self):
         self.sqlFolder = 'localDB\scheduleC'
-        self.database = 'scheduleC.avd'
+        self.database = 'avdt.db'
         self.tableVar = 'scheduleC'
         self.idVar = 'id'
 

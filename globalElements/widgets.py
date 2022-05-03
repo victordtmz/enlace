@@ -153,6 +153,9 @@ class cbo(qtw.QComboBox):
         self.items = items
          
         if items:
+            # if self.sourceType is dict:
+            #     items = sorted(items, key = lambda i: i)
+            # else:
             items = sorted(items)
             self.clear()
             self.addItems(items)
@@ -245,7 +248,7 @@ class cboFilterGroup(qtw.QWidget):
         self.cbo.setCompleter(self.completer_name)
 
     def btn_pressed(self):
-        self.reSet()
+        self.cbo.setCurrentText('')
         self.cbo.setFocus()
 
     def populate(self,text):    

@@ -1,15 +1,15 @@
 from abc import abstractmethod
 import sqlite3
-from globalElements import constants
+from globalElements import constants 
 
-class DB():
+class avdtLocalDB():
     def __init__(self):
         self.configDB()
     
     @abstractmethod    
     def configDB(self):
-        self.sqlFolder = 'localDB\zipCodes'
-        self.database = 'name.avd'
+        self.sqlFolder = 'localDB\sql'
+        self.database = 'avdt.db' 
     
     def createSqliteConnection(self, db):
         dbFolder = f'{constants.othFolder}\localDB'
@@ -73,5 +73,5 @@ class DB():
 
 
 if __name__ == '__main__':
-    db = DB()
+    db = avdtLocalDB()
     

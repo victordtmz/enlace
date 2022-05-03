@@ -39,7 +39,7 @@ from PyQt6.QtGui import QCursor
 #         info = self.db.selectRecords(sql)[0][0]
 #         return info
 
-class DB(sqliteDB.DB):
+class DB(sqliteDB.avdtLocalDB):
     def __init__(self):
         super().__init__()
         # self.configDB()
@@ -63,10 +63,12 @@ class DB(sqliteDB.DB):
     #         self.list.append(i[0])
     
     def selectDict(self):
-        self.dict[""] = ""
+        # self.dict[""] = ""
+        self.list.append('')
         records = self.selectAll()
         for i in records:
-            self.dict[i[0]] = i[1]
+            self.list.append(i[2])
+            self.dict[i[2]] = i[1]
 
     # def selectByItem(self, txt):
     #     sql = f'''

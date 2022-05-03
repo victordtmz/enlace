@@ -12,7 +12,7 @@ bookkeeping.idCarrier AS "4-Carrier",
 bookkeeping.anexo AS "5-Anexo",
 
 -- FILTER VALUES
-YEAR(bookkeeping.date_) AS "6-Year",
+-- YEAR(bookkeeping.date_) AS "6-Year",
 DATE_FORMAT(bookkeeping.date_, '%m') AS "7-Month",
 categories.categorie "8-Categorie",
 CASE WHEN bookkeeping.isBusiness = 1 THEN "True" ELSE "False" END as "9- IsBusiness",
@@ -24,5 +24,6 @@ FROM bookkeeping
 -- Join Statements
 LEFT JOIN bookkeeping_categories categories ON  categories.id = bookkeeping.idCategorie
 -- Where condition statements
--- WHERE AVDT_Accounting.idCarrier = %s
+WHERE bookkeeping.idCarrier = %s
+AND YEAR(bookkeeping.date_) LIKE %s
 ;

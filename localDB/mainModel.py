@@ -20,7 +20,7 @@ class main(mainModel.main):
         
     @abstractmethod
     def setDBConnection(self):
-        self.db = sqliteDB.DB()
+        self.db = sqliteDB.avdtLocalDB()
 
     def selectAll(self):
         sql = self.db.getSQL(self.selectFile)#make sure sql has no ending statement
