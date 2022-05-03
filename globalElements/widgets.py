@@ -83,13 +83,15 @@ class buttonWidget(qtw.QPushButton):
         if size == "main":
             globalFont_.setPointSize(18)
             iconSize_ = qtc.QSize(50, 32)
+            # self.setContentsMargins(50,50,50,50)
             self.setIconSize(iconSize_)
             # font_.setBold(True)
             self.setFont(globalFont_)
             self.reSetFont()
-            self.setMinimumHeight(133)
+            self.setSizePolicy(qtw.QSizePolicy.Policy.Expanding,qtw.QSizePolicy.Policy.Expanding)
+            # self.setMinimumHeight(133)
             # self.setFixedSize(130,35)
-            css = self.getCSS("h1.css")
+            css = self.getCSS("main.css")
             self.setStyleSheet(css)
 
 
@@ -938,7 +940,7 @@ class deleteWarningBox(qtw.QMessageBox):
         super().__init__()
         self.iconAVD = qtg.QIcon( f'{constants.othFolder}\icons\enlace.png')
         self.setWindowTitle('Eliminar registro')
-        self.setWindowIcon(qtg.QIcon('oth/icons/LOGO_WORLD.png'))
+        self.setWindowIcon(qtg.QIcon(f'{constants.othFolder}\icons\enlace.png'))
         self.setText(text)
         # self.setStyleSheet("QLabel{min-width: 200px;}")
         self.setInformativeText('Continue?')
