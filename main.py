@@ -9,6 +9,8 @@ from PyQt6.QtCore import Qt
 from globalElements import constants
 from globalElements.widgets import tabWidget
 from avdt import avdt
+from avdt.loads import loads
+from avdt.accounts import main as accounts
 
 class MainWindow(QMainWindow):
     def __init__(self): 
@@ -38,8 +40,22 @@ class MainWindow(QMainWindow):
     def configureAVDT(self):
         self.avdtMenu = avdt.main()
         self.mainMenuLayout.addWidget(self.avdtMenu)
+        self.configAVDTConnections()
 
-        
+    def configAVDTConnections(self):
+        self.avdtMenu.btnAvdtLoads.pressed.connect(self.avdtLoadsOpen)
+        self.avdtMenu.btnAvdtAccounts.pressed.connect(self.avdtAccountsOpen)
+#AVDT 
+#------------------------------------------------------------------------
+    def avdtLoadsOpen(self):
+        self.avdtLoads = loads.main()
+        self.tabWidget.addTab(self.avdtLoads,'       AVDT LOADS      ')
+        self.tabWidget.setCurrentWidget(self.avdtLoads)
+
+    def avdtAccountsOpen(self):
+        self.avdtAccounts = accounts.main()
+        self.tabWidget.addTab(self.avdtAccounts,'    AVDT ACCOUNTS   ')
+        self.tabWidget.setCurrentWidget(self.avdtAccounts)
 
 
 

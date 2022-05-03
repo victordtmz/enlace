@@ -10,10 +10,10 @@ class avdtLocalDB():
     def configDB(self):
         self.sqlFolder = 'localDB\sql'
         self.database = 'avdt.db' 
+        self.dbFolder = f'{constants.othFolder}\localDB' 
     
     def createSqliteConnection(self, db):
-        dbFolder = f'{constants.othFolder}\localDB'
-        self.connection = sqlite3.connect(f'{dbFolder}\{db}')
+        self.connection = sqlite3.connect(f'{self.dbFolder}\{db}')
         self.cursor = self.connection.cursor()
         
     def executeQuery(self, sql):

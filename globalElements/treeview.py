@@ -66,6 +66,8 @@ class treeviewSearchBox(QMainWindow):
         self.treeview = QTreeView()
         self.treeview.setUniformRowHeights(True)
         self.treeview.setSortingEnabled(True )
+        #gets rid of the space on the left to select or expand when has children
+        self.treeview.setRootIsDecorated(False)
         self.standardModel = QStandardItemModel() 
         # self.standardModel.invisibleRootItem().setText("")
         self.proxyModel = QSortFilterProxyModel() #w! Create filtering model 
