@@ -11,7 +11,7 @@ class Clone():
         sql = f'''
             SELECT 
                 *
-            FROM AVDT_Drivers;
+            FROM AVDT_Miles;
         '''
         records = dataBase.get_records_clearNull(sql)
         
@@ -24,7 +24,7 @@ class Clone():
         # print(records)
         # print(type(records))
         #o! CHANGE FOLDER NAME
-        sql = self.getSQL("avdt/drivers/insertNewRecord.sql")
+        sql = self.getSQL("avdt/miles/insertNewRecord.sql")
         sql = f'{sql} {records};'
         dbLogin = constants.avdtDB
         dataBase = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
