@@ -3,7 +3,7 @@ from globalElements import constants
 from globalElements.widgets import buttonWidget, labelWidget
 import sys
 from PyQt6.QtWidgets import (QWidget,QMainWindow,QHBoxLayout,
-    QVBoxLayout, QGridLayout, QApplication)
+    QVBoxLayout, QGridLayout, QApplication, QSizePolicy)
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 
@@ -27,10 +27,34 @@ class main(QMainWindow):
         self.setGridLayout()
         self.setCentralWidget(self.layoutMainBox)
         self.show()
+    
+    # def resizeEvent(self, a0: QResizeEvent) -> None:
+    #     currWidth = self.width()
+    #     currHeigh = self.height()
+    #     # newWidth = 10
+    #     if currWidth < 1100:
+    #         newWidth = 10
+    #     elif currWidth > 1101 and currWidth <1500:
+    #         newWidth = 30
+    #     else:
+    #         newWidth = 50
 
-        #142,170,219 #84ABBE -2F5496
+    #     if currHeigh < 500:
+    #         newHeight = 10
+    #     elif currHeigh > 501 and currHeigh <1500:
+    #         newHeight = 30
+    #     else:
+    #         newHeight = 50
         
-        
+    #     # print(f' Current width: {currWidth}')
+    #     # print(f' Current Spacing: {newWidth}')
+
+    #     # print(f' Current Height: {currHeigh}')
+    #     # print(f' Current H Spacing: {newWidth}')
+    #     self.layoutMainGrid.setHorizontalSpacing(newWidth)
+    #     self.layoutMainGrid.setVerticalSpacing(newHeight)
+    #     return super().resizeEvent(a0)
+
     def initUi(self):
         self.createAvdtItems()
         self.layoutMainBox = QWidget()
@@ -88,11 +112,13 @@ class main(QMainWindow):
         self.layoutAvdtTitleBox= QWidget()
         self.layoutAvdtTitleBox.setMaximumHeight(80)
         self.layoutAvdtTitle = QHBoxLayout()
+        
         self.layoutAvdtTitle.setSpacing(0)
         self.layoutAvdtTitle.setContentsMargins(0,0,0,0)
         self.layoutAvdtTitle.addWidget(self.avdtLogo,1)
         self.layoutAvdtTitle.addWidget(self.avdtTitle,10)
         self.layoutAvdtTitleBox.setLayout(self.layoutAvdtTitle)
+        self.layoutAvdtTitleBox.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
     def setGridLayout(self):
         self.layoutMainGrid =QGridLayout()

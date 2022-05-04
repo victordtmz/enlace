@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 from globalElements.setup import load
-load()
+load() 
 import sys
 from PyQt6.QtWidgets import (QWidget,QMainWindow,QHBoxLayout,
-    QVBoxLayout, QGridLayout, QApplication)
-from PyQt6.QtGui import QPixmap, QIcon
-from PyQt6.QtCore import Qt
+    QVBoxLayout,  QApplication)
+from PyQt6.QtGui import  QIcon
 from globalElements import constants
 from globalElements.widgets import tabWidget
 from avdt import avdt
@@ -18,8 +17,7 @@ class MainWindow(QMainWindow):
         self.initUi()
         self.layoutConfig()
         self.configureAVDT()
-        
-
+        self.showMaximized()
 
     def initUi(self):
         self.setWindowTitle('ENLACE LLC')

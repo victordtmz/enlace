@@ -1,19 +1,14 @@
-from globalElements import constants, functions as gf
+from globalElements import constants
 from localDB import mainModel
-from globalElements.widgets import lineEditCopy, webWidget, dateWidget, labelWidget,  lineEditCurrency, textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone
-from distutils import ccompiler
-import imp
+from globalElements.widgets import (lineEditCopy, webWidget, dateWidget, 
+    labelWidget,  textEdit, lineEdit, cboFilterGroup)
 import pathlib
 import os
-from avdt import bookkeeping
-from avdt.bookkeeping import categories
 from localDB import sqliteDB
-from localDB.scheduleC import scheduleC
-from globalElements.widgets import cbo
-from PyQt6.QtWidgets import QCompleter,QApplication
+from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
-from globalElements import DB as mysqlDb
+# from globalElements import DB as mysqlDb
 
 class DB(sqliteDB.avdtLocalDB):
     def __init__(self):
@@ -37,46 +32,47 @@ class DB(sqliteDB.avdtLocalDB):
         '''
         records = self.selectRecords(sql)
         return records
-
-    def cloneDB(self):
-        dbLogin = constants.avdOld
-        dataBase = mysqlDb.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        sql = f'''
-            SELECT 
-                accountName,
-                userName,
-                pwd,
-                date_,
-                portal,
-                notes
-            FROM AVDT_Accounts
-            WHERE idCarrier = 1;
-        '''
-        records = dataBase.get_records_clearNull(sql)
-        # records = gf.recordToSQL(records)
-        self.database = 'dnpfAct.db'
-        sql = self.getSQL('createTable.sql')
-        self.executeQuery(sql)
-        missing = []
-        missed = 0
-        recorded = 0
-        for i in records:
-            # i = gf.recordToSQL(i)
-            sql = f'''INSERT INTO {self.tableVar} 
-                (account, user, pwd, date_, portal, notes)
-            VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}","{i[4]}","{i[5]}")
-        ''' 
-            try:
-                self.executeQueryCommit(sql)
-                recorded += 1
-            except:
-                # print(sql)
-                missing.append([i[0],i[1]])
-                missed += 1
+    
+    #p! DO NOT DELETE - SAMPLE CODE FOR CLONING INTO DB
+    # def cloneDB(self):
+    #     dbLogin = constants.avdOld
+    #     dataBase = mysqlDb.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+    #     sql = f'''
+    #         SELECT 
+    #             accountName,
+    #             userName,
+    #             pwd,
+    #             date_,
+    #             portal,
+    #             notes
+    #         FROM AVDT_Accounts
+    #         WHERE idCarrier = 1;
+    #     '''
+    #     records = dataBase.get_records_clearNull(sql)
+    #     # records = gf.recordToSQL(records)
+    #     self.database = 'dnpfAct.db'
+    #     sql = self.getSQL('createTable.sql')
+    #     self.executeQuery(sql)
+    #     missing = []
+    #     missed = 0
+    #     recorded = 0
+    #     for i in records:
+    #         # i = gf.recordToSQL(i)
+    #         sql = f'''INSERT INTO {self.tableVar} 
+    #             (account, user, pwd, date_, portal, notes)
+    #         VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}","{i[4]}","{i[5]}")
+    #     ''' 
+    #         try:
+    #             self.executeQueryCommit(sql)
+    #             recorded += 1
+    #         except:
+    #             # print(sql)
+    #             missing.append([i[0],i[1]])
+    #             missed += 1
                 
-        for i in missing:
-            print(i)
-        print(missed)
+    #     for i in missing:
+    #         print(i)
+    #     print(missed)
 
 class main(mainModel.main):
     def __init__(self):
@@ -86,10 +82,7 @@ class main(mainModel.main):
         self.configure_form()
         self.configure_list()
         self.setConnections()
-        # self.setTotalsElements()
         self.requery()
-        
-        # self.getIdLoad()
 
     def setDBConnection(self):
         self.db = DB()
@@ -108,9 +101,6 @@ class main(mainModel.main):
         self.listColumnWidth = ((1,320),(2,250))
         self.sortColumn = 1
         self.onNewFocusWidget = 0
-        # self.fontSize = 
-        
-        # self.evaluateSaveIndex = (1)
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
@@ -194,7 +184,7 @@ class main(mainModel.main):
         self.user = lineEditCopy(self.fontSize)
         self.pwd = lineEditCopy(self.fontSize)
         self.date_ = dateWidget(self.fontSize)
-        self.portal = webWidget(self.fontSize)
+        self.portal = webWidget(10)
         self.notes = textEdit(self.fontSize)
         self.notes.setMinimumHeight(300)
         self.formItems = [self.id_, self.account, self.user,
@@ -209,7 +199,6 @@ class main(mainModel.main):
         self.layoutForm.addRow(labelWidget('Notes', 14,True, align="center"))
         self.layoutForm.addRow(self.notes)
         
-
     def setConnections(self):
         self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
         # self.carrier.cbo.currentTextChanged.connect(lambda: self.formDirty(1,self.carrier.getInfo()))

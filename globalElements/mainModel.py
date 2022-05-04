@@ -132,22 +132,20 @@ class main(qtw.QMainWindow):
         self.btn_cerrar = buttonWidget(text=" Cerrar", 
             icon=constants.iconClose, size=self.mainSize)
 
-        self.spacerLeft = spacer('     ')
-        self.spacer1 = spacer('          ')
-        self.spacer2 = spacer('        ')
-        self.spacerRight = spacer('      ')
+        self.spacerLeft = spacer('    ')
+        self.spacer1 = spacer(' ')
+        self.spacer2 = spacer('      ')
+        self.spacerRight = spacer(' ')
         self.titleLayout = qtw.QHBoxLayout()
         self.titleLayout.setSpacing(0)
         self.titleLayout.setContentsMargins(0,0,0,0)
         self.titleLayout.addWidget(self.spacerLeft)
         self.titleLayout.addWidget(self.logo)
         self.titleLayout.addWidget(self.title,1)
-        
         self.titleLayout.addWidget(self.btnNew)
         self.titleLayout.addWidget(self.spacer2)
         self.titleLayout.addWidget(self.btnDelete)
-        self.titleLayout.addWidget(self.spacer1)
-        
+        self.titleLayout.addWidget(self.spacer1,1)
         self.titleLayout.addWidget(self.btn_cerrar)
         self.titleLayout.addWidget(self.spacerRight)
         

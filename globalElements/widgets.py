@@ -91,6 +91,8 @@ class buttonWidget(qtw.QPushButton):
             self.setSizePolicy(qtw.QSizePolicy.Policy.Expanding,qtw.QSizePolicy.Policy.Expanding)
             # self.setMinimumHeight(133)
             # self.setFixedSize(130,35)
+            self.setMaximumHeight(110)
+            self.setMaximumWidth(330)
             css = self.getCSS("main.css")
             self.setStyleSheet(css)
 
