@@ -124,7 +124,7 @@ class main(QMainWindow):
         self.layoutMainGrid =QGridLayout()
         # self.layoutMainGrid.setSpacing(50)
 
-        self.layoutMainGrid.addWidget(self.layoutAvdtTitleBox,2,0,1,4)
+        # self.layoutMainGrid.addWidget(self.layoutAvdtTitleBox,2,0,1,4)
 
         self.layoutMainGrid.addWidget(self.btnAvdtLoads,3,0)
         self.layoutMainGrid.addWidget(self.btnAvdtLoadPayments,3,1)
@@ -151,7 +151,7 @@ class main(QMainWindow):
 
         self.layoutMainGridTitle = QVBoxLayout()
         self.layoutMainGridTitle.setContentsMargins(0,0,0,0)
-        # self.layoutMainGridTitle.addWidget(self.layoutTitleBox)
+        self.layoutMainGridTitle.addWidget(self.layoutAvdtTitleBox)
         self.layoutMainGridTitle.addWidget(self.layoutItemsWidget)
 
 

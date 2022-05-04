@@ -16,7 +16,7 @@ from globalElements import mainModel
 class main(mainModel.main):
     def __init__(self):
         super().__init__()
-        self.setDBConnection()
+        pass
         
     @abstractmethod
     def setDBConnection(self):

@@ -9,6 +9,7 @@ mysqlDB = DB.DB(avdtDB[0], avdtDB[1], avdtDB[2])
 
 #program paths
 oneDrive = os.path.expanduser('~\OneDrive')
+rootEnlace = f'{oneDrive}\enlace'
 rootDb = f'{oneDrive}\db'
 othFolder =f'{rootDb}\oth'
 #AVDT Root folders

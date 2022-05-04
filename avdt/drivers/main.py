@@ -51,7 +51,7 @@ class main(mainModel.main):
         
         # self.evaluateSaveIndex = (1,)
         # self.andOr = "and"
-        if not constants.carriersList:
+        if not constants.carriersItems:
             constants.queryCarriers()
 
     def updateRecord(self, record): 

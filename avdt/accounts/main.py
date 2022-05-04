@@ -11,79 +11,24 @@ from PyQt6.QtGui import QCursor
 # from globalElements import DB as mysqlDb
 
 class DB(sqliteDB.avdtLocalDB):
-    def __init__(self):
-        super().__init__()
-        # self.configDB()
-        #'id-0', 'carrier-1'
+    def __init__(self): 
         self.dict = {}
         self.list = []
-    
-    def configDB(self):
         self.sqlFolder = 'avdt\\accounts'
         self.database = 'accounts.avd'
         self.tableVar = 'accounts'
-        self.dbFolder = f'{constants.othFolder}\localDB' 
-        # self.avdtDB = 'avdtAct.db'
-        # self.dnpfDB = 'dnpfAct.db'
-    
-    def selectAll(self):
-        sql = f'''
-            SELECT * FROM {self.tableVar}
-        '''
-        records = self.selectRecords(sql)
-        return records
-    
-    #p! DO NOT DELETE - SAMPLE CODE FOR CLONING INTO DB
-    # def cloneDB(self):
-    #     dbLogin = constants.avdOld
-    #     dataBase = mysqlDb.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-    #     sql = f'''
-    #         SELECT 
-    #             accountName,
-    #             userName,
-    #             pwd,
-    #             date_,
-    #             portal,
-    #             notes
-    #         FROM AVDT_Accounts
-    #         WHERE idCarrier = 1;
-    #     '''
-    #     records = dataBase.get_records_clearNull(sql)
-    #     # records = gf.recordToSQL(records)
-    #     self.database = 'dnpfAct.db'
-    #     sql = self.getSQL('createTable.sql')
-    #     self.executeQuery(sql)
-    #     missing = []
-    #     missed = 0
-    #     recorded = 0
-    #     for i in records:
-    #         # i = gf.recordToSQL(i)
-    #         sql = f'''INSERT INTO {self.tableVar} 
-    #             (account, user, pwd, date_, portal, notes)
-    #         VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}","{i[4]}","{i[5]}")
-    #     ''' 
-    #         try:
-    #             self.executeQueryCommit(sql)
-    #             recorded += 1
-    #         except:
-    #             # print(sql)
-    #             missing.append([i[0],i[1]])
-    #             missed += 1
-                
-    #     for i in missing:
-    #         print(i)
-    #     print(missed)
+        self.dbFolder = f'{constants.rootAVDT}\Carriers'
 
 class main(mainModel.main):
     def __init__(self):
         super().__init__()
-        # self.setDBConnection()
-        self.initUi()
         self.configure_form()
         self.configure_list()
         self.setConnections()
-        self.requery()
+        self.setDBConnection()
 
+        
+    
     def setDBConnection(self):
         self.db = DB()
         self.tableVar = self.db.tableVar
@@ -117,7 +62,7 @@ class main(mainModel.main):
     def requery(self):
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
         self.db.dbFolder = f'{constants.rootAVDT}\Carriers'
-        carrier = self.carrierFiltros.getInfo()
+        carrier = self.clientFiltros.getInfo()
         self.db.dbFolder = f'{self.db.dbFolder}\{carrier}\Accounts'
         # self.db.createSqliteConnection()
         try:
@@ -146,12 +91,12 @@ class main(mainModel.main):
         self.listFontSize = 13
         self.queryCarriers()
         filterSize = 13
-        self.carrierFiltros = cboFilterGroup(self.fontSize,
+        self.clientFiltros = cboFilterGroup(self.fontSize,
             refreshable=False,
             items= self.carriers,
             requeryFunc= self.queryCarriers)
 
-        self.list.layoutFilter.insertRow(0, labelWidget('Carrier:', filterSize), self.carrierFiltros)
+        self.list.layoutFilter.insertRow(0, labelWidget('Client:', filterSize), self.clientFiltros)
         self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
         self.filesFolder.txtFilePath.setText(self.filesFolder.root)
 
@@ -160,7 +105,7 @@ class main(mainModel.main):
         #Verificar si hay registro seleccionado
         if record:
             idVar = self.id_.text()
-            carrier = self.carrierFiltros.getInfo()
+            carrier = self.clientFiltros.getInfo()
             account = self.account.getInfo()
             text = f'''Eliminar el registro:
             id: {idVar} 
@@ -210,10 +155,10 @@ class main(mainModel.main):
         self.notes.textChanged.connect(lambda: self.formDirty(6,self.notes.getInfo()))
 
         # LIST CONNECTIONS
-        self.carrierFiltros.cbo.currentIndexChanged.connect(self.requery)
+        self.clientFiltros.cbo.currentIndexChanged.connect(self.requery)
 
     def setFilesFolder(self):
-        carrier = self.carrierFiltros.cbo.currentText()
+        carrier = self.clientFiltros.cbo.currentText()
         account = self.account.text()
         if carrier and account:
             folderPath = f'{self.filesFolder.root}/{carrier}/Accounts/{account}'
@@ -233,3 +178,45 @@ if __name__ == '__main__':
     
 
     
+
+
+ #p! DO NOT DELETE - SAMPLE CODE FOR CLONING INTO DB
+    # def cloneDB(self):
+    #     dbLogin = constants.avdOld
+    #     dataBase = mysqlDb.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+    #     sql = f'''
+    #         SELECT 
+    #             accountName,
+    #             userName,
+    #             pwd,
+    #             date_,
+    #             portal,
+    #             notes
+    #         FROM AVDT_Accounts
+    #         WHERE idCarrier = 1;
+    #     '''
+    #     records = dataBase.get_records_clearNull(sql)
+    #     # records = gf.recordToSQL(records)
+    #     self.database = 'dnpfAct.db'
+    #     sql = self.getSQL('createTable.sql')
+    #     self.executeQuery(sql)
+    #     missing = []
+    #     missed = 0
+    #     recorded = 0
+    #     for i in records:
+    #         # i = gf.recordToSQL(i)
+    #         sql = f'''INSERT INTO {self.tableVar} 
+    #             (account, user, pwd, date_, portal, notes)
+    #         VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}","{i[4]}","{i[5]}")
+    #     ''' 
+    #         try:
+    #             self.executeQueryCommit(sql)
+    #             recorded += 1
+    #         except:
+    #             # print(sql)
+    #             missing.append([i[0],i[1]])
+    #             missed += 1
+                
+    #     for i in missing:
+    #         print(i)
+    #     print(missed)

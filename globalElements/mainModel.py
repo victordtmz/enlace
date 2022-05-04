@@ -44,9 +44,10 @@ class titleBox(qtw.QWidget):
 class main(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.iconAVD = qtg.QIcon('oth/icons/LOGO_WORLD.png')#o!modify
-        # when selection changes, we need this before saving, in case of a requery
+        
+         self.iconAVD = qtg.QIcon('oth/icons/LOGO_WORLD.png')#o!modify
         self.newSelectionId = ""
+        self.initUi()
         
     def initUi(self):
         self.setConstants()

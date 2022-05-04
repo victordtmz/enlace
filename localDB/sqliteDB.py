@@ -4,14 +4,11 @@ from globalElements import constants
 
 class avdtLocalDB():
     def __init__(self):
-        self.configDB()
-    
-    @abstractmethod    
-    def configDB(self):
+        # self.configDB()
         self.sqlFolder = 'localDB\sql'
         self.database = 'avdt.db' 
         self.dbFolder = f'{constants.othFolder}\localDB' 
-    
+
     def createSqliteConnection(self, db):
         self.connection = sqlite3.connect(f'{self.dbFolder}\{db}')
         self.cursor = self.connection.cursor()
