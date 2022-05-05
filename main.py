@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-from setup import load
+from globalElements.setup import load
 load()
-from setup import (QMainWindow, QIcon, constants, QWidget, QVBoxLayout,
+from globalElements.setup import (QMainWindow, QIcon, constants, QWidget, QVBoxLayout,
     tabWidget, enlace, enlaceAccounts, avdt, loads, accounts, drivers, trucks,
     QApplication, sys)
 

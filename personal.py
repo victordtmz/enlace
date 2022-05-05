@@ -1,8 +1,8 @@
-from setup import load
+from globalElements.setup import load
 load()
 import sys
 from PyQt6.QtWidgets import (QApplication)
-from . import p_accounts as accounts
+from personal.accounts import main as accounts
  
  
 if __name__ == '__main__':

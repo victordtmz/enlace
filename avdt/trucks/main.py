@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from setup import (sys, os, pathlib, labelWidget, textEdit, lineEdit, cboFilterGroup,
+from globalElements.setup import (sys, os, pathlib, labelWidget, textEdit, lineEdit, cboFilterGroup,
     DB, constants, mainModel, QApplication, QCursor, Qt)
 class main(mainModel.main):
     def __init__(self):
