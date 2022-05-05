@@ -1,6 +1,12 @@
 #!/usr/bin/python3
-from globalElements.setup import (sys, os, pathlib, labelWidget, textEdit, lineEdit, cboFilterGroup,
-    DB, constants, mainModel, QApplication, QCursor, Qt)
+import sys, os, pathlib
+from globalElements.widgets import labelWidget, textEdit, lineEdit, cboFilterGroup
+from globalElements import constants, mainModel, DB
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import  QCursor
+
+
 class main(mainModel.main):
     def __init__(self):
         super().__init__()

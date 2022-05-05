@@ -333,7 +333,6 @@ class treeviewSearchBox(QMainWindow):
     def addRecords(self, records, fontSize=13, rowHeight=42, colorVar ='#000000'):
         if records:
             for item in records: 
-                
                 stdItemItem = list(map(lambda x: standardItem(str(x),fontSize,rowHeight,colorVar),item))
                 self.rootNode.insertRow(0, stdItemItem)
     
@@ -507,6 +506,7 @@ class treeviewSearchBox(QMainWindow):
             self.search = functions.create_regEx(text)
             self.regEx_search = QRegularExpression(self.search,QRegularExpression.PatternOption.CaseInsensitiveOption)
             self.proxyModel.setFilterRegularExpression(self.regEx_search)
+            # self.proxyModel.setRecursiveFilteringEnabled(True)
             self.proxyModel.setFilterKeyColumn(-1)
         if sort:
             self.proxyModel.sort(sortColumn, order)

@@ -1,9 +1,22 @@
 #!/usr/bin/python3
 from globalElements.setup import load
 load()
-from globalElements.setup import (QMainWindow, QIcon, constants, QWidget, QVBoxLayout,
-    tabWidget, enlace, enlaceAccounts, avdt, loads, accounts, drivers, trucks,
-    QApplication, sys)
+import sys
+ 
+#     tabWidget, enlace, enlaceAccounts, avdt, loads, accounts, drivers, trucks,
+#     QApplication, sys)
+from globalElements import constants
+from enlace.accounts import main as enlaceAccounts
+from avdt import avdt
+from enlace import enlace
+from avdt.loads import loads
+from avdt.accounts import main as accounts
+from avdt.drivers import main as drivers
+from avdt.trucks import main as trucks
+from globalElements.widgets import tabWidget
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
+# from PyQt6.QtCore import Qicon
+from PyQt6.QtGui import QIcon
 
   
 

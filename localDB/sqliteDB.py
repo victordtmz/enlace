@@ -1,13 +1,13 @@
-from abc import abstractmethod
 import sqlite3
-from globalElements import constants 
-
+import os
+ 
+oneDrive = os.path.expanduser('~\OneDrive')
 class avdtLocalDB():
     def __init__(self):
         # self.configDB()
         self.sqlFolder = 'localDB\sql'
         self.database = 'avdt.db' 
-        self.dbFolder = f'{constants.othFolder}\localDB' 
+        self.dbFolder = f'{oneDrive}\db\oth\localDB' 
 
     def createSqliteConnection(self, db):
         self.connection = sqlite3.connect(f'{self.dbFolder}\{db}')
