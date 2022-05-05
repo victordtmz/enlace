@@ -1,11 +1,14 @@
+from globalElements.setup import load
+load()
 from globalElements import constants
 from globalElements.widgets import labelWidget,cboFilterGroup
 from globalElements.accounts import main as accounts
 import os
 import pathlib
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QCursor
+from PyQt6.QtGui import QCursor, QIcon
 from PyQt6.QtWidgets import QApplication
+import sys
 
 class main(accounts.main):
     def __init__(self):
@@ -18,6 +21,10 @@ class main(accounts.main):
         self.configure_list()
         self.title.setText('Personal Accounts')
         self.requery()
+
+        self.setWindowTitle('CUENTAS PERSONALES')
+        self.iconFamily = QIcon( f'{constants.othFolder}\icons\\family.png')
+        self.setWindowIcon(self.iconFamily)
 
     def requery(self):
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
@@ -54,7 +61,7 @@ class main(accounts.main):
         self.familyFilter = cboFilterGroup(self.fontSize,
             items = self.family,
             requeryFunc = self.queryFamily,
-            refreshable = False)
+            refreshable = True)
 
         self.list.layoutFilter.insertRow(0, labelWidget('Miembro:', filterSize), self.familyFilter)
         self.familyFilter.cbo.currentIndexChanged.connect(self.requery)
@@ -75,3 +82,9 @@ class main(accounts.main):
                 self.filesFolder.txtFilePath.setText(folderPath)
         else:
             self.filesFolder.txtFilePath.setText(self.filesFolder.root)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    mw = main()
+    mw.show()
+    sys.exit(app.exec())

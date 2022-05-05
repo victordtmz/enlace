@@ -1,8 +1,9 @@
 from abc import abstractmethod
 import sqlite3
 from globalElements import constants 
+from PyQt6.QtWidgets import QMainWindow
 
-class avdtLocalDB():
+class avdtLocalDB(QMainWindow):
     def __init__(self):
         # self.configDB()
         self.sqlFolder = 'localDB\sql'

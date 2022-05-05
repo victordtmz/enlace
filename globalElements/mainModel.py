@@ -45,7 +45,7 @@ class main(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.iconAVD = qtg.QIcon(f'{constants.rootDb}oth/icons/enlace.png')#o!modify
+        # self.iconAVD = qtg.QIcon(f'{constants.rootDb}oth/icons/enlace.png')#o!modify
         self.newSelectionId = ""
         self.initUi()
         
@@ -188,10 +188,9 @@ class main(qtw.QMainWindow):
 
     def initMain(self):
         
-        self.setWindowIcon(self.iconAVD)
-        self.setWindowTitle("ENLACE LLC")
-        self.windowTitle().center(50)
-        # self.configureMainBtns()
+        # self.setWindowIcon(self.iconAVD)
+        # self.setWindowTitle("ENLACE LLC")
+        # self.windowTitle().center(50)
         self.setMainLayout()
         
 

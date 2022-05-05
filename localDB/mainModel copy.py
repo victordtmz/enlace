@@ -191,9 +191,9 @@ class main(qtw.QMainWindow):
 
     def initMain(self):
         
-        self.setWindowIcon(self.iconAVD)
-        self.setWindowTitle("ENLACE LLC")
-        self.windowTitle().center(50)
+        # self.setWindowIcon(self.iconAVD)
+        # self.setWindowTitle("ENLACE LLC")
+        # self.windowTitle().center(50)
         # self.configureMainBtns()
         self.setMainLayout()
         
