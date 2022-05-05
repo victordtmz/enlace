@@ -1,4 +1,4 @@
-from globalElements.setup import load
+from setup import load
 load()
 import sys
 from PyQt6.QtWidgets import (QApplication)

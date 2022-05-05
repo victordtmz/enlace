@@ -1,20 +1,16 @@
 #!/usr/bin/python3
-from globalElements.setup import load
-load()  
-import sys
-from PyQt6.QtWidgets import (QWidget,QMainWindow,QHBoxLayout,
-    QVBoxLayout,  QApplication)
-from PyQt6.QtGui import  QIcon 
-from globalElements import constants
-from globalElements.widgets import tabWidget
+from setup import load
+load()
+from setup import (QMainWindow, QIcon, constants, QWidget, QVBoxLayout,
+    tabWidget, enlace, enlaceAccounts, avdt, loads, accounts, drivers, trucks,
+    QApplication, sys)
 
-from enlace import enlace
-from enlace.accounts import main as enlaceAccounts
+  
 
-from avdt import avdt
-from avdt.loads import loads
-from avdt.accounts import main as accounts
-from avdt.drivers import main as drivers
+
+
+
+
 
 class MainWindow(QMainWindow):
     def __init__(self):  
@@ -68,6 +64,8 @@ class MainWindow(QMainWindow):
         self.avdtMenu.btnAvdtLoads.pressed.connect(self.avdtOpenLoads)
         self.avdtMenu.btnAvdtAccounts.pressed.connect(self.avdtOpenAccounts)
         self.avdtMenu.btnAvdtDrivers.pressed.connect(self.avdtOpenDrivers)
+        self.avdtMenu.btnAvdtTrucks.pressed.connect(self.avdtOpenTrucks)
+
 
     def avdtOpenLoads(self):
         self.avdtLoads = loads.main()
@@ -83,6 +81,11 @@ class MainWindow(QMainWindow):
         self.avdtDrivers = drivers.main()
         self.tabWidget.addTab(self.avdtDrivers,'    AVDT DRIVERS   ')
         self.tabWidget.setCurrentWidget(self.avdtDrivers)
+
+    def avdtOpenTrucks(self):
+        self.avdtTrucks = trucks.main()
+        self.tabWidget.addTab(self.avdtTrucks,'    AVDT TRUCKS   ')
+        self.tabWidget.setCurrentWidget(self.avdtTrucks)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -1,4 +1,4 @@
-from globalElements.setup import load
+from setup import load
 load()
 from globalElements import constants
 from globalElements.widgets import labelWidget,cboFilterGroup

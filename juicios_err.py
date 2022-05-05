@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from globalElements.setup import load
+from setup import load
 load() 
 import sys
 from globalElements.treeview import treeviewSearchBox

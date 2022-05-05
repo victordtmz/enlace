@@ -1,20 +1,6 @@
 #!/usr/bin/python3
-
-from globalElements import DB, constants, mainModel
-from globalElements.widgets import labelWidget,  lineEditCurrency, textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone
-from globalElements.zipsWidget import mainUs as UsZipsWidget
-import sys
-import os
-import pathlib
-from PyQt6 import QtWidgets as qtw 
-from PyQt6 import QtCore as qtc
-from PyQt6 import QtGui as qtg 
-import locale 
-
-locale.setlocale(locale.LC_ALL,"")
-from decimal import *
-
-
+from setup import (sys, os, pathlib, labelWidget, textEdit, lineEdit, cboFilterGroup,
+    DB, constants, mainModel, QApplication, QCursor, Qt)
 class main(mainModel.main):
     def __init__(self):
         super().__init__()
@@ -51,7 +37,7 @@ class main(mainModel.main):
         
         # self.evaluateSaveIndex = (1,)
         # self.andOr = "and"
-        if not constants.carriersList:
+        if not constants.carriersItems:
             constants.queryCarriers()
 
     def updateRecord(self, record): 
@@ -68,7 +54,7 @@ class main(mainModel.main):
         self.db.run_sql_commit(sql)
 
     def requery(self):
-        qtw.QApplication.setOverrideCursor(qtg.QCursor(qtc.Qt.CursorShape.WaitCursor))
+        QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
         records = self.selectAll()
         if records:
             self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
@@ -77,8 +63,8 @@ class main(mainModel.main):
             self.list.removeAllRows()
         
         self.configureColumns()
-        while qtw.QApplication.overrideCursor() is not None:
-            qtw.QApplication.restoreOverrideCursor()
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
         
         
 
@@ -160,7 +146,7 @@ class main(mainModel.main):
 
 
 if __name__ == '__main__':
-    app = qtw.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mw = main()
     mw.show()
     sys.exit(app.exec())
