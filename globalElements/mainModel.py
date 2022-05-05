@@ -44,8 +44,8 @@ class titleBox(qtw.QWidget):
 class main(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
-        
-         self.iconAVD = qtg.QIcon('oth/icons/LOGO_WORLD.png')#o!modify
+
+        self.iconAVD = qtg.QIcon(f'{constants.rootDb}oth/icons/enlace.png')#o!modify
         self.newSelectionId = ""
         self.initUi()
         

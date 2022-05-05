@@ -1,63 +1,25 @@
 from globalElements import constants
+from globalElements.accounts import main as accounts
 from localDB import mainModel
 from globalElements.widgets import (lineEditCopy, webWidget, dateWidget, 
     labelWidget,  textEdit, lineEdit, cboFilterGroup)
 import pathlib
-import os
+import os 
 from localDB import sqliteDB
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
 # from globalElements import DB as mysqlDb
 
-class DB(sqliteDB.avdtLocalDB):
-    def __init__(self): 
-        self.dict = {}
-        self.list = []
-        self.sqlFolder = 'avdt\\accounts'
-        self.database = 'accounts.avd'
-        self.tableVar = 'accounts'
-        self.dbFolder = f'{constants.rootAVDT}\Carriers'
-
-class main(mainModel.main):
+class main(accounts.main):
     def __init__(self):
         super().__init__()
-        self.configure_form()
-        self.configure_list()
-        self.setConnections()
-        self.setDBConnection()
-
+        # self.dbFolder = f'{constants.rootAVDT}\Carriers'
+        self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
+        self.filesFolder.txtFilePath.setText(self.filesFolder.root)
         
-    
-    def setDBConnection(self):
-        self.db = DB()
-        self.tableVar = self.db.tableVar
-
-    def setGlobalVariables(self):
-        # DB INFO
-        self.size_ = "h1" 
-        self.idColumn = 'id' 
-        self.listTableValuesIndexes = (0,1,2,3,4,5,6)
-        # self.formToDBItems = 4
-        self.titleText = "CARRIERS ACCOUNTS"
-        self.listWidth = 1
-        self.formWidth = 1
-        self.listHiddenItems = (0,3,4,5,6)
-        self.listColumnWidth = ((1,320),(2,250))
-        self.sortColumn = 1
-        self.onNewFocusWidget = 0
-
-    def updateRecord(self, record): 
-        '''record is passed as a tuple with id'''
-        sql =f'''UPDATE {self.tableVar} SET 
-                account = '{record[1]}',
-                user = '{record[2]}',
-                pwd = '{record[3]}',
-                date_ = '{record[4]}',
-                portal = '{record[5]}',
-                notes = '{record[6]}'
-                WHERE id =  {record[0]};'''
-        self.db.executeQueryCommit(sql)
+        self.configure_list()
+        self.requery()
 
     def requery(self):
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
@@ -97,30 +59,15 @@ class main(mainModel.main):
             requeryFunc= self.queryCarriers)
 
         self.list.layoutFilter.insertRow(0, labelWidget('Client:', filterSize), self.clientFiltros)
-        self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
-        self.filesFolder.txtFilePath.setText(self.filesFolder.root)
-
-    def btn_delete_pressed(self):
-        record = self.list.treeview.selectionModel().selectedIndexes()
-        #Verificar si hay registro seleccionado
-        if record:
-            idVar = self.id_.text()
-            carrier = self.clientFiltros.getInfo()
-            account = self.account.getInfo()
-            text = f'''Eliminar el registro:
-            id: {idVar} 
-            Carrier: {carrier}
-            Account.: {account}
-            '''
-            self.deleteRecord(text)
-        else:
-            self.clearForm()
+        self.clientFiltros.cbo.currentIndexChanged.connect(self.requery)
         
-    def configure_form(self): 
-        self.formLayoutSideFilesTree()
-        self.layoutFormBox.setMinimumWidth(450)
-        self.layoutFormBox.setMaximumWidth(500)
-        self.setFormElements()
+
+            
+    # def configure_form(self): 
+    #     self.formLayoutSideFilesTree()
+    #     self.layoutFormBox.setMinimumWidth(450)
+    #     self.layoutFormBox.setMaximumWidth(500)
+    #     self.setFormElements()
 
     def setFormElements(self):#p! Form elements
         self.id_ = lineEdit(self.fontSize)#
@@ -144,18 +91,18 @@ class main(mainModel.main):
         self.layoutForm.addRow(labelWidget('Notes', 14,True, align="center"))
         self.layoutForm.addRow(self.notes)
         
-    def setConnections(self):
-        self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
-        # self.carrier.cbo.currentTextChanged.connect(lambda: self.formDirty(1,self.carrier.getInfo()))
-        self.account.textChanged.connect(lambda: self.formDirty(1,self.account.getInfo()))
-        self.user.lineEdit.textChanged.connect(lambda: self.formDirty(2,self.user.getInfo()))
-        self.pwd.lineEdit.textChanged.connect(lambda: self.formDirty(3,self.pwd.getInfo()))
-        self.date_.dateEdit.dateChanged.connect(lambda: self.formDirty(4,self.date_.getInfo()))
-        self.portal.lineEdit.textChanged.connect(lambda: self.formDirty(5,self.portal.getInfo()))
-        self.notes.textChanged.connect(lambda: self.formDirty(6,self.notes.getInfo()))
+    # def setConnections(self):
+    #     self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
+    #     # self.carrier.cbo.currentTextChanged.connect(lambda: self.formDirty(1,self.carrier.getInfo()))
+    #     self.account.textChanged.connect(lambda: self.formDirty(1,self.account.getInfo()))
+    #     self.user.lineEdit.textChanged.connect(lambda: self.formDirty(2,self.user.getInfo()))
+    #     self.pwd.lineEdit.textChanged.connect(lambda: self.formDirty(3,self.pwd.getInfo()))
+    #     self.date_.dateEdit.dateChanged.connect(lambda: self.formDirty(4,self.date_.getInfo()))
+    #     self.portal.lineEdit.textChanged.connect(lambda: self.formDirty(5,self.portal.getInfo()))
+    #     self.notes.textChanged.connect(lambda: self.formDirty(6,self.notes.getInfo()))
 
         # LIST CONNECTIONS
-        self.clientFiltros.cbo.currentIndexChanged.connect(self.requery)
+        
 
     def setFilesFolder(self):
         carrier = self.clientFiltros.cbo.currentText()
@@ -170,12 +117,6 @@ class main(mainModel.main):
                 self.filesFolder.txtFilePath.setText(folderPath)
         else:
             self.filesFolder.txtFilePath.setText(self.filesFolder.root)
-
-    
-
-if __name__ == '__main__':
-    db = DB()
-    
 
     
 

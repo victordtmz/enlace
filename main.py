@@ -1,11 +1,10 @@
 #!/usr/bin/python3
-import imp
 from globalElements.setup import load
-load() 
+load()  
 import sys
 from PyQt6.QtWidgets import (QWidget,QMainWindow,QHBoxLayout,
     QVBoxLayout,  QApplication)
-from PyQt6.QtGui import  QIcon
+from PyQt6.QtGui import  QIcon 
 from globalElements import constants
 from globalElements.widgets import tabWidget
 
@@ -84,8 +83,6 @@ class MainWindow(QMainWindow):
         self.avdtDrivers = drivers.main()
         self.tabWidget.addTab(self.avdtDrivers,'    AVDT DRIVERS   ')
         self.tabWidget.setCurrentWidget(self.avdtDrivers)
-
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
