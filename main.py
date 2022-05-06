@@ -1,21 +1,18 @@
 #!/usr/bin/python3
+from pydoc import cli
 from globalElements.setup import load
 load()
 import sys
- 
+  
 #     tabWidget, enlace, enlaceAccounts, avdt, loads, accounts, drivers, trucks,
 #     QApplication, sys)
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
-from avdt import avdt
+from avdt import avdt, carriers, clients_, drivers, trucks, trailers, stops, loads_
 from enlace import enlace
-from avdt.loads import loads
 from avdt.accounts import main as accounts
-from avdt.drivers import main as drivers
-from avdt.trucks import main as trucks
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
-# from PyQt6.QtCore import Qicon
 from PyQt6.QtGui import QIcon
 
 class MainWindow(QMainWindow):
@@ -71,10 +68,14 @@ class MainWindow(QMainWindow):
         self.avdtMenu.btnAvdtAccounts.pressed.connect(self.avdtOpenAccounts)
         self.avdtMenu.btnAvdtDrivers.pressed.connect(self.avdtOpenDrivers)
         self.avdtMenu.btnAvdtTrucks.pressed.connect(self.avdtOpenTrucks)
-
+        self.avdtMenu.btnAvdtTrailers.pressed.connect(self.avdtOpenTrailers)
+        self.avdtMenu.btnAvdtCarriers.pressed.connect(self.avdtOpenCarriers)
+        self.avdtMenu.btnAvdtClients.pressed.connect(self.avdtOpenClients)
+        self.avdtMenu.btnAvdtWarehouses.pressed.connect(self.avdtOpenStops)
+ 
 
     def avdtOpenLoads(self):
-        self.avdtLoads = loads.main()
+        self.avdtLoads = loads_.main()
         self.tabWidget.addTab(self.avdtLoads,'       AVDT LOADS      ')
         self.tabWidget.setCurrentWidget(self.avdtLoads)
 
@@ -92,6 +93,26 @@ class MainWindow(QMainWindow):
         self.avdtTrucks = trucks.main()
         self.tabWidget.addTab(self.avdtTrucks,'    AVDT TRUCKS   ')
         self.tabWidget.setCurrentWidget(self.avdtTrucks)
+
+    def avdtOpenTrailers(self):
+        self.avdtTrailers = trailers.main()
+        self.tabWidget.addTab(self.avdtTrailers,'    AVDT TRAILERS   ')
+        self.tabWidget.setCurrentWidget(self.avdtTrailers)
+
+    def avdtOpenCarriers(self):
+        self.avdtCarriers = carriers.main()
+        self.tabWidget.addTab(self.avdtCarriers,'    AVDT CARRIERS   ')
+        self.tabWidget.setCurrentWidget(self.avdtCarriers)
+
+    def avdtOpenClients(self):
+        self.avdtClients = clients_.main()
+        self.tabWidget.addTab(self.avdtClients,'    AVDT CLIENTS   ')
+        self.tabWidget.setCurrentWidget(self.avdtClients)
+
+    def avdtOpenStops(self):
+        self.avdtStops = stops.main()
+        self.tabWidget.addTab(self.avdtStops,'    AVDT WAREHOUSES   ')
+        self.tabWidget.setCurrentWidget(self.avdtStops)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

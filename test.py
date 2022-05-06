@@ -11,8 +11,8 @@ from globalElements import constants
 class main(treeviewSearchBox):
     def __init__(self, fontSize=13, sortColumn=1, sortOrder=Qt.SortOrder.AscendingOrder):
         super().__init__(fontSize, sortColumn, sortOrder)
-        # self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios'
-        self.rootFolder = f'{constants.oneDrive}\Despacho\Traducciones\Traducciones'
+        self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios'
+        # self.rootFolder = f'{constants.oneDrive}\Despacho\Traducciones\Traducciones'
 
         self.getFiles(self.rootFolder, self.rootNode)
         self.treeview.setRootIsDecorated(True)

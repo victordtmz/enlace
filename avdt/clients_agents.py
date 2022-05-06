@@ -45,9 +45,22 @@ class main(mainModel.main):
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        sqlFiles = 'avdt\\clients\\agents'
-        self.selectFile = f'{sqlFiles}\selectAll.sql'
-        self.newRecordSql = f'{sqlFiles}\insertNewRecord.sql'
+        self.selectFile = '''
+            SELECT 
+                agents.id, 
+                clients.name_ AS "Client",
+                agents.name_ AS "Agent",
+                agents.phone AS "Phone",
+                agents.ext AS "Extention",
+                agents.email AS "Email",
+                agents.notes AS "Notes"
+                FROM clients_agents agents
+                LEFT JOIN clients ON clients.id = agents.idClient
+                ORDER BY agents.name_
+                ;
+                        '''
+        self.newRecordSql = ''' INSERT INTO clients_agents 
+            (idClient, name_, phone, ext, email, notes) VALUES '''
         
         # self.evaluateSaveIndex = (1,)
         # self.andOr = "and"

@@ -506,7 +506,7 @@ class treeviewSearchBox(QMainWindow):
             self.search = functions.create_regEx(text)
             self.regEx_search = QRegularExpression(self.search,QRegularExpression.PatternOption.CaseInsensitiveOption)
             self.proxyModel.setFilterRegularExpression(self.regEx_search)
-            # self.proxyModel.setRecursiveFilteringEnabled(True)
+            self.proxyModel.setRecursiveFilteringEnabled(True)
             self.proxyModel.setFilterKeyColumn(-1)
         if sort:
             self.proxyModel.sort(sortColumn, order)

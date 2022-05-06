@@ -14,6 +14,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
+from avdt import loads_stops
 
 
 class main(mainModel.main):
@@ -21,9 +22,11 @@ class main(mainModel.main):
         super().__init__()
         
         self.initUi()
+        self.configToolbar()
         self.configure_form()
         self.setConnections()
         self.listFontSize = 10
+        self.configAdditionalTabs()
         # self.setTotalsElements()
         self.requery()
         self.showMaximized()
@@ -31,7 +34,61 @@ class main(mainModel.main):
         
         # self.getIdLoad()
 
-   
+    def configAdditionalTabs(self):
+        self.stops = ''
+
+    def configToolbar(self):
+        iconRoot = f'{constants.rootDb}\oth\icons'
+        self.iconAccounting = qtg.QIcon(f'{iconRoot}\\bank-account.png')
+        self.iconDiesel = qtg.QIcon(f'{iconRoot}\\fuel.png')
+        self.iconMoney = qtg.QIcon(f'{iconRoot}\moneyBag.png')
+        self.iconRoad = qtg.QIcon(f'{iconRoot}\\road.png')
+        self.iconStops = qtg.QIcon(f'{iconRoot}\placeholder.png')
+        self.iconInvoice = qtg.QIcon(f'{iconRoot}\\accounting.png')
+
+        #Stops toolbar button
+        self.actStops = qtg.QAction('Stops')
+        self.actStops.setIcon(self.iconStops)
+        self.actStops.triggered.connect(self.stopsOpen)
+        #Toolbar button Contracting carrier accounting
+        self.actCCarrierAccounting = qtg.QAction('C ACCOUNTING')
+        self.actCCarrierAccounting.setIcon(self.iconAccounting)
+        # self.actCCarrierAccounting.triggered.connect(self.cCarrierAccountingOpen)
+        #toolbar button hauling carrier accounting
+        self.actHCarrierAccounting = qtg.QAction('H ACCOUNTING')
+        self.actHCarrierAccounting.setIcon(self.iconAccounting)
+        # self.actHCarrierAccounting.triggered.connect(self.hCarrierAccountingOpen)
+        #diesel toolbar button
+        self.actDiesel = qtg.QAction('DIESEL')
+        self.actDiesel.setIcon(self.iconDiesel)
+        # self.actDiesel.triggered.connect(self.dieselOpen)
+
+        #Miles toolbar button
+        self.actMiles = qtg.QAction('MILES')
+        self.actMiles.setIcon(self.iconRoad)
+        # self.actMiles.triggered.connect(self.milesOpen)
+
+        #Invoice toolbar button
+        self.actInvoice = qtg.QAction('INVOICE ITEMS')
+        self.actInvoice.setIcon(self.iconInvoice)
+        # self.actInvoice.triggered.connect(self.invoiceOpen)
+
+        #toolbar button hauling carrier accounting
+        self.actLoadsPay = qtg.QAction('PAY INFO')
+        self.actLoadsPay.setIcon(self.iconMoney)
+        # self.actLoadsPay.triggered.connect(self.loadsPayOpen)
+
+        self.toolBar = qtw.QToolBar('File')
+        self.toolBar.setToolButtonStyle(qtc.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.toolBar.addAction(self.actStops)
+        self.toolBar.addAction(self.actDiesel)
+        self.toolBar.addAction(self.actMiles)
+        self.toolBar.addAction(self.actInvoice)
+        self.toolBar.addAction(self.actCCarrierAccounting)
+        self.toolBar.addAction(self.actHCarrierAccounting)
+        self.toolBar.addAction(self.actLoadsPay)
+        
+        self.addToolBar(qtc.Qt.ToolBarArea.TopToolBarArea, self.toolBar)
 
     def setGlobalVariables(self):
         # DB INFO
@@ -49,9 +106,43 @@ class main(mainModel.main):
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        sqlFiles = 'avdt\\loads'
-        self.selectFile = f'{sqlFiles}\selectAll.sql'
-        self.newRecordSql = f'{sqlFiles}\insertNewRecord.sql'
+        self.selectSql = '''
+            SELECT 
+                loads.id, 
+                contracting.name_ AS "Contractin",
+                hauling.name_ AS "Hauling",
+                trucks.no_ AS "Truck",
+                trailers.no_ AS "Trailer",
+                drivers.name_ AS "Driver",
+                loads.contractDate AS "Date",
+                clients.name_ AS "Client",
+                agents.name_ AS "Clients Agent",
+                loads.referenceNo AS "Reference",
+                loads.rate AS "Rate",
+                loads.dateInvoice AS "Invoice Date",
+                loads.amountPaid AS "Amount Paid",
+                loads.datePaid AS "Date Paid",
+                loads.notes AS "Notes",
+                loads.delivered AS "Delivered",
+                loads.invoiced AS "invoiced",
+                loads.paid AS "Paid",
+                loads.paidHCarrier AS "Paid H Carrier",
+                loads.completed AS "Completed"
+                FROM loads
+                LEFT JOIN carriers contracting ON contracting.id = loads.idContracting
+                LEFT JOIN carriers hauling ON hauling.id = loads.idHauling
+                LEFT JOIN trucks ON trucks.id = loads.idTruck
+                LEFT JOIN trailers ON trailers.id = loads.idTrailer
+                LEFT JOIN drivers ON drivers.id = loads.idDriver
+                LEFT JOIN clients ON clients.id = loads.idClient
+                LEFT JOIN clients_agents agents ON agents.id = loads.idClientAgent
+                ORDER BY loads.contractDate DESC
+                ;
+        '''
+        self.newRecordSql = ''' INSERT INTO loads (idContracting, idHauling, idTruck,
+            idTrailer, idDriver, idClient, idClientAgent, contractDate, referenceNo,
+            rate, amountPaid, datePaid, notes, delivered, invoiced, paid, paidHCarrier, 
+            completed) VALUES '''
         
         
         # self.evaluateSaveIndex = (1,)
@@ -113,14 +204,13 @@ class main(mainModel.main):
         record = self.list.treeview.selectionModel().selectedIndexes()
         #Verificar si hay registro seleccionado
         if record:
-            idVar = self.id_.text()
-            no = self.reference.getInfo()
-            
-
-            text = f'''Eliminar el registro:
-            id: {idVar} 
-            No.: {no}
-            '''
+            idVar = self.id_.getInfo()
+            client =self.client.getInfo()
+            reference =self.reference.getInfo()
+            text = f'''Delete load record:
+            id: {idVar}
+            Client/Broker: {client}
+            Reference No. : {reference}'''
             self.deleteRecord(text)
         else:
             self.clearForm()
@@ -248,6 +338,8 @@ class main(mainModel.main):
         self.paidHCarrier.toggled.connect(lambda: self.formDirty(18, self.paidHCarrier.getInfo()))
         self.completed.toggled.connect(lambda: self.formDirty(19, self.completed.getInfo()))
 
+        self.list.treeview.selectionModel().selectionChanged.connect(self.loadSelectionChange)
+
     def setFilesFolder(self):
         carrier = self.contracting.getInfo()
         date_ = self.contractDate.getInfo()
@@ -262,6 +354,108 @@ class main(mainModel.main):
                 self.filesFolder.txtFilePath.setText(folderPath)
         else:
             self.filesFolder.txtFilePath.setText(self.filesFolder.root)
+
+    def stopsOpen(self):
+        self.stops = loads_stops.main()
+        self.tabsWidget.addTab(self.stops, '   STOPS   ')
+        self.tabsWidget.setCurrentWidget(self.stops)
+        idLoad = self.id_.text()
+        #set items to current selection 
+        if idLoad:
+            #set the values for idLoad and id Carrier on List for to be used on requery
+            self.stops.idLoad = idLoad
+            # self.stops.screenshotItems.carrier.setText(self.form.cCarrier.cbo.currentText())
+            # self.stops.screenshotItems.loadNo.setText(self.form.referenceNo.text())
+        else:
+            self.stops.idLoad = 0
+        self.stops.requery()
+
+    def loadSelectionChange(self):
+        idLoad = self.id_.getInfo()
+        self.idLoad = idLoad
+        # idCCarrier = self.form.cCarrier.getInfo()
+        # idHCarrier = self.form.hCarrier.getInfo()
+        
+        counter = 0
+        while counter < self.tabsWidget.count():
+            # if self.tabsWidget.widget(counter) == self.cCarrierAccounting:
+                
+            #     if idLoad and idCCarrier:
+            #         #set the values for idLoad and id Carrier on List for to be used on requery
+            #         self.cCarrierAccounting.accounting.list.idLoad = idLoad
+            #         self.cCarrierAccounting.accounting.list.idCarrier = idCCarrier
+            #         # self.cCarrierAccounting.form.
+            #         self.cCarrierAccounting.accounting.list.requery()
+            #         #set the filter values for the list of account transactions
+            #         self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
+            #         self.cCarrierAccounting.accounting.form.clear()
+            #         self.cCarrierAccounting.accounting.setCarrierAccount()
+            
+            # elif self.tabDetailsWidget.widget(counter) == self.hCarrierAccounting:
+            #     if idLoad and idHCarrier:
+            #         #set the values for idLoad and id Carrier on List for to be used on requery
+            #         self.hCarrierAccounting.accounting.list.idLoad = idLoad
+            #         self.hCarrierAccounting.accounting.list.idCarrier = idHCarrier
+            #         # self.cCarrierAccounting.form.
+            #         self.hCarrierAccounting.accounting.list.requery()
+            #         #set the filter values for the list of account transactions
+            #         self.hCarrierAccounting.accounting.addList.carrierFilter_.populate(idHCarrier)
+            #         self.hCarrierAccounting.accounting.form.clear()
+            #         self.hCarrierAccounting.accounting.setCarrierAccount()
+                
+            # elif self.tabDetailsWidget.widget(counter) == self.diesel:
+            #     if idLoad and idHCarrier:
+            #         #set the values for idLoad and id Carrier on List for to be used on requery
+            #         self.diesel.displayForm.idLoad = idLoad
+            #         self.diesel.displayForm.idCarrier = idHCarrier
+            #         if self.diesel.addForm: #if hasattr(self.diesel, "addForm"):
+            #             self.diesel.addForm.idCarrier = idHCarrier
+            #             self.diesel.addForm.idLoad = idLoad
+
+                # else:
+                #     self.diesel.displayForm.idLoad = 0
+                #     self.diesel.displayForm.idCarrier = 0
+                #     # if hasattr(self.diesel, "addForm"):
+                #     if self.diesel.addForm:
+                #         self.diesel.addForm.idCarrier = 0
+                #         self.diesel.addForm.idLoad = 0
+
+                # self.diesel.displayForm.requery()
+                # if self.diesel.addForm:
+                # # if hasattr(self.diesel, "addForm"):
+                #     self.diesel.addForm.requery()
+            
+            # elif self.tabDetailsWidget.widget(counter) == self.miles:
+            #     if idLoad:
+            #         #set the values for idLoad and id Carrier on List for to be used on requery
+            #         self.miles.idLoad = idLoad
+            #         if self.miles.addForm: #if hasattr(self.diesel, "addForm"):
+            #             self.miles.addForm.idLoad = idLoad
+            #     else:
+            #         self.miles.idLoad = 0
+            #         if self.miles.addForm:
+            #             self.miles.addForm.idLoad = 0
+
+            #     self.miles.requery()
+            #     if self.miles.addForm:
+            #         self.miles.addForm.requery()
+            
+            if self.tabsWidget.widget(counter) == self.stops:
+                if idLoad:
+                    self.stops.idLoad = idLoad
+                    # self.stops.screenshotItems.carrier.setText(self.form.cCarrier.cbo.currentText())
+                    # self.stops.screenshotItems.loadNo.setText(self.form.referenceNo.text())
+                else:
+                    self.stops.idLoad = 0
+                self.stops.requery()
+
+            # elif self.tabDetailsWidget.widget(counter) == self.invoice:
+            #     if idLoad:
+            #         self.invoice.idLoad = idLoad
+            #     else:
+            #         self.invoice.idLoad = 0
+            #     self.invoice.requery()
+            counter +=1
 
 
 if __name__ == '__main__':

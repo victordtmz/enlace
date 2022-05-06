@@ -261,6 +261,16 @@ def queryYears():
         yearsItems.insert(0, i[0])
     yearsItems.insert(1, '')
 
+# years
+iftaJuris = []
+def queryIftaJuris():
+    sql = f'''
+        SELECT * FROM jurisdictions;
+    '''
+    records = localDB.selectRecords(sql)
+    for i in records:
+        iftaJuris.insert(0, i[0])
+    iftaJuris.insert(1, '')
 
 
 

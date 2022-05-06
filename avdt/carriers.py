@@ -45,13 +45,44 @@ class main(mainModel.main):
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        sqlFiles = 'avdt\carriers'
-        self.selectFile = f'{sqlFiles}\selectAll.sql'
-        self.newRecordSql = f'{sqlFiles}\insertNewRecord.sql'
+        self.selectSql = '''
+            SELECT 
+                id, 
+                name_ AS "Name",
+                mc AS "MC",
+                usdot AS "USDOT",
+                ein AS "EIN",
+                agent AS "Agent",
+                phone AS "Phone",
+                address AS "Address",
+                address1 AS "Address",
+                zip AS "Zip",
+                city as "City",
+                state AS "State",
+                notes AS "Notes"
+                FROM carriers
+                ORDER BY 
+                name_
+                ;
+                        '''
+        self.newRecordSql = '''
+            INSERT INTO carriers (
+                name_,
+                mc,
+                usdot,
+                ein,
+                agent,
+                phone,
+                address,
+                address1,
+                city,
+                state,
+                zip,
+                notes
+            )
+            VALUES 
+                    '''
         
-        # self.evaluateSaveIndex = (1,)
-        # self.andOr = "and"
-
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 

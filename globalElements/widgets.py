@@ -113,8 +113,9 @@ class buttonWidget(qtw.QPushButton):
             # font_.setBold(True)
             self.setFont(globalFont_)
             self.reSetFont()
-            self.setMinimumHeight(35)
+            # self.setMinimumHeight(35)
             # self.setFixedSize(130,35)
+            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
             css = self.getCSS("h1Warning.css")
             self.setStyleSheet(css)
 
@@ -123,8 +124,19 @@ class buttonWidget(qtw.QPushButton):
             self.setFont(globalFont_)
             self.reSetFont()
             # self.setFixedSize(120,30)
-            self.setMinimumHeight(30)
+            # self.setMinimumHeight(30)
+            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
             css = self.getCSS("h2.css")
+            self.setStyleSheet(css)
+
+        elif size == "h2_":
+            globalFont_.setPointSize(12)
+            self.setFont(globalFont_)
+            self.reSetFont()
+            # self.setFixedSize(120,30)
+            self.setMinimumHeight(30)
+            # self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            css = self.getCSS("h2_.css")
             self.setStyleSheet(css)
         
         elif size == "icon":

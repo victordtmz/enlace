@@ -45,13 +45,38 @@ class main(mainModel.main):
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        sqlFiles = 'avdt\\trailers'
-        self.selectFile = f'{sqlFiles}\selectAll.sql'
-        self.newRecordSql = f'{sqlFiles}\insertNewRecord.sql'
+        # sqlFiles = 'avdt\\trailers'
+        self.newRecordSql = '''
+            INSERT INTO trailers (
+            idCarrier,
+            no_,
+            vin,
+            year_,
+            make,
+            model,
+            notes
+            )
+            VALUES
+        '''
+        self.selectSql = '''
+        SELECT 
+            trailers.id, 
+            carriers.name_ AS "Carrier",
+            no_ AS "No",
+            vin AS "VIN",
+            year_ AS "Year",
+            make AS "Make",
+            model AS "Model",
+            trailers.notes AS "Notes"
+            FROM trailers
+            LEFT JOIN carriers ON carriers.id = trailers.idCarrier
+            ORDER BY no_
+            ;
+        '''
         
         # self.evaluateSaveIndex = (1,)
         # self.andOr = "and"
-        if not constants.carriersList:
+        if not constants.carriersItems:
             constants.queryCarriers()
 
     def updateRecord(self, record): 

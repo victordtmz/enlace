@@ -1,18 +1,19 @@
 #!/usr/bin/python3
-import imp
 
 from abc import abstractmethod
 import sys
-from PyQt6 import QtWidgets as qtw 
-from PyQt6 import QtGui as qtg
-from PyQt6 import QtCore as qtc
+from PyQt6.QtWidgets import (QMainWindow, QHBoxLayout, QWidget, QSizePolicy,
+    QVBoxLayout, QFrame, QApplication, QLabel, QSplitter, QFormLayout, QScrollArea,
+    QSpacerItem, QMessageBox)
+from PyQt6.QtGui import QPixmap, QIcon, QCloseEvent
+from PyQt6.QtCore import Qt
 from globalElements.treeview import treeviewSearchBox, filesTree
 from globalElements.widgets import buttonWidget, labelWidget,  deleteWarningBox, tabWidget
 import html2text
 from globalElements import DB, constants, functions as gf
 
 
-class spacer(qtw.QLabel):
+class spacer(QLabel):
     def __init__(self, text='', size="h1"):
         super().__init__(text)
         
@@ -27,12 +28,12 @@ class spacer(qtw.QLabel):
             self.setStyleSheet('''
             QWidget {background-color:#0053a7}
             ''')
-class titleBox(qtw.QWidget):
+class titleBox(QWidget):
     def __init__(self, size="h1"):
         super().__init__()
         if size.lower() == "h1".lower():
             self.setStyleSheet('''
-            QWidget, QWidget:QSpacerItem {
+            QWidget {
                 background-color:#002142;
                 color: 
                 }
@@ -41,11 +42,11 @@ class titleBox(qtw.QWidget):
             self.setStyleSheet('''
             QWidget {background-color:#0053a7}
             ''')
-class main(qtw.QMainWindow):
+class main(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.iconAVD = qtg.QIcon(f'{constants.rootDb}oth/icons/enlace.png')#o!modify
+        self.iconAVD = QIcon(f'{constants.rootDb}oth/icons/enlace.png')#o!modify
         self.newSelectionId = ""
         self.initUi()
         
@@ -53,6 +54,7 @@ class main(qtw.QMainWindow):
         self.setConstants()
         self.setGlobalVariables()
         # self.sqlFolder = f"oth/sql/{self.sqlFolderName}"
+        
         if self.size_ == "h2":
             self.setH2Settings()
         else: 
@@ -78,10 +80,22 @@ class main(qtw.QMainWindow):
         self.listTableValuesIndexes = []
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        self.selectSql = "selectAll.sql"
-        self.newRecordSql = "insertNewRecord.sql"
+        self.newRecordSql = '''
+        
+        '''
+        self.selectSql = '''
+        
+        '''
     
 
+    
+    def createButtons(self):
+        self.btnNew = buttonWidget(text=" Nuevo", 
+            icon=constants.iconAdd, size=self.mainSize)
+        self.btnDelete = buttonWidget(text=" Eliminar", 
+            icon=constants.iconDelete, size=self.mainSize)
+        self.btn_cerrar = buttonWidget(text=" Cerrar", 
+            icon=constants.iconClose, size=self.mainSize)
     
     def setH2Settings(self):
         # LIST INFO
@@ -93,12 +107,35 @@ class main(qtw.QMainWindow):
         self.formSize = "h3"
         self.fontSize = 12
 
-        self.titleLayoutBox = labelWidget(
+        self.title = labelWidget(
             text=self.titleText, 
             fontSize=20,
             fontColor="White",
             align="center",
             backColor="#0053a7") 
+
+        self.createButtons()
+
+        self.spacerLeft = spacer('    ','h2')
+        self.spacer1 = spacer(' ','h2')
+        self.spacer2 = spacer('      ','h2')
+        self.spacerRight = spacer(' ','h2')
+        # self.titleLayout = QHBoxLayout()
+        # self.titleLayout.setSpacing(0)
+        # self.titleLayout.setContentsMargins(0,0,0,0)
+        # # self.titleLayout.addWidget(self.spacerLeft)
+        # # self.titleLayout.addWidget(self.logo)
+        # self.titleLayout.addWidget(self.title,1)
+        # self.titleLayout.addWidget(self.btnNew)
+        # self.titleLayout.addWidget(self.spacer2)
+        # self.titleLayout.addWidget(self.btnDelete)
+        # self.titleLayout.addWidget(self.spacer1,1)
+        # self.titleLayout.addWidget(self.btn_cerrar)
+        # self.titleLayout.addWidget(self.spacerRight)
+        
+        # self.titleLayoutBox = titleBox('h2')
+        # self.titleLayoutBox.setLayout(self.titleLayout)
+        self.configureTitleLayout()
 
     def setH1Settings(self):
         # LIST INFO
@@ -107,7 +144,7 @@ class main(qtw.QMainWindow):
         self.filterSize = 11
 
         self.mainSize = "h1"
-        self.formSize = "h2"
+        self.formSize = "h2_"
         self.fontSize = 13
         
 
@@ -124,26 +161,31 @@ class main(qtw.QMainWindow):
             #backColor="#002142", 
             padding="6px")
         logo = f'{constants.iconsFolder}enlace.png'
-        self.imageAVD = qtg.QPixmap(logo)
-        self.imageAVD = self.imageAVD.scaled(30,30,qtc.Qt.AspectRatioMode.KeepAspectRatio)
+        self.imageAVD = QPixmap(logo)
+        self.imageAVD = self.imageAVD.scaled(30,30,Qt.AspectRatioMode.KeepAspectRatio)
         self.logo.setPixmap(self.imageAVD)
+        self.createButtons()
 
-        self.btnNew = buttonWidget(text=" Nuevo", 
-            icon=constants.iconAdd, size=self.mainSize)
-        self.btnDelete = buttonWidget(text=" Eliminar", 
-            icon=constants.iconDelete, size=self.mainSize)
-        self.btn_cerrar = buttonWidget(text=" Cerrar", 
-            icon=constants.iconClose, size=self.mainSize)
+        # self.btnNew = buttonWidget(text=" Nuevo", 
+        #     icon=constants.iconAdd, size=self.mainSize)
+        # self.btnDelete = buttonWidget(text=" Eliminar", 
+        #     icon=constants.iconDelete, size=self.mainSize)
+        # self.btn_cerrar = buttonWidget(text=" Cerrar", 
+        #     icon=constants.iconClose, size=self.mainSize)
 
         self.spacerLeft = spacer('    ')
         self.spacer1 = spacer(' ')
         self.spacer2 = spacer('      ')
         self.spacerRight = spacer(' ')
-        self.titleLayout = qtw.QHBoxLayout()
+        self.configureTitleLayout()
+        
+    def configureTitleLayout(self):
+        self.titleLayout = QHBoxLayout()
         self.titleLayout.setSpacing(0)
         self.titleLayout.setContentsMargins(0,0,0,0)
         self.titleLayout.addWidget(self.spacerLeft)
-        self.titleLayout.addWidget(self.logo)
+        if self.mainSize == 'h1':
+            self.titleLayout.addWidget(self.logo)
         self.titleLayout.addWidget(self.title,1)
         self.titleLayout.addWidget(self.btnNew)
         self.titleLayout.addWidget(self.spacer2)
@@ -152,7 +194,7 @@ class main(qtw.QMainWindow):
         self.titleLayout.addWidget(self.btn_cerrar)
         self.titleLayout.addWidget(self.spacerRight)
         
-        self.titleLayoutBox = titleBox('h1')
+        self.titleLayoutBox = titleBox(self.mainSize)
         self.titleLayoutBox.setLayout(self.titleLayout)
 
         
@@ -165,7 +207,7 @@ class main(qtw.QMainWindow):
         self.formItems = []
         self.formToDBItems = 0
         self.sortColumn = 1
-        self.sortOrder = qtc.Qt.SortOrder.AscendingOrder
+        self.sortOrder = Qt.SortOrder.AscendingOrder
         self.listTableValues = [] 
         self.formTableValues = []
         self.horizontalLabels = ["Id"]
@@ -220,38 +262,38 @@ class main(qtw.QMainWindow):
     def setMainLayout(self):
         #g! LAYOUT ---- **** Box container for details items
         #o! CONSIDER THE SPLITTER OPTION FOR THE SIDE TO SIDE FORM
-        self.detailsLayout = qtw.QVBoxLayout()
+        self.detailsLayout = QVBoxLayout()
         self.detailsLayout.setSpacing(0)
         self.detailsLayout.setContentsMargins(0,0,0,0)
         # self.splitter_details.addWidget(self.titleLayoutBox)
         # self.splitter_details.addWidget(self.layout_buttons_box)
         self.detailsLayout.addWidget(self.form)
         self.detailsLayout.addWidget(self.layoutFormSaveBtnBox)
-        self.detailsBox = qtw.QFrame()
-        self.detailsBox.setFrameShape(qtw.QFrame.Shape.Box)
-        self.detailsBox.setFrameShadow(qtw.QFrame.Shadow.Raised)
+        self.detailsBox = QFrame()
+        self.detailsBox.setFrameShape(QFrame.Shape.Box)
+        self.detailsBox.setFrameShadow(QFrame.Shadow.Raised)
         self.detailsBox.setLayout(self.detailsLayout)
 
         #g!LAYOUT LIST
-        self.listLayout = qtw.QVBoxLayout()
+        self.listLayout = QVBoxLayout()
         self.listLayout.setContentsMargins(0,0,0,0)
         self.listLayout.addWidget(self.list)
-        self.listLayoutBox = qtw.QWidget()
+        self.listLayoutBox = QWidget()
         self.listLayoutBox.setLayout(self.listLayout)
 
         #g! MAIN SPLITTER
-        self.splitter = qtw.QSplitter(qtc.Qt.Orientation.Horizontal)
+        self.splitter = QSplitter(Qt.Orientation.Horizontal)
         self.splitter.addWidget(self.listLayoutBox)
         self.splitter.addWidget(self.detailsBox)
         self.splitter.setStretchFactor(0,self.listWidth)
         self.splitter.setStretchFactor(1,self.formWidth)
 
-        self.layoutmain = qtw.QVBoxLayout()
+        self.layoutmain = QVBoxLayout()
         self.layoutmain.setSpacing(0)
         self.layoutmain.setContentsMargins(0,0,0,0)
         self.layoutmain.addWidget(self.titleLayoutBox,0)
         self.layoutmain.addWidget(self.splitter,1)
-        self.mainWidget = qtw.QWidget()
+        self.mainWidget = QWidget()
         self.mainWidget.setLayout(self.layoutmain)
         
         self.setCentralWidget(self.mainWidget)
@@ -299,7 +341,7 @@ class main(qtw.QMainWindow):
 
   
     def initForm(self):
-        self.form = qtw.QWidget()
+        self.form = QWidget()
         self.formButtons()
         self.formLayout()
         # self.formLayoutStraight()#o!delete -- only for testing
@@ -309,14 +351,14 @@ class main(qtw.QMainWindow):
         self.btnCancel = buttonWidget("  Cancelar", self.formSize, constants.iconCancel)
 
        #G! Botones
-        self.layoutFormSaveBtn = qtw.QHBoxLayout()
+        self.layoutFormSaveBtn = QHBoxLayout()
         
         self.layoutFormSaveBtn.addStretch()
         self.layoutFormSaveBtn.addWidget(self.btnSave)
         self.layoutFormSaveBtn.addWidget(self.btnCancel)
         self.layoutFormSaveBtn.addStretch()
-        self.layoutFormSaveBtnBox = qtw.QWidget()
-        self.layoutFormSaveBtnBox.setSizePolicy(qtw.QSizePolicy.Policy.Expanding, qtw.QSizePolicy.Policy.Fixed )
+        self.layoutFormSaveBtnBox = QWidget()
+        self.layoutFormSaveBtnBox.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed )
         self.layoutFormSaveBtnBox.setLayout(self.layoutFormSaveBtn)
         self.layoutFormSaveBtn.setContentsMargins(15,5,15,5)
 
@@ -328,21 +370,21 @@ class main(qtw.QMainWindow):
         self.filesFolder.txtFilePath.setText(self.filesFolder.root)
     
     def formLayout(self):
-        self.layoutForm = qtw.QFormLayout()
-        self.layoutForm.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
+        self.layoutForm = QFormLayout()
+        self.layoutForm.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.layoutForm.setContentsMargins(0,0,0,0)
  
-        self.layoutFormBox = qtw.QWidget()
+        self.layoutFormBox = QWidget()
         self.layoutFormBox.setContentsMargins(0,10,50,10)
         self.layoutFormBox.setMinimumWidth(450)
         self.layoutFormBox.setLayout(self.layoutForm)
         self.layoutFormBox.setMaximumWidth(600)
-        self.scrollBox = qtw.QScrollArea()
+        self.scrollBox = QScrollArea()
         self.scrollBox.setWidgetResizable(True)
         # self.scrollBox.setMinimumHeight(500)
         self.scrollBox.setStyleSheet(('''QScrollArea {border-style: none;};'''))
         self.scrollBox.setWidget(self.layoutFormBox)
-        self.scrollBox.setAlignment(qtc.Qt.AlignmentFlag.AlignHCenter)
+        self.scrollBox.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
     
 
@@ -354,7 +396,7 @@ class main(qtw.QMainWindow):
         Layout in a scrollBox just the form items with no files tree
         '''
         #this is the layout where the top buttons, form/files folder and bottom buttons go
-        self.layoutFormStraight = qtw.QVBoxLayout()
+        self.layoutFormStraight = QVBoxLayout()
         self.layoutFormStraight.setSpacing(15)
         self.layoutFormStraight.setContentsMargins(10,0,10,0)
         # self.main_layout.addWidget(self.lbl_Main)
@@ -367,34 +409,34 @@ class main(qtw.QMainWindow):
         '''
         self.formLayoutStraight()
         self.initFilesFolder()
-        self.spacerLeft = qtw.QSpacerItem(0,20)
+        self.spacerLeft = QSpacerItem(0,20)
         self.layoutForm.insertRow(0,self.filesFolder)
 
     def formLayoutSideFilesTree(self):
         self.initFilesFolder()
-        self.hBoxLayout = qtw.QHBoxLayout()
+        self.hBoxLayout = QHBoxLayout()
         self.hBoxLayout.setContentsMargins(0,0,0,0)
         self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.addWidget(self.scrollBox,2)
         self.hBoxLayout.addWidget(self.filesFolder,1)
-        self.hBoxLayout.setAlignment(self.filesFolder,qtc.Qt.AlignmentFlag.AlignTop)
+        self.hBoxLayout.setAlignment(self.filesFolder,Qt.AlignmentFlag.AlignTop)
         self.form.setLayout(self.hBoxLayout)
 
     def formLayoutTabsFilesTree(self):
         self.initFilesFolder()
-        self.hBoxLayout = qtw.QHBoxLayout()
+        self.hBoxLayout = QHBoxLayout()
         self.hBoxLayout.setContentsMargins(0,0,0,0)
         self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.addWidget(self.scrollBox,2)
         self.hBoxLayout.addWidget(self.filesFolder,1)
-        self.hBoxLayout.setAlignment(self.filesFolder,qtc.Qt.AlignmentFlag.AlignTop)
-        self.hbox = qtw.QWidget()
+        self.hBoxLayout.setAlignment(self.filesFolder,Qt.AlignmentFlag.AlignTop)
+        self.hbox = QWidget()
         self.hbox.setLayout(self.hBoxLayout)
 
         self.tabsWidget = tabWidget("h2")
         self.tabsWidget.addTab(self.hbox, '    MAIN     ')
 
-        self.formMainLayout = qtw.QHBoxLayout()
+        self.formMainLayout = QHBoxLayout()
         self.formMainLayout.setContentsMargins(0,0,0,0)
         self.formMainLayout.setSpacing(0)
         self.formMainLayout.addWidget(self.tabsWidget)
@@ -443,7 +485,7 @@ class main(qtw.QMainWindow):
 #P! FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^
 
 #G! BUTTON ACTIONS  -------------------------------------------------
-    def closeEvent(self, a0: qtg.QCloseEvent) -> None:
+    def closeEvent(self, a0: QCloseEvent) -> None:
         self.save_record_main(False, False)#updateList, changedSelection
         return super().closeEvent(a0)
 
@@ -575,7 +617,7 @@ class main(qtw.QMainWindow):
             warning_box = deleteWarningBox(text)
             button = warning_box.exec()
 
-            if button == qtw.QMessageBox.StandardButton.Yes:
+            if button == QMessageBox.StandardButton.Yes:
                 
                 self.save_record_main(True,False)
                 # values_ = (IdVar,)
@@ -736,7 +778,7 @@ class main(qtw.QMainWindow):
         return richTextItems
              
 if __name__ == '__main__':
-    app = qtw.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     mw = main()
     mw.show()
     sys.exit(app.exec())

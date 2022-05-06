@@ -36,8 +36,8 @@ class main(accounts.main):
             try:
                 records = self.selectAll()
             except:
-                sql = self.db.getSQL('createTable.sql')
-                self.db.executeQuery(sql)
+                # sql = self.db.getSQL('createTable.sql')
+                self.db.executeQuery(self.db.createTableSql)
                 records = self.selectAll()
 
             if records:
