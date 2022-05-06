@@ -9,7 +9,7 @@ from localDB import sqliteDB
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
-# from globalElements import DB as mysqlDb
+# from globalElements import DB as mysqlDb 
 
 class main(accounts.main):
     def __init__(self):
@@ -30,8 +30,8 @@ class main(accounts.main):
         try:
             records = self.selectAll()
         except:
-            sql = self.db.getSQL('createTable.sql')
-            self.db.executeQuery(sql)
+            # sql = self.db.getSQL('createTable.sql')
+            self.db.executeQuery(self.db.createTableSql)
             records = self.selectAll()
 
         if records:

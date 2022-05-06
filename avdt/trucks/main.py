@@ -39,7 +39,33 @@ class main(mainModel.main):
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
         sqlFiles = 'avdt\\trucks'
         self.selectFile = f'{sqlFiles}\selectAll.sql'
-        self.newRecordSql = f'{sqlFiles}\insertNewRecord.sql'
+        self.selectSql = '''
+        SELECT 
+            trucks.id, 
+            carriers.name_ AS "Carrier",
+            no_ AS "No",
+            vin AS "VIN",
+            year_ AS "Year",
+            make AS "Make",
+            model AS "Model",
+            trucks.notes AS "Notes"
+            FROM trucks
+            LEFT JOIN carriers ON carriers.id = trucks.idCarrier
+            ORDER BY no_
+            ;
+        '''
+        self.newRecordSql = '''
+        INSERT INTO trucks (
+            idCarrier,
+            no_,
+            vin,
+            year_,
+            make,
+            model,
+            notes
+            )
+            VALUES
+        '''
         
         # self.evaluateSaveIndex = (1,)
         # self.andOr = "and"

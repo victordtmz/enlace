@@ -2,11 +2,22 @@ from localDB import mainModel
 from globalElements.widgets import (lineEditCopy, webWidget, dateWidget, 
     labelWidget,  textEdit, lineEdit)
 from localDB import sqliteDB
-
-class DB(sqliteDB.avdtLocalDB):
+ 
+class DB(sqliteDB.avdtLocalDB): 
     def __init__(self): 
         # self.dict = {}
         # self.list = []
+        self.createTableSql = '''
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY,
+            account TEXT,
+            user TEXT,
+            pwd TEXT,
+            date_ TEXT,
+            portal TEXT,
+            notes TEXT
+            )
+        '''
         self.sqlFolder = 'globalElements\\accounts'
         self.database = 'accounts.avd'
         self.tableVar = 'accounts'
@@ -36,6 +47,27 @@ class main(mainModel.main):
         self.listColumnWidth = ((1,320),(2,250))
         self.sortColumn = 1
         self.onNewFocusWidget = 0
+        self.selectSql = '''
+        SELECT
+            id,
+            account AS "Account",
+            user AS "User",
+            pwd AS "Password",
+            date_ AS "Date",
+            portal AS "Portal",
+            notes AS "Notes"
+        FROM accounts;'''
+        self.newRecordSql = '''
+            INSERT INTO accounts (
+                account,
+                user,
+                pwd,
+                date_,
+                portal,
+                notes
+                )
+            VALUES 
+        '''
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''

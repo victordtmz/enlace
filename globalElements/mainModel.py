@@ -78,6 +78,8 @@ class main(qtw.QMainWindow):
         self.listTableValuesIndexes = []
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        self.selectSql = "selectAll.sql"
+        self.newRecordSql = "insertNewRecord.sql"
     
 
     
@@ -167,8 +169,9 @@ class main(qtw.QMainWindow):
         self.listTableValues = [] 
         self.formTableValues = []
         self.horizontalLabels = ["Id"]
-        self.selectFile = "selectAll.sql"
-        self.newRecordSql = "insertNewRecord.sql"
+        
+        
+        
         
 
         
@@ -544,17 +547,17 @@ class main(qtw.QMainWindow):
     def updateRecord(self):
         return
 
-    def selectAll(self, parameters=0):
-        sql = self.getSQL(self.selectFile)#make sure sql has no ending statement
+    def selectAll(self, parameters=0): 
+        # sql = self.getSQL(self.selectSql)#make sure sql has no ending statement
         parameters = parameters
-        records = self.db.get_records_clearNull(sql,parameters)
+        records = self.db.get_records_clearNull(self.selectSql, parameters) 
         self.horizontalLabels = self.db.cursor.column_names
         return records 
     
     def insertNewRecord(self, record):
         r = gf.insertNewRecord(record)
-        sql = self.getSQL(self.newRecordSql)
-        sql = f"{sql} ({r});"
+        # sql = self.getSQL(self.newRecordSql)
+        sql = f"{self.newRecordSql} ({r});"
         idVar = self.db.insertNewRecord(sql)
 
         return idVar

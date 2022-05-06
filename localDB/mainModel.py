@@ -22,16 +22,16 @@ class main(mainModel.main):
     def setDBConnection(self):
         self.db = sqliteDB.avdtLocalDB()
 
-    def selectAll(self):
-        sql = self.db.getSQL(self.selectFile)#make sure sql has no ending statement
-        records, labels = self.db.selectRecordsAndLabels(sql)
+    def selectAll(self): 
+        # sql = self.db.getSQL(self.selectSql)#make sure sql has no ending statement
+        records, labels = self.db.selectRecordsAndLabels(self.selectSql)
         self.horizontalLabels = labels
         return records 
     
     def insertNewRecord(self, record):
         r = gf.insertNewRecord(record)
-        sql = self.db.getSQL(self.newRecordSql)
-        sql = f"{sql} ({r});"
+        # sql = self.db.getSQL(self.newRecordSql)
+        sql = f"{self.newRecordSql} ({r});"
         idVar = self.db.insertNewRecord(sql)
         return idVar
 

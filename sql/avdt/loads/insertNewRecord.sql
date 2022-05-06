@@ -1,0 +1,21 @@
+INSERT INTO loads (
+    idContracting,
+    idHauling,
+    idTruck,
+    idTrailer,
+    idDriver,
+    idClient,
+    idClientAgent,
+    contractDate,
+    referenceNo,
+    rate,
+    amountPaid,
+    datePaid,
+    notes,
+    delivered,
+    invoiced,
+    paid,
+    paidHCarrier,
+    completed
+  )
+VALUES 

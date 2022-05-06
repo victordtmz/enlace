@@ -18,13 +18,6 @@ from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 # from PyQt6.QtCore import Qicon
 from PyQt6.QtGui import QIcon
 
-  
-
-
-
-
-
-
 class MainWindow(QMainWindow):
     def __init__(self):  
         super().__init__()
