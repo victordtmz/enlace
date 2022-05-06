@@ -166,9 +166,10 @@ class main(mainModel.main):
         self.widgetsOptSizes = [1,1]#list, form > relative valies
         self.formToDBItems = 8
         self.titleText = "LOAD STOPS"
-        self.listExpand = 1
-        self.formExpand = 1
-        self.addFormExpand = 1
+        # self.listExpand = 1
+        # self.formExpand = 1
+        # self.addFormExpand = 1
+        self.widgetsOptSizes = [1,1]
 
         self.listHiddenItems = (0,1,2,6,7,9,10,11,12)
         self.listColumnWidth = ((3,40),(4,70),(5,120),(5,120),(7,110))

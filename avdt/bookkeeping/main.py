@@ -52,8 +52,9 @@ class main(mainModel.main):
         self.listTableValuesIndexes = (0,4,7,9,1,2,10,3,5,8)
         # self.formToDBItems = 4
         self.titleText = "BOOKKEEPING"
-        self.listExpand = 1
-        self.formExpand = 1
+        # self.listExpand = 1
+        # self.formExpand = 1
+        self.widgetsOptSizes = [1,1]
         self.listHiddenItems = (4,5,6,7,8,9,10)#(4,5,6,7,8,9,10,11,12)
         self.listColumnWidth = ((0,70),(1,120),(2,120))
         self.sortColumn = 1

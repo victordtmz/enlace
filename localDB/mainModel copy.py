@@ -78,8 +78,9 @@ class main(qtw.QMainWindow):
         self.idColumn = ''#o! 
         self.tableVar = ''#o! 
         self.dbName = ''#o! 
-        self.listExpand = 1
-        self.formExpand = 1
+        # self.listExpand = 1
+        # self.formExpand = 1
+        self.widgetsOptSizes = [1,1]
         self.listHiddenItems = ()
         self.listColumnWidth = ()
         self.listTableValuesIndexes = []

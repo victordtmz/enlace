@@ -37,8 +37,9 @@ class main(mainModel.main):
         self.listTableValuesIndexes = (0,1,2,3)
         # self.formToDBItems = 4
         self.titleText = "BOOKKEEPING CATEGORIES"
-        self.listExpand = 1
-        self.formExpand = 1
+        # self.listExpand = 1
+        # self.formExpand = 1
+        self.widgetsOptSizes = [1,1]
         self.listHiddenItems = ()
         self.listColumnWidth = ((0,60),(1,100),(2,260))
         self.sortColumn = 2
