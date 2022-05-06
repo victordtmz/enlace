@@ -27,7 +27,7 @@ class spacer(qtw.QLabel):
             ''')
         else:
             self.setStyleSheet('''
-            QWidget {background-color:#0053a7}
+            QWidget {background-color:#134A4D}
             ''')
 class titleBox(qtw.QWidget):
     def __init__(self, size="h1"):
@@ -41,7 +41,7 @@ class titleBox(qtw.QWidget):
             ''')
         else:
             self.setStyleSheet('''
-            QWidget {background-color:#0053a7}
+            QWidget {background-color:#134A4D}
             ''')
 
 class main(qtw.QMainWindow):
@@ -78,8 +78,8 @@ class main(qtw.QMainWindow):
         self.idColumn = ''#o! 
         self.tableVar = ''#o! 
         self.dbName = ''#o! 
-        self.listWidth = 1
-        self.formWidth = 1
+        self.listExpand = 1
+        self.formExpand = 1
         self.listHiddenItems = ()
         self.listColumnWidth = ()
         self.listTableValuesIndexes = []
@@ -99,7 +99,7 @@ class main(qtw.QMainWindow):
             fontSize=20,
             fontColor="White",
             align="center",
-            backColor="#0053a7") 
+            backColor="#134A4D") 
 
     def setH1Settings(self):
         # LIST INFO
@@ -243,8 +243,8 @@ class main(qtw.QMainWindow):
         self.splitter = qtw.QSplitter(qtc.Qt.Orientation.Horizontal)
         self.splitter.addWidget(self.listLayoutBox)
         self.splitter.addWidget(self.detailsBox)
-        self.splitter.setStretchFactor(0,self.listWidth)
-        self.splitter.setStretchFactor(1,self.formWidth)
+        self.splitter.setStretchFactor(0,self.listExpand)
+        self.splitter.setStretchFactor(1,self.formExpand)
 
         self.layoutmain = qtw.QVBoxLayout()
         self.layoutmain.setSpacing(0)

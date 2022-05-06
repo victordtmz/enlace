@@ -6,6 +6,7 @@ from functions import formatPhoneNo
 import re
 import winsound
 import webbrowser
+from PyQt6.QtWidgets import (QWidget, QLabel)
 from PyQt6 import QtWidgets as qtw
 from PyQt6 import QtGui as qtg
 from PyQt6 import QtCore as qtc
@@ -18,6 +19,36 @@ globalFont_ = qtg.QFont(globalFontStyle, globalFontSize)
 #w! START ---------------------------- LABELS
 def printContants():
     print(constants.rootDb)
+
+class spacer(QLabel):
+    def __init__(self, text='', size="h1"):
+        super().__init__(text)
+        
+        if size.lower() == "h1".lower():
+            self.setStyleSheet('''
+            QWidget {
+                background-color:#002142;
+                color: 
+                }
+            ''')
+        else:
+            self.setStyleSheet('''
+            QWidget {background-color:#134A4D}
+            ''')
+class titleBox(QWidget):
+    def __init__(self, size="h1"):
+        super().__init__()
+        if size.lower() == "h1".lower():
+            self.setStyleSheet('''
+            QWidget {
+                background-color:#002142;
+                color: 
+                }
+            ''')
+        else:
+            self.setStyleSheet('''
+            QWidget {background-color:#134A4D}
+            ''')
 
 class labelWidget(qtw.QLabel):
     def __init__(self, text="", fontSize=13, fontBolt = False, fontColor = "" , align = "", backColor = "", padding="0px" ): 
@@ -137,6 +168,16 @@ class buttonWidget(qtw.QPushButton):
             self.setMinimumHeight(30)
             # self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
             css = self.getCSS("h2_.css")
+            self.setStyleSheet(css)
+
+        elif size == "h3":
+            globalFont_.setPointSize(11)
+            self.setFont(globalFont_)
+            self.reSetFont()
+            # self.setFixedSize(120,30)
+            self.setMinimumHeight(28)
+            # self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            css = self.getCSS("h3.css")
             self.setStyleSheet(css)
         
         elif size == "icon":
@@ -864,9 +905,19 @@ class webWidget(lineEditCopy):
             webbrowser.open(link)
 
 class checkBox(qtw.QCheckBox):
-    def __init__(self):
+    def __init__(self, text='', fontSize = 13, size=''):
         super().__init__()
-        # self.setText(text)
+        if text:
+            globalFont_.setPointSize(fontSize)
+            self.setFont(globalFont_)
+            self.setText(text)
+        if size == 'h1' or size == 'h2':
+            self.setStyleSheet('''
+            QCheckBox {color: white}
+             ''')
+            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+        
+
     
     def populate(self, value):
         if value == '1' or value.lower() == "true":

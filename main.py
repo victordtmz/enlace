@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from pydoc import cli
 from globalElements.setup import load
 load()
 import sys
@@ -21,7 +20,7 @@ class MainWindow(QMainWindow):
         self.initUi()
         self.layoutConfig()
         self.configureEnlace()
-        self.configureAVDT()
+        self.configureAVDT() 
         self.showMaximized()
 
     def initUi(self):

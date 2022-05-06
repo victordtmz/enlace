@@ -23,7 +23,7 @@ class spacer(QLabel):
             ''')
         else:
             self.setStyleSheet('''
-            QWidget {background-color:#0053a7}
+            QWidget {background-color:#134A4D}
             ''')
 class titleBox(QWidget):
     def __init__(self, size="h1"):
@@ -37,7 +37,7 @@ class titleBox(QWidget):
             ''')
         else:
             self.setStyleSheet('''
-            QWidget {background-color:#0053a7}
+            QWidget {background-color:#134A4D}
             ''')
 
 
@@ -84,7 +84,7 @@ class main(QMainWindow):
         self.rowHeight = 42
         self.listFontSize = 12
         self.filterSize = 11
-        self.listWidth = 4
+        self.listExpand = 4
         self.size_ = "h1"
 
     def createButtons(self):
@@ -107,7 +107,7 @@ class main(QMainWindow):
             fontSize=20,
             fontColor="White",
             align="center",
-            backColor="#0053a7") 
+            backColor="#134A4D") 
         
         self.createButtons()
         
@@ -247,8 +247,8 @@ class main(QMainWindow):
         
         # self.splitter.addWidget(self.splitter_details_box)
         # self.splitter.addWidget(self.list)
-        # # self.splitter.setStretchFactor(0,self.formWidth)
-        # self.splitter.setStretchFactor(1,self.listWidth)
+        # # self.splitter.setStretchFactor(0,self.formExpand)
+        # self.splitter.setStretchFactor(1,self.listExpand)
         
         self.setCentralWidget(self.splitter_details_box)
 

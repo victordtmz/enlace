@@ -7,12 +7,14 @@ from PyQt6 import QtGui as qtg
 import locale 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
-from globalElements.widgets import buttonWidget, labelWidget, webWidget,  textEdit, lineEdit, truFalseRadioButtons,spinbox,dateTimeEdit
+from globalElements.widgets import (buttonWidget, labelWidget, webWidget,  
+    textEdit, lineEdit, truFalseRadioButtons,spinbox,dateTimeEdit, 
+    checkBox, spacer)
 
-class warehouses(listModel.main):
+class warehouses(listModel.main): 
     def __init__(self):
         super().__init__()
-        # self.btn_cerrar.deleteLater()
+        self.btn_cerrar.deleteLater()
         
         self.configureButtons()
         # self.setConnectionsLocal()
@@ -52,7 +54,7 @@ class warehouses(listModel.main):
         self.listColumnWidth = ((1,220),(5,110),(6,60),(7,80) )
         self.filterSize = 11
 
-        self.listWidth = 4
+        self.listExpand = 4
         # self.list.addToolBar(qtc.Qt.ToolBarArea.TopToolBarArea, self.list.toolBar)
     
     def requery(self):
@@ -77,18 +79,8 @@ class warehouses(listModel.main):
         self.titleLayout.insertWidget(2, self.spacer2,1)
         self.titleLayout.insertWidget(3, self.btnEditStop)
         
-        # self.btnClose = buttonWidget("   Cerrar", "warning", constants.iconClose)
-        # self.btnLayout = qtw.QVBoxLayout()
-        # self.btnLayout.setContentsMargins(0,0,0,0)
-        # self.btnLayout.addWidget(self.btnAdd)
-        # self.btnLayout.addWidget(self.btnEditStop)
-        # self.btnLayoutBox = qtw.QWidget()
-        # self.btnLayoutBox.setLayout(self.btnLayout)
-        # self.layout_buttons.insertWidget(0, self.btnLayoutBox)
-        
-
-    def btn_cerrar_pressed(self):
-        self.deleteLater()
+    # def btn_cerrar_pressed(self):
+    #     self.deleteLater()
 
 
 class screenshot(qtw.QWidget):
@@ -116,7 +108,7 @@ class screenshot(qtw.QWidget):
         self.layoutForm.addRow(labelWidget('Appointment:', fontSize,True), self.appointment)
         self.layoutForm.addRow(labelWidget('PO:', fontSize,True), self.po)
         self.layoutForm.addRow(self.notes)
-        self.layoutForm.addRow(labelWidget("Warehouse Information:", 16, True, "#0053a7", "center"))
+        self.layoutForm.addRow(labelWidget("Warehouse Information:", 16, True, "#134A4D", "center"))
         self.layoutForm.addRow(self.bodega)
         self.layoutForm.addRow(labelWidget("Coordinates:", 14, True, "black", "center"))
         self.layoutForm.addRow(labelWidget('North:', fontSize), self.north)
@@ -133,11 +125,22 @@ class main(mainModel.main):
     def __init__(self):
         super().__init__()
         
-        if not constants.iftaJuris:
-            constants.queryIftaJuris()
+        
+        #o! CONFIGURE IN FILTERS OR DELETE
+        # if not constants.iftaJuris:
+        #     constants.queryIftaJuris()
         # set addForm to False - this will be the widget to add records to the current load
         self.addForm = False
         self.initUi()
+        self.addFormOpt = checkBox('Agregar Elementos',fontSize=self.fontSize, size=self.mainSize)
+        self.widgetsOpt.append(self.addFormOpt)
+        # self.titleLayout.addWidget(self.addFormOpt)
+
+        
+        self.widgetsOptSizes.append(1)#size proportion
+        self.spacer3 = spacer('     ', self.formSize)
+        self.titleLayout.insertWidget(3, self.spacer3)
+        self.titleLayout.insertWidget(4, self.addFormOpt)
         
         
 
@@ -160,10 +163,13 @@ class main(mainModel.main):
         self.tableVar = 'loads_stops'
         # self.sqlFolderName = "AVDT_loads_stops"
         self.listTableValuesIndexes = (0,1,2,4,3,5,6,7,8,9,10,11,12)
+        self.widgetsOptSizes = [1,1]#list, form > relative valies
         self.formToDBItems = 8
         self.titleText = "LOAD STOPS"
-        self.listWidth = 1
-        self.formWidth = 1
+        self.listExpand = 1
+        self.formExpand = 1
+        self.addFormExpand = 1
+
         self.listHiddenItems = (0,1,2,6,7,9,10,11,12)
         self.listColumnWidth = ((3,40),(4,70),(5,120),(5,120),(7,110))
         self.sortColumn = 3
@@ -258,8 +264,8 @@ class main(mainModel.main):
         self.layoutFormBox.setMinimumWidth(400)
         self.layoutFormBox.setMaximumWidth(450)
         self.setFormElements()
-        self.btnAdd = buttonWidget("   Agregar elementos", "h2", constants.iconAdd)
-        self.titleLayout.insertWidget(2, self.btnAdd)
+        # self.btnAdd = buttonWidget("   Agregar elementos", "h2", constants.iconAdd)
+        # self.titleLayout.insertWidget(2, self.btnAdd)
 
     def setFormElements(self):#p! Form elements
         self.id_ = lineEdit(self.fontSize)#
@@ -320,7 +326,7 @@ class main(mainModel.main):
         # self.list.allFiltersLayout.addWidget(self.listBtnsLayoutBox,1,1)
 
     def setConnections(self):
-        self.btnAdd.pressed.connect(self.displayAddForm)
+        # self.btnAdd.pressed.connect(self.displayAddForm)
 
         #g! FORM Connections
         self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
@@ -331,6 +337,7 @@ class main(mainModel.main):
         self.appointment.dateTimeChanged.connect(self.appointmentAfterUpdate)
         self.po.textChanged.connect(self.poAfterUpdate)
         self.notes.textChanged.connect(self.notesAfterUpdate)
+        self.addFormOpt.toggled.connect(self.displayAddForm)
         
     def no_AfterUpdate(self):
         text = self.no_.getInfo()
@@ -360,6 +367,96 @@ class main(mainModel.main):
     def removeAllFilters(self):
         self.list.filtros.txt.reSet()
  
+    # def configureWidth(self):
+    #     index = 0
+    #     for i in self.widgetsOpt:
+    #         value = int(i.getDbInfo())
+    #         i = value
+    #         if not value:
+    #             self.widgetsOptSizes[index] = 0
+    #             # totalExpand += value
+        
+        
+        
+    #     totalWidth = self.width()
+    #     widthExpandValues = []
+    #     widthSizesToSet = []
+    #     totalExpand = 0
+    #     #for each widget considered to be hidden, get their stretch value
+    #     #also create a list of no of items set to 0 for real width
+        
+    #     for i in self.widgetsOpt:
+    #         value = int(i.getDbInfo())
+    #         if value:
+    #             totalExpand += value
+            
+            
+            
+    #         widthExpandValues.append(value)
+    #         widthSizesToSet.append(0)
+        
+    #     widthFraction = totalWidth//totalExpand
+    #     for i in widthExpandValues:
+    #         if i:
+
+
+        
+        
+        
+    #     listValue = int(self.listOpt.getDbInfo())
+    #     formValue = int(self.formOpt.getDbInfo())
+    #     addFormValue = int(self.addFormOpt.getDbInfo())
+    #     #set the size proportions
+        
+    #     items = [listValue, formValue, addFormValue]
+        
+    #     for i in 
+
+    #     active = 0
+    #     totalExpand = 0
+    #     for i in items:
+    #         if i:
+    #             active += 1
+    #             totalExpand += 1
+        
+    #     if listValue:
+    #         listSize = widthFraction * self.listExpand
+    #     else:
+    #         listSize = 0
+    #     if formValue:
+    #         formSize = widthFraction * self.formExpand
+    #     else:
+    #         formSize = 0
+    #     if addFormValue:
+    #         self.displayAddForm()
+    #         addFormSize = widthFraction * self.addFormExpand
+    #     else:
+    #         addFormSize = 0
+    #         self.addForm = False
+    #     self.splitter.setSizes([listSize, formSize, addFormSize])
+        
+    #     self.splitter.setStretchFactor(0,self.listExpand)
+    #     self.splitter.setStretchFactor(1,self.formExpand)
+    #     self.splitter.setStretchFactor(2, self.addFormExpand)
+    #     # #get the total width of the widget
+        
+    #     # #Get the stretch factors for each widget
+        
+    #     # #lood at the number of sections the width is devided according to expand set
+        
+    #     # listSize = widthFraction * self.listExpand
+    #     # formSize = widthFraction * self.formExpand
+            
+        
+    #     # self.splitter.setSizes([500,600,0])
+    #     # self.splitter.setStretchFactor(0,1)
+    #     # self.splitter.setStretchFactor(1,2)
+
+    #     self.addForm = False
+    #     self.splitter.setSizes([500,0,500])
+    #     self.splitter.setStretchFactor(0,self.listExpand)
+    #     self.splitter.setStretchFactor(2,self.formExpand)
+    
     def displayAddForm(self):
         if not self.addForm:
             #Create instance of add form
@@ -369,27 +466,28 @@ class main(mainModel.main):
             # set all form elements for this load
             self.addForm.requery()
             #place on splitter
-            self.splitter.insertWidget(1, self.addForm)
+            self.splitter.addWidget(self.addForm)
             #set connections to this item
             self.addForm.btnAdd.pressed.connect(self.addStopLoad)
             self.addForm.btnEditStop.pressed.connect(self.btnEditStopPressed)
-            self.addForm.btn_cerrar.pressed.connect(self.closeAddForm)
+            self.configureWidth()
+        else:
+            self.addForm.deleteLater()
+            self.addForm = False
+
+
+            # self.addForm.btn_cerrar.pressed.connect(self.closeAddForm)
             #set the widget sizes for the splitter
             # totalWidgets = self.splitter.count()
             # pass_ = 0
             # while pass_ < totalWidgets:
             #     print(self.splitter.widget(pass_))
             #     pass_+=1
-            self.splitter.setSizes([500,600,0])
-            self.splitter.setStretchFactor(0,1)
-            self.splitter.setStretchFactor(1,2)
+            
 
-    def closeAddForm(self):
-        """To avoid error when trying to requery form main loads form, set to false - from close code is set in class"""
-        self.addForm = False
-        self.splitter.setSizes([500,0,500])
-        self.splitter.setStretchFactor(0,self.listWidth)
-        self.splitter.setStretchFactor(2,self.formWidth)
+    # def closeAddForm(self):
+    #     """To avoid error when trying to requery form main loads form, set to false - from close code is set in class"""
+        
 
     def addStopLoad(self):
         self.btnAddPressed()

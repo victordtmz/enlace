@@ -8,40 +8,13 @@ from PyQt6.QtWidgets import (QMainWindow, QHBoxLayout, QWidget, QSizePolicy,
 from PyQt6.QtGui import QPixmap, QIcon, QCloseEvent
 from PyQt6.QtCore import Qt
 from globalElements.treeview import treeviewSearchBox, filesTree
-from globalElements.widgets import buttonWidget, labelWidget,  deleteWarningBox, tabWidget
+from globalElements.widgets import (buttonWidget, titleBox, spacer, 
+    labelWidget,  deleteWarningBox, tabWidget, checkBox)
 import html2text
 from globalElements import DB, constants, functions as gf
 
 
-class spacer(QLabel):
-    def __init__(self, text='', size="h1"):
-        super().__init__(text)
-        
-        if size.lower() == "h1".lower():
-            self.setStyleSheet('''
-            QWidget {
-                background-color:#002142;
-                color: 
-                }
-            ''')
-        else:
-            self.setStyleSheet('''
-            QWidget {background-color:#0053a7}
-            ''')
-class titleBox(QWidget):
-    def __init__(self, size="h1"):
-        super().__init__()
-        if size.lower() == "h1".lower():
-            self.setStyleSheet('''
-            QWidget {
-                background-color:#002142;
-                color: 
-                }
-            ''')
-        else:
-            self.setStyleSheet('''
-            QWidget {background-color:#0053a7}
-            ''')
+
 class main(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -73,8 +46,10 @@ class main(QMainWindow):
         self.titleText = ""
         self.idColumn = ''#o! 
         self.tableVar = ''#o! 
-        self.listWidth = 1
-        self.formWidth = 1
+        # self.listExpand = 1
+        # self.formExpand = 1
+        self.widgetsOptSizes = [1,1]#list, form - sizes
+        
         self.listHiddenItems = ()
         self.listColumnWidth = ()
         self.listTableValuesIndexes = []
@@ -96,7 +71,14 @@ class main(QMainWindow):
             icon=constants.iconDelete, size=self.mainSize)
         self.btn_cerrar = buttonWidget(text=" Cerrar", 
             icon=constants.iconClose, size=self.mainSize)
-    
+
+        self.listOpt = checkBox('List   ',fontSize=self.fontSize, size=self.mainSize)
+        self.listOpt.setChecked(True)
+        self.formOpt = checkBox('Form',fontSize=self.fontSize, size=self.mainSize)
+        self.formOpt.setChecked(True)
+        self.widgetsOpt = [self.listOpt, self.formOpt]
+
+
     def setH2Settings(self):
         # LIST INFO
         self.rowHeight = 42
@@ -112,7 +94,7 @@ class main(QMainWindow):
             fontSize=20,
             fontColor="White",
             align="center",
-            backColor="#0053a7") 
+            backColor="#134A4D") 
 
         self.createButtons()
 
@@ -156,14 +138,14 @@ class main(QMainWindow):
             #backColor="#002142"
             ) 
         
-        self.logo = labelWidget(
-            align="center",
-            #backColor="#002142", 
-            padding="6px")
-        logo = f'{constants.iconsFolder}enlace.png'
-        self.imageAVD = QPixmap(logo)
-        self.imageAVD = self.imageAVD.scaled(30,30,Qt.AspectRatioMode.KeepAspectRatio)
-        self.logo.setPixmap(self.imageAVD)
+        # self.logo = labelWidget(
+        #     align="center",
+        #     #backColor="#002142", 
+        #     padding="6px")
+        # logo = f'{constants.iconsFolder}enlace.png'
+        # self.imageAVD = QPixmap(logo)
+        # self.imageAVD = self.imageAVD.scaled(30,30,Qt.AspectRatioMode.KeepAspectRatio)
+        # self.logo.setPixmap(self.imageAVD)
         self.createButtons()
 
         # self.btnNew = buttonWidget(text=" Nuevo", 
@@ -184,8 +166,10 @@ class main(QMainWindow):
         self.titleLayout.setSpacing(0)
         self.titleLayout.setContentsMargins(0,0,0,0)
         self.titleLayout.addWidget(self.spacerLeft)
-        if self.mainSize == 'h1':
-            self.titleLayout.addWidget(self.logo)
+        # if self.mainSize == 'h1':
+        #     self.titleLayout.addWidget(self.logo)
+        self.titleLayout.addWidget(self.listOpt)
+        self.titleLayout.addWidget(self.formOpt)
         self.titleLayout.addWidget(self.title,1)
         self.titleLayout.addWidget(self.btnNew)
         self.titleLayout.addWidget(self.spacer2)
@@ -230,6 +214,8 @@ class main(QMainWindow):
         
         self.list.actRefresh.triggered.connect(self.requery)
         self.list.actClearFilters.triggered.connect(self.clearAllFilters)
+        self.listOpt.toggled.connect(self.configureWidth)
+        self.formOpt.toggled.connect(self.configureWidth)
 
     def initMain(self):
         
@@ -238,26 +224,80 @@ class main(QMainWindow):
         self.windowTitle().center(50)
         # self.configureMainBtns()
         self.setMainLayout()
-        
+        self.configureWidth
 
-    # def configureTitle(self):
+    def configureWidth(self):
+        widgetsOpt = list(map(lambda x: int(x.getDbInfo()), self.widgetsOpt))
+        # widthSizes = []
+        # index = 0
+        if any(widgetsOpt):
+            #for all the checked items, we will set the with size to its value, else to 0
+            widthSizes  = []
+            index = 0
+            for i in widgetsOpt:
+                if i:
+                    widthSizes.append(self.widgetsOptSizes[index])
+                else:
+                    widthSizes.append(0)
+                index +=1
+        else:
+            widthSizes = self.widgetsOptSizes
+        totalExpand = sum(widthSizes)
+        totalWidth = self.width()
+        widthFraction = totalWidth//totalExpand
         
-    # def configureMainBtns(self):
-    #     self.btnNew = buttonWidget(text="   Nuevo", icon=constants.iconAdd, size=self.mainSize)
-    #     self.btnDelete = buttonWidget(text="   Eliminar", icon=constants.iconDelete, size=self.mainSize)
-    #     self.btn_cerrar = buttonWidget(text="   Cerrar", icon=constants.iconClose, size=self.mainSize)
+        widthSizes = list(map(lambda x: x * widthFraction, widthSizes)) 
+        self.splitter.setSizes(widthSizes)
 
-    #     self.layout_buttons = qtw.QHBoxLayout() 
-    #     self.layout_buttons.setSpacing(10)
-    #     self.layout_buttons.setContentsMargins(15,5,15,5)
-    #     self.layout_buttons.addWidget(self.btnNew)
-    #     self.layout_buttons.addWidget(self.btnDelete)
-    #     self.layout_buttons.addStretch()
-    #     self.layout_buttons.addWidget(self.btn_cerrar)
+
+        # index = 0
+        # totalExpand = 0
+        # totalAllExpand = 0
+        # widthSizes = []
+        # for i in self.widgetsOpt:
+        #     value = int(i.getDbInfo())
+        #     i = value
+        #     if not value:widthSizes.append(0)
+        #         # self.widgetsOptSizes[index] = 0
+        #     else: widthSizes.append(self.widgetsOptSizes[index])
+        #     #to get the total expand, add the widgets to be considered
+        #     totalExpand += widthSizes[index]
+        #     totalAllExpand += self.widgetsOptSizes[index]
+        #     index += 1
         
-    #     self.layout_buttons_box = qtw.QWidget()
-    #     self.layout_buttons_box.setSizePolicy(qtw.QSizePolicy.Policy.Expanding, qtw.QSizePolicy.Policy.Fixed)
-    #     self.layout_buttons_box.setLayout(self.layout_buttons)
+        # if any(widthSizes):
+        #     widthFraction = totalWidth//totalExpand
+        #     widthSizes = list(map(lambda x: x * widthFraction, widthSizes)) 
+        #     self.splitter.setSizes(widthSizes)
+        # else:
+        #     widthFraction = totalWidth//totalExpand
+        #     widthSizes = list(map(lambda x: x * widthFraction, self.widgetsOptSizes)) 
+        #     self.splitter.setSizes(widthSizes)
+        # if any(self.widgetsOpt):
+            
+        #     pass
+        # #if all values are 0, default to all
+        # elif:
+        #     pass
+        # listValue = int(self.listOpt.getDbInfo())
+        # formValue = int(self.formOpt.getDbInfo())
+        # self.splitter.setStretchFactor(0,self.listExpand)
+        # self.splitter.setStretchFactor(1,self.formExpand)
+        # #get the total width of the widget
+        # totalWidth = self.width()
+        # #Get the stretch factors for each widget
+        # totalExpand = self.listExpand + self.formExpand
+        # #lood at the number of sections the width is devided according to expand set
+        # widthFraction = totalWidth//totalExpand
+        # listSize = widthFraction * self.listExpand
+        # formSize = widthFraction * self.formExpand
+            
+        # if listValue and not formValue:
+        #     self.splitter.setSizes([totalWidth,0])
+        # elif formValue and not listValue: 
+        #     self.splitter.setSizes([0,totalWidth])
+        # else:
+        #     self.splitter.setSizes([listSize, formSize])
 
     def setMainLayout(self):
         #g! LAYOUT ---- **** Box container for details items
@@ -285,8 +325,7 @@ class main(QMainWindow):
         self.splitter = QSplitter(Qt.Orientation.Horizontal)
         self.splitter.addWidget(self.listLayoutBox)
         self.splitter.addWidget(self.detailsBox)
-        self.splitter.setStretchFactor(0,self.listWidth)
-        self.splitter.setStretchFactor(1,self.formWidth)
+        
 
         self.layoutmain = QVBoxLayout()
         self.layoutmain.setSpacing(0)

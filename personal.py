@@ -13,6 +13,8 @@ from PyQt6.QtWidgets import QApplication
 class main(accounts.main):
     def __init__(self):
         super().__init__()
+        self.listExpand = 1
+        self.formExpand = 1
         # self.btn_cerrar.deleteLater()
         self.setProgramDetails()
         self.family = []

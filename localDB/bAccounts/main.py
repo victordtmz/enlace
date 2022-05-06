@@ -112,8 +112,8 @@ class main(mainModel.main):
         self.listTableValuesIndexes = (0,1,2)
         # self.formToDBItems = 4
         self.titleText = "CARRIER BANK ACCOUNTS"
-        self.listWidth = 1
-        self.formWidth = 1
+        self.listExpand = 1
+        self.formExpand = 1
         self.listHiddenItems = ()
         self.listColumnWidth = ((0,80),(1,160))
         self.sortColumn = 1

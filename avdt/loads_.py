@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
+from gevent import idle
 from globalElements import DB, constants, mainModel
-from globalElements.widgets import (dateWidget, dateEdit, labelWidget,  lineEditCurrency, 
+from globalElements.widgets import (buttonWidget, dateWidget, dateEdit, labelWidget,  lineEditCurrency, 
     textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone, truFalseRadioButtons, checkBox)
 from globalElements.zipsWidget import mainUs as UsZipsWidget
 import sys
@@ -30,7 +31,7 @@ class main(mainModel.main):
         # self.setTotalsElements()
         self.requery()
         self.showMaximized()
-        self.splitter.setSizes([360,1000])
+        self.splitter.setSizes([400,1000])
         
         # self.getIdLoad()
 
@@ -47,48 +48,41 @@ class main(mainModel.main):
         self.iconInvoice = qtg.QIcon(f'{iconRoot}\\accounting.png')
 
         #Stops toolbar button
-        self.actStops = qtg.QAction('Stops')
-        self.actStops.setIcon(self.iconStops)
-        self.actStops.triggered.connect(self.stopsOpen)
-        #Toolbar button Contracting carrier accounting
-        self.actCCarrierAccounting = qtg.QAction('C ACCOUNTING')
-        self.actCCarrierAccounting.setIcon(self.iconAccounting)
-        # self.actCCarrierAccounting.triggered.connect(self.cCarrierAccountingOpen)
-        #toolbar button hauling carrier accounting
-        self.actHCarrierAccounting = qtg.QAction('H ACCOUNTING')
-        self.actHCarrierAccounting.setIcon(self.iconAccounting)
-        # self.actHCarrierAccounting.triggered.connect(self.hCarrierAccountingOpen)
+        self.btnStops = buttonWidget('Stops', self.mainSize, self.iconStops)
+        self.btnStops.pressed.connect(self.stopsOpen)
+        self.titleLayout.insertWidget(3, self.btnStops)
+        
         #diesel toolbar button
-        self.actDiesel = qtg.QAction('DIESEL')
-        self.actDiesel.setIcon(self.iconDiesel)
-        # self.actDiesel.triggered.connect(self.dieselOpen)
+        self.btnDiesel = buttonWidget('Diesel', self.mainSize, self.iconDiesel)
+        # self.btnDiesel.pressed.connect(self.dieselOpen)
+        self.titleLayout.insertWidget(4, self.btnDiesel)
 
         #Miles toolbar button
-        self.actMiles = qtg.QAction('MILES')
-        self.actMiles.setIcon(self.iconRoad)
-        # self.actMiles.triggered.connect(self.milesOpen)
+        self.btnMiles = buttonWidget('Miles', self.mainSize, self.iconRoad)
+        # self.btnMiles.pressed.connect(self.milesOpen)
+        self.titleLayout.insertWidget(5, self.btnMiles)
 
-        #Invoice toolbar button
-        self.actInvoice = qtg.QAction('INVOICE ITEMS')
-        self.actInvoice.setIcon(self.iconInvoice)
-        # self.actInvoice.triggered.connect(self.invoiceOpen)
-
-        #toolbar button hauling carrier accounting
-        self.actLoadsPay = qtg.QAction('PAY INFO')
-        self.actLoadsPay.setIcon(self.iconMoney)
-        # self.actLoadsPay.triggered.connect(self.loadsPayOpen)
-
-        self.toolBar = qtw.QToolBar('File')
-        self.toolBar.setToolButtonStyle(qtc.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        self.toolBar.addAction(self.actStops)
-        self.toolBar.addAction(self.actDiesel)
-        self.toolBar.addAction(self.actMiles)
-        self.toolBar.addAction(self.actInvoice)
-        self.toolBar.addAction(self.actCCarrierAccounting)
-        self.toolBar.addAction(self.actHCarrierAccounting)
-        self.toolBar.addAction(self.actLoadsPay)
+        # #Toolbar button Contracting carrier accounting
+        # self.actCCarrierAccounting = qtg.QAction('C ACCOUNTING')
+        # self.actCCarrierAccounting.setIcon(self.iconAccounting)
+        # # self.actCCarrierAccounting.triggered.connect(self.cCarrierAccountingOpen)
+        # #toolbar button hauling carrier accounting
+        # self.actHCarrierAccounting = qtg.QAction('H ACCOUNTING')
+        # self.actHCarrierAccounting.setIcon(self.iconAccounting)
+        # # self.actHCarrierAccounting.triggered.connect(self.hCarrierAccountingOpen)
         
-        self.addToolBar(qtc.Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+
+        
+
+        # #Invoice toolbar button
+        # self.actInvoice = qtg.QAction('INVOICE ITEMS')
+        # self.actInvoice.setIcon(self.iconInvoice)
+        # # self.actInvoice.triggered.connect(self.invoiceOpen)
+
+        # #toolbar button hauling carrier accounting
+        # self.actLoadsPay = qtg.QAction('PAY INFO')
+        # self.actLoadsPay.setIcon(self.iconMoney)
+        # # self.actLoadsPay.triggered.connect(self.loadsPayOpen)
 
     def setGlobalVariables(self):
         # DB INFO
@@ -98,8 +92,11 @@ class main(mainModel.main):
         self.listTableValuesIndexes = (0,1,2,3,4,5,7,8,6,9,10,11,12,13,14,15,16,17,18,19)
         # self.formToDBItems = 4
         self.titleText = "LOADS"
-        self.listWidth = 0
-        self.formWidth = 3
+        # self.listExpand = 1
+        # self.listExpand = 500
+        # self.formExpand = 4
+        self.widgetsOptSizes = [2,7]#list, form => relative size 
+        # self.formExpand = 500
         self.listHiddenItems = (1,2,3,4,5,8,9,10,11,12,13,14,15,16,17,18,19)
         self.listColumnWidth = ((0,50),(6,80),(7,220))
         self.sortColumn = 2
@@ -372,6 +369,11 @@ class main(mainModel.main):
 
     def loadSelectionChange(self):
         idLoad = self.id_.getInfo()
+        if idLoad:
+            date = self.contractDate.getInfo()
+            client = self.client.getInfo()
+            self.tabsWidget.setTabText(0, f'{idLoad}  |  {date}  |  {client}')
+        else: self.tabsWidget.setTabText(0, 'MAIN')
         self.idLoad = idLoad
         # idCCarrier = self.form.cCarrier.getInfo()
         # idHCarrier = self.form.hCarrier.getInfo()

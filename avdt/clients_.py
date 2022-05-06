@@ -31,8 +31,8 @@ class main(mainModel.main):
         self.listTableValuesIndexes = (0,1,2,3,4,5,6,7,8,9,10,11,12)
         # self.formToDBItems = 4
         self.titleText = "CLIENTS"
-        self.listWidth = 1
-        self.formWidth = 1
+        self.listExpand = 1
+        self.formExpand = 1
         self.listHiddenItems = ()#(4,5,6,7,8,9,10,11,12)
         self.listColumnWidth = ((0,60),(1,280),(2,130),(3,130))
         self.sortColumn = 1
@@ -161,7 +161,7 @@ class main(mainModel.main):
         self.layoutForm.addRow(labelWidget('City:', self.fontSize), self.city)
         self.layoutForm.addRow(labelWidget('Notes', 14,True, align="center"))
         self.layoutForm.addRow(self.notes)
-        self.layoutForm.addRow(labelWidget('INVOICE  DETAILS', 20,False, "white", "center", '#0053a7'))
+        self.layoutForm.addRow(labelWidget('INVOICE  DETAILS', 20,False, "white", "center", '#134A4D'))
         self.layoutForm.addRow(labelWidget('Email:', self.fontSize), self.invoiceEmail)
         self.layoutForm.addRow(labelWidget('Notes', 14,True, "Black", "center"))
         self.layoutForm.addRow(self.invoiceNotes)
