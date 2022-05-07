@@ -5,7 +5,8 @@ load()
 import sys
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
-from avdt import avdt, carriers, clients_, drivers, trucks, trailers, stops, accounts, bookkeeping
+from avdt import (avdt, carriers, clients_, drivers, trucks, trailers, stops, accounts, bookkeeping,
+    diesel)
 from enlace import enlace
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
@@ -70,6 +71,7 @@ class MainWindow(QMainWindow):
         self.avdtMenu.btnAvdtClients.pressed.connect(self.avdtOpenClients)
         self.avdtMenu.btnAvdtStops.pressed.connect(self.avdtOpenStops)
         self.avdtMenu.btnAvdtBookkeeping.pressed.connect(self.avdtOpenBookkeeping)
+        self.avdtMenu.btnAvdtDiesel.pressed.connect(self.avdtOpenDiesel)
 
     def avdtOpenLoads(self):
         self.avdtLoads = loads.main()
@@ -115,6 +117,11 @@ class MainWindow(QMainWindow):
         self.avdtBookkeeping = bookkeeping.main()
         self.tabWidget.addTab(self.avdtBookkeeping,'    AVDT BOOKKEEPING   ')
         self.tabWidget.setCurrentWidget(self.avdtBookkeeping)
+
+    def avdtOpenDiesel(self):
+        self.avdtDiesel = diesel.main()
+        self.tabWidget.addTab(self.avdtDiesel,'    AVDT DIESEL   ')
+        self.tabWidget.setCurrentWidget(self.avdtDiesel)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -539,7 +539,7 @@ class main(QMainWindow):
         self.listTableValues = record.copy()# record.copy()
         self.formTableValues = record.copy()# record.copy()
         return record
-
+ 
 #g! LIST DATA MANIPULATION -----------------------------------------------------------------------
     #used the indexes provided, to get the values from the list 
     #Return only the values that need to be used for comparison and to populate the form
@@ -658,10 +658,6 @@ class main(QMainWindow):
             self.setFilesFolder()
 
     def evaluateNewRcdSave(self, itemsIndex = (0,), andOr = "and"):
-        
-        #if the default value given of 0 on the items index is found, do not save
-        #never evaluate the index 0 - it belongs to the ID
-        
         if itemsIndex[0] == 0:
             return False
         #get the values of the items provided
@@ -670,15 +666,6 @@ class main(QMainWindow):
             iValue = self.formItems[i].getInfo()
             values.append(iValue)
         
-        #if there is only one value, evaluate and return true to save
-        # if len(values) <= 1:
-        #     #Evaluate if there is only one value
-        #     if values[0]:
-        #         return True
-        
-        # #if there is more than one value ...
-        # else:
-            # if the or operator was provited, go through every item, if any are present, return true to save
         if andOr == "or":
             return any(values)
 
