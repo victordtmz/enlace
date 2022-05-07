@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 
-from gevent import idle
 from globalElements import DB, constants, mainModel
-from globalElements.widgets import (buttonWidget, dateWidget, dateEdit, labelWidget,  lineEditCurrency, 
-    textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone, truFalseRadioButtons, checkBox)
-from globalElements.zipsWidget import mainUs as UsZipsWidget
+from globalElements.widgets import (buttonWidget, dateWidget, labelWidget,  lineEditCurrency, 
+    textEdit, lineEdit, cboFilterGroup, checkBox)
 import sys
 import os
 import pathlib
@@ -15,7 +13,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
-from avdt import loads_stops
+from avdt.loads import stops
 
 
 class main(mainModel.main):
@@ -353,7 +351,7 @@ class main(mainModel.main):
             self.filesFolder.txtFilePath.setText(self.filesFolder.root)
 
     def stopsOpen(self):
-        self.stops = loads_stops.main()
+        self.stops = stops.main()
         self.tabsWidget.addTab(self.stops, '   STOPS   ')
         self.tabsWidget.setCurrentWidget(self.stops)
         idLoad = self.id_.text()

@@ -1,21 +1,25 @@
 #!/usr/bin/python3
 
-import constants
-from functions import formatPhoneNo
+from globalElements import constants
+from globalElements.functions import formatPhoneNo
 # from datetime import time
 import re
-import winsound
 import webbrowser
-from PyQt6.QtWidgets import (QWidget, QLabel)
-from PyQt6 import QtWidgets as qtw
+from PyQt6.QtWidgets import (QWidget, QLabel, QPushButton, QSizePolicy,
+    QComboBox, QCompleter, QHBoxLayout, QGroupBox, QGridLayout, QRadioButton,
+    QDateEdit, QDateTimeEdit, QLineEdit, QMainWindow, QToolBar, QCheckBox,
+    QMessageBox, QTabWidget, QTextEdit, QSpinBox)
+
+from PyQt6.QtCore import (Qt, QSize, QDate, QDateTime)
+from PyQt6.QtGui import (QWheelEvent, QFont, QIcon, QCursor, QGuiApplication,
+    QTextDocument, QStandardItem, QColor)
 from PyQt6 import QtGui as qtg
-from PyQt6 import QtCore as qtc
 from datetime import datetime, time
 import locale
 locale.setlocale(locale.LC_ALL,"")
 globalFontStyle = "Calibri"
 globalFontSize = 13
-globalFont_ = qtg.QFont(globalFontStyle, globalFontSize)
+globalFont_ = QFont(globalFontStyle, globalFontSize)
 #w! START ---------------------------- LABELS
 def printContants():
     print(constants.rootDb)
@@ -50,7 +54,7 @@ class titleBox(QWidget):
             QWidget {background-color:#134A4D}
             ''')
 
-class labelWidget(qtw.QLabel):
+class labelWidget(QLabel):
     def __init__(self, text="", fontSize=13, fontBolt = False, fontColor = "" , align = "", backColor = "", padding="0px" ): 
         super().__init__() 
         
@@ -86,9 +90,9 @@ class labelWidget(qtw.QLabel):
 
         if align:
             if align == "center":
-                self.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
+                self.setAlignment(Qt.AlignmentFlag.AlignCenter)
             elif align == "right":
-                self.setAlignment(qtc.Qt.AlignmentFlag.AlignRight)
+                self.setAlignment(Qt.AlignmentFlag.AlignRight)
 
     def populate(self,text):    
         self.setText(text)
@@ -99,27 +103,27 @@ class labelWidget(qtw.QLabel):
     def getInfo(self):
         return self.text()
 #w! START ---------------------------- BUTTONS
-class buttonWidget(qtw.QPushButton):
+class buttonWidget(QPushButton):
     def __init__(self, text="", size="h1", icon=""):
         super().__init__()
-        cursor = qtg.QCursor(qtc.Qt.CursorShape.PointingHandCursor)
+        cursor = QCursor(Qt.CursorShape.PointingHandCursor)
         self.setCursor(cursor)
         
         if icon:
-            icon = qtg.QIcon(icon)
+            icon = QIcon(icon)
             self.setIcon(icon)
         if text:
             self.setText(text)
 
         if size == "main":
             globalFont_.setPointSize(18)
-            iconSize_ = qtc.QSize(50, 32)
+            iconSize_ = QSize(50, 32)
             # self.setContentsMargins(50,50,50,50)
             self.setIconSize(iconSize_)
             # font_.setBold(True)
             self.setFont(globalFont_)
             self.reSetFont()
-            self.setSizePolicy(qtw.QSizePolicy.Policy.Expanding,qtw.QSizePolicy.Policy.Expanding)
+            self.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Expanding)
             # self.setMinimumHeight(133)
             # self.setFixedSize(130,35)
             self.setMaximumHeight(110)
@@ -135,7 +139,7 @@ class buttonWidget(qtw.QPushButton):
             self.reSetFont()
             # self.setMinimumHeight(35)
             # self.setFixedSize(130,35)
-            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             css = self.getCSS("h1.css")
             self.setStyleSheet(css)
 
@@ -146,7 +150,7 @@ class buttonWidget(qtw.QPushButton):
             self.reSetFont()
             # self.setMinimumHeight(35)
             # self.setFixedSize(130,35)
-            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             css = self.getCSS("h1Warning.css")
             self.setStyleSheet(css)
 
@@ -156,7 +160,7 @@ class buttonWidget(qtw.QPushButton):
             self.reSetFont()
             # self.setFixedSize(120,30)
             # self.setMinimumHeight(30)
-            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             css = self.getCSS("h2.css")
             self.setStyleSheet(css)
 
@@ -166,7 +170,7 @@ class buttonWidget(qtw.QPushButton):
             self.reSetFont()
             # self.setFixedSize(120,30)
             self.setMinimumHeight(30)
-            # self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            # self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             css = self.getCSS("h2_.css")
             self.setStyleSheet(css)
 
@@ -176,7 +180,7 @@ class buttonWidget(qtw.QPushButton):
             self.reSetFont()
             # self.setFixedSize(120,30)
             self.setMinimumHeight(28)
-            # self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            # self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             css = self.getCSS("h3.css")
             self.setStyleSheet(css)
         
@@ -196,11 +200,11 @@ class buttonWidget(qtw.QPushButton):
         globalFont_.setBold(False)
 
 
-class cbo(qtw.QComboBox):
+class cbo(QComboBox):
     def __init__(self, 
             fontSize =13, 
             items = [], 
-            completionMode=qtw.QCompleter.CompletionMode.PopupCompletion):
+            completionMode=QCompleter.CompletionMode.PopupCompletion):
         super().__init__()
         self.setEditable(True)
         globalFont_.setPointSize(fontSize)
@@ -216,14 +220,14 @@ class cbo(qtw.QComboBox):
             items = sorted(items)
             self.clear()
             self.addItems(items)
-            self.completer_name = qtw.QCompleter(items)
-            self.completer_name.setCaseSensitivity(qtc.Qt.CaseSensitivity.CaseInsensitive)
+            self.completer_name = QCompleter(items)
+            self.completer_name.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
             self.completer_name.setCompletionMode(completionMode)
             self.setCompleter(self.completer_name) 
             
         
 
-    def wheelEvent(self, e: qtg.QWheelEvent) -> None:
+    def wheelEvent(self, e: QWheelEvent) -> None:
         e.ignore()
 
     def setConnection(self,e):
@@ -258,13 +262,13 @@ class cbo(qtw.QComboBox):
             text = self.sourceType
         return text
 
-class cboFilterGroup(qtw.QWidget):
+class cboFilterGroup(QWidget):
     def __init__(self, 
             fontSize =13, 
             label = "",
             refreshable = True, 
             items = [], 
-            completionMode=qtw.QCompleter.CompletionMode.PopupCompletion,
+            completionMode=QCompleter.CompletionMode.PopupCompletion,
             requeryFunc="", 
             clearFilter = True):
 
@@ -273,7 +277,7 @@ class cboFilterGroup(qtw.QWidget):
         
         self.items = items
         
-        self.layout_ = qtw.QHBoxLayout()
+        self.layout_ = QHBoxLayout()
         self.layout_.setSpacing(0)
         self.layout_.setContentsMargins(0,0,0,0)
         self.layout_.addWidget(self.cbo,1)
@@ -299,9 +303,9 @@ class cboFilterGroup(qtw.QWidget):
         self.requeryFunct()
         self.cbo.clear()
         self.cbo.addItems(self.items)
-        self.completer_name = qtw.QCompleter(self.items)
-        self.completer_name.setCaseSensitivity(qtc.Qt.CaseSensitivity.CaseInsensitive)
-        self.completer_name.setCompletionMode(qtw.QCompleter.CompletionMode.InlineCompletion)
+        self.completer_name = QCompleter(self.items)
+        self.completer_name.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
         self.cbo.setCompleter(self.completer_name)
 
     def btn_pressed(self):
@@ -326,13 +330,13 @@ class cboFilterGroup(qtw.QWidget):
 
 
 #w! RADIO BUTTONS ------------------------- START
-class radioButtons(qtw.QGroupBox):
+class radioButtons(QGroupBox):
     def __init__(self, style = False):
         super().__init__()
         self.itemsList = []
         
-        self.layout_ = qtw.QGridLayout()
-        self.layout_.setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        self.layout_ = QGridLayout()
+        self.layout_.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.setLayout(self.layout_)
         
         if style:        
@@ -384,8 +388,8 @@ class truFalseRadioButtons(radioButtons):
     def __init__(self,fontSize = 12, style = False, filter = False):
         super().__init__(style)
         self.layout_.setContentsMargins(0,0,0,0)
-        self.true = qtw.QRadioButton("True")
-        self.false = qtw.QRadioButton("False")
+        self.true = QRadioButton("True")
+        self.false = QRadioButton("False")
         self.itemsList.extend([self.true, self.false])
 
         #Row 0 
@@ -393,7 +397,7 @@ class truFalseRadioButtons(radioButtons):
         self.layout_.addWidget(self.false,0,1)
         
         if filter:
-            self.removeFilter = qtw.QRadioButton("All")
+            self.removeFilter = QRadioButton("All")
             self.itemsList.append(self.removeFilter)
             self.layout_.addWidget(self.removeFilter,0,2)
 
@@ -413,8 +417,8 @@ class incomeExpenseRadioButtons(radioButtons):
     def __init__(self, fontSize = 12, style = False, filter = False):
         super().__init__(style)
         self.layout_.setContentsMargins(0,0,0,0)
-        self.income = qtw.QRadioButton("Income")
-        self.expense = qtw.QRadioButton("Expense")
+        self.income = QRadioButton("Income")
+        self.expense = QRadioButton("Expense")
         
         
 
@@ -423,7 +427,7 @@ class incomeExpenseRadioButtons(radioButtons):
         self.layout_.addWidget(self.income,0,0)
         self.layout_.addWidget(self.expense,0,1)
         if filter:
-            self.removeFilter = qtw.QRadioButton("All")
+            self.removeFilter = QRadioButton("All")
             self.itemsList.append(self.removeFilter)
             self.layout_.addWidget(self.removeFilter,0,2)
 
@@ -441,16 +445,16 @@ class incomeExpenseRadioButtons(radioButtons):
 #w! RADIO BUTTONS ------------------------- END
 
 #w! DATE  ------------------------- START
-class dateEdit(qtw.QDateEdit):
+class dateEdit(QDateEdit):
     def __init__(self, fontSize = 13):
         super().__init__()
         self.setCalendarPopup(True)
         self.setDisplayFormat('yyyy-MM-dd')
-        # self.setDate(qtc.QDate.currentDate())
+        # self.setDate(QDate.currentDate())
         globalFont_.setPointSize(fontSize)
         self.setFont(globalFont_)
     
-    def wheelEvent(self, e: qtg.QWheelEvent) -> None:
+    def wheelEvent(self, e: QWheelEvent) -> None:
         e.ignore()
 
     def populate(self, text):
@@ -467,14 +471,14 @@ class dateEdit(qtw.QDateEdit):
     def getInfo(self):
         return self.text()
 
-class dateWidget(qtw.QWidget):
+class dateWidget(QWidget):
     def __init__(self, fontSize = 13):
         super().__init__()
         self.dateEdit = dateEdit(fontSize) 
         self.btnToday = buttonWidget(size="icon", icon=constants.iconToday)
         self.btnToday.setMinimumHeight(30)
 
-        self.layout_ = qtw.QHBoxLayout()
+        self.layout_ = QHBoxLayout()
         self.layout_.setSpacing(0)
         self.layout_.setContentsMargins(0,0,0,0)
         # self.layout_.addWidget(self.lbl)
@@ -485,7 +489,7 @@ class dateWidget(qtw.QWidget):
         self.btnToday.pressed.connect(self.btnTodayPressed)
         
     def btnTodayPressed(self):
-        self.dateEdit.setDate(qtc.QDate.currentDate())
+        self.dateEdit.setDate(QDate.currentDate())
 
     def populate(self, text):
         self.dateEdit.populate(text)
@@ -496,17 +500,17 @@ class dateWidget(qtw.QWidget):
     def getInfo(self):
         return self.dateEdit.getInfo()
 
-class dateTimeEdit(qtw.QDateTimeEdit):
+class dateTimeEdit(QDateTimeEdit):
     def __init__(self, fontSize = 13):
         super().__init__()
         # self.setCalendarPopup(True)
         # self.setDisplayFormat('yyyy-MM-dd')
-        # self.setDate(qtc.QDate.currentDate())
+        # self.setDate(QDate.currentDate())
         self.setDisplayFormat("yyyy-MM-dd hh:mm")
         globalFont_.setPointSize(fontSize)
         self.setFont(globalFont_)
     
-    def wheelEvent(self, e: qtg.QWheelEvent) -> None:
+    def wheelEvent(self, e: QWheelEvent) -> None:
         e.ignore()
 
     def populate(self, text):
@@ -514,13 +518,13 @@ class dateTimeEdit(qtw.QDateTimeEdit):
             dateTime =  datetime.strptime(text, '%Y-%m-%d %H:%M')
             # time_ = time_.time()
         except:
-            date = qtc.QDateTime()
+            date = QDateTime()
             dateTime = date.currentDateTime()
         self.setDateTime(dateTime)
         
 
     def reSet(self):
-        date = qtc.QDateTime()
+        date = QDateTime()
         dateTime = date.currentDateTime()
         self.setDateTime(dateTime)
 
@@ -530,7 +534,7 @@ class dateTimeEdit(qtw.QDateTimeEdit):
 
 
 #w! LINEEDIT  ------------------------- START
-class lineEdit(qtw.QLineEdit):
+class lineEdit(QLineEdit):
     def __init__(self, fontSize = 13, hightLight=False):
         super().__init__()
         globalFont_.setPointSize(fontSize)
@@ -616,7 +620,7 @@ class lineEditCurrency(lineEdit):
         self.clear()
 
 
-class lineEditFilterGroup(qtw.QWidget):
+class lineEditFilterGroup(QWidget):
     def __init__(self, fontSize =13, label = "", clearFilter = True):
         '''Line edit with label and clear text button'''
         super().__init__()
@@ -628,7 +632,7 @@ class lineEditFilterGroup(qtw.QWidget):
         # else:
         #     self.btn = buttonWidget(size="icon", icon=self.btn.iconEraser)
         self.btn.setMaximumHeight(25)        
-        self.layout_ = qtw.QHBoxLayout()
+        self.layout_ = QHBoxLayout()
         self.layout_.setSpacing(0)
         self.layout_.setContentsMargins(0,0,0,0)
         self.layout_.addWidget(self.txt,1)
@@ -659,7 +663,7 @@ class lineEditFilterGroup(qtw.QWidget):
         return text
 #w! LINEEDIT  ------------------------- START
 
-class textEdit(qtw.QTextEdit):
+class textEdit(QTextEdit):
     def __init__(self, fontSize=11):
         super().__init__()
         globalFont_.setPointSize(fontSize)
@@ -689,25 +693,25 @@ class textEdit(qtw.QTextEdit):
         # return [sqlText, htmlText]
         return sqlText
 
-class textEditRich(qtw.QMainWindow):
+class textEditRich(QMainWindow):
     def __init__(self, fontSize = 11):
         '''MainWindow Constructor'''
         super().__init__()
-        self.iconBold = qtg.QIcon('oth/icons/edit-bold.png')
-        self.iconUnderline = qtg.QIcon('oth/icons/edit-underline.png')
-        self.iconItalic = qtg.QIcon('oth/icons/edit-italic.png')
-        self.iconHiglight = qtg.QIcon('oth/icons/highlighter-text.png')
-        self.iconRed = qtg.QIcon('oth/icons/edit-red.png')
-        self.iconP = qtg.QIcon('oth/icons/edit.png')
-        self.iconH1 = qtg.QIcon('oth/icons/edit-heading-1.png')
-        self.iconH2 = qtg.QIcon('oth/icons/edit-heading-2.png')
-        self.iconH3 = qtg.QIcon('oth/icons/edit-heading-3.png')
-        self.iconH4 = qtg.QIcon('oth/icons/edit-heading-4.png')
-        self.iconH5 = qtg.QIcon('oth/icons/edit-heading-5.png')
-        self.iconH6 = qtg.QIcon('oth/icons/edit-heading-6.png')
-        self.cb = qtg.QGuiApplication.clipboard()
+        self.iconBold = QIcon('oth/icons/edit-bold.png')
+        self.iconUnderline = QIcon('oth/icons/edit-underline.png')
+        self.iconItalic = QIcon('oth/icons/edit-italic.png')
+        self.iconHiglight = QIcon('oth/icons/highlighter-text.png')
+        self.iconRed = QIcon('oth/icons/edit-red.png')
+        self.iconP = QIcon('oth/icons/edit.png')
+        self.iconH1 = QIcon('oth/icons/edit-heading-1.png')
+        self.iconH2 = QIcon('oth/icons/edit-heading-2.png')
+        self.iconH3 = QIcon('oth/icons/edit-heading-3.png')
+        self.iconH4 = QIcon('oth/icons/edit-heading-4.png')
+        self.iconH5 = QIcon('oth/icons/edit-heading-5.png')
+        self.iconH6 = QIcon('oth/icons/edit-heading-6.png')
+        self.cb = QGuiApplication.clipboard()
         self.textBox = textEdit(fontSize)
-        self.format = qtg.QTextDocument(self.textBox)
+        self.format = QTextDocument(self.textBox)
         self.textBox.setDocument(self.format)
         
         css = open('oth/Program_Data/style.css','r')
@@ -715,7 +719,7 @@ class textEditRich(qtw.QMainWindow):
         self.format.setDefaultStyleSheet(self.style_)
 
         #p! Tool Bar
-        self.toolBar = qtw.QToolBar('File')
+        self.toolBar = QToolBar('File')
         self.toolBar.addAction(self.iconP, 'P',self.txtP)
         self.toolBar.addAction(self.iconBold, 'Bold',self.txtBold)
         self.toolBar.addAction(self.iconUnderline, 'Underline',self.txtUnderline)
@@ -731,7 +735,7 @@ class textEditRich(qtw.QMainWindow):
         self.toolBar.addAction(self.iconH6, 'H1',self.txtH6)
         # self.toolBar.addAction(self.iconH1, 'H1',self.toSQL)
         
-        self.addToolBar(qtc.Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
         self.setCentralWidget(self.textBox)
         #g! Connections
 
@@ -852,7 +856,7 @@ class textEditRich(qtw.QMainWindow):
             self.cb.clear()
             self.format.setDefaultStyleSheet(self.style_)
 
-class lineEditCopy(qtw.QWidget):
+class lineEditCopy(QWidget):
     def __init__(self, fontSize = 13):
         super().__init__()
         self.lineEdit = lineEdit(fontSize) 
@@ -860,7 +864,7 @@ class lineEditCopy(qtw.QWidget):
         self.btnCopyLink.setMinimumHeight(30)
         self.btnCopyLink.setText("")
 
-        self.layout_ = qtw.QHBoxLayout()
+        self.layout_ = QHBoxLayout()
         self.layout_.setSpacing(0)
         self.layout_.setContentsMargins(0,0,0,0)
         # self.layout_.addWidget(self.lbl)
@@ -871,7 +875,7 @@ class lineEditCopy(qtw.QWidget):
         self.btnCopyLink.pressed.connect(self.btnCopyLinkPressed)
         
     def btnCopyLinkPressed(self):
-        cb = qtg.QGuiApplication.clipboard()
+        cb = QGuiApplication.clipboard()
         cb.clear(cb.Mode.Clipboard)
         link = self.lineEdit.text()
         if link:
@@ -904,18 +908,18 @@ class webWidget(lineEditCopy):
         if link:
             webbrowser.open(link)
 
-class checkBox(qtw.QCheckBox):
+class checkBox(QCheckBox):
     def __init__(self, text='', fontSize = 13, size=''):
         super().__init__()
+        cursor = QCursor(Qt.CursorShape.PointingHandCursor)
+        self.setCursor(cursor)
         if text:
             globalFont_.setPointSize(fontSize)
             self.setFont(globalFont_)
             self.setText(text)
         if size == 'h1' or size == 'h2':
-            self.setStyleSheet('''
-            QCheckBox {color: white}
-             ''')
-            self.setSizePolicy(qtw.QSizePolicy.Policy.Fixed, qtw.QSizePolicy.Policy.Expanding)
+            self.setStyleSheet('QCheckBox {color: white} ')
+            self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
         
 
     
@@ -940,7 +944,7 @@ class checkBox(qtw.QCheckBox):
         else:
             return "0"
 
-class spinbox(qtw.QSpinBox):
+class spinbox(QSpinBox):
     def __init__(self, fontSize=13):
         super().__init__()
         globalFont_.setPointSize(fontSize)
@@ -950,7 +954,7 @@ class spinbox(qtw.QSpinBox):
         # self.setFont(font_)
         # self.setMaximum(500000)
         # self.setSingleStep(1)
-    def wheelEvent(self, e: qtg.QWheelEvent) -> None:
+    def wheelEvent(self, e: QWheelEvent) -> None:
         e.ignore()
 
     def getInfo(self):
@@ -965,7 +969,7 @@ class spinbox(qtw.QSpinBox):
     def reSet(self):
         self.setValue(1)
 
-class tabWidget(qtw.QTabWidget):
+class tabWidget(QTabWidget):
     def __init__(self, size="h1"):#self, fontSize=10, selectedSize=16
         super().__init__()
         self.setContentsMargins(0,0,0,0)
@@ -989,7 +993,7 @@ class tabWidget(qtw.QTabWidget):
         if intVar:
             self.widget(intVar).deleteLater()
 
-class standardItem(qtg.QStandardItem):
+class standardItem(QStandardItem):
     def __init__(self,  txt='',fontSize = 13, rowHeight=42, colorVar ='#000000'):
         super().__init__()
         self.setEditable(True)
@@ -997,20 +1001,20 @@ class standardItem(qtg.QStandardItem):
         globalFont_.setPointSize(fontSize)
         self.setFont(globalFont_)
         self.setText(str(txt))
-        self.setForeground(qtg.QColor(colorVar))
-        self.setSizeHint(qtc.QSize(20,rowHeight))
+        self.setForeground(QColor(colorVar))
+        self.setSizeHint(QSize(20,rowHeight))
 
 
-class deleteWarningBox(qtw.QMessageBox):
+class deleteWarningBox(QMessageBox):
     def __init__(self, text='', fontSize=13):
         super().__init__()
-        self.iconAVD = qtg.QIcon( f'{constants.othFolder}\icons\enlace.png')
+        self.iconAVD = QIcon( f'{constants.othFolder}\icons\enlace.png')
         self.setWindowTitle('Eliminar registro')
-        self.setWindowIcon(qtg.QIcon(f'{constants.othFolder}\icons\enlace.png'))
+        self.setWindowIcon(QIcon(f'{constants.othFolder}\icons\enlace.png'))
         self.setText(text)
         # self.setStyleSheet("QLabel{min-width: 200px;}")
         self.setInformativeText('Continue?')
         globalFont_.setPointSize(fontSize)
         self.setFont(globalFont_)
-        self.setStandardButtons(qtw.QMessageBox.StandardButton.Yes|qtw.QMessageBox.StandardButton.No)
-        self.setIcon(qtw.QMessageBox.Icon.Warning)
+        self.setStandardButtons(QMessageBox.StandardButton.Yes|QMessageBox.StandardButton.No)
+        self.setIcon(QMessageBox.Icon.Warning)

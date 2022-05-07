@@ -1,15 +1,13 @@
 #!/usr/bin/python3
+from avdt.loads import loads
 from globalElements.setup import load
 load()
 import sys
-  
-#     tabWidget, enlace, enlaceAccounts, avdt, loads, accounts, drivers, trucks,
-#     QApplication, sys)
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
-from avdt import avdt, carriers, clients_, drivers, trucks, trailers, stops, loads_
+from avdt import avdt, carriers, clients_, drivers, trucks, trailers, stops, accounts, bookkeeping
 from enlace import enlace
-from avdt.accounts import main as accounts
+# from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
@@ -70,11 +68,11 @@ class MainWindow(QMainWindow):
         self.avdtMenu.btnAvdtTrailers.pressed.connect(self.avdtOpenTrailers)
         self.avdtMenu.btnAvdtCarriers.pressed.connect(self.avdtOpenCarriers)
         self.avdtMenu.btnAvdtClients.pressed.connect(self.avdtOpenClients)
-        self.avdtMenu.btnAvdtWarehouses.pressed.connect(self.avdtOpenStops)
- 
+        self.avdtMenu.btnAvdtStops.pressed.connect(self.avdtOpenStops)
+        self.avdtMenu.btnAvdtBookkeeping.pressed.connect(self.avdtOpenBookkeeping)
 
     def avdtOpenLoads(self):
-        self.avdtLoads = loads_.main()
+        self.avdtLoads = loads.main()
         self.tabWidget.addTab(self.avdtLoads,'       AVDT LOADS      ')
         self.tabWidget.setCurrentWidget(self.avdtLoads)
 
@@ -112,6 +110,11 @@ class MainWindow(QMainWindow):
         self.avdtStops = stops.main()
         self.tabWidget.addTab(self.avdtStops,'    AVDT WAREHOUSES   ')
         self.tabWidget.setCurrentWidget(self.avdtStops)
+
+    def avdtOpenBookkeeping(self):
+        self.avdtBookkeeping = bookkeeping.main()
+        self.tabWidget.addTab(self.avdtBookkeeping,'    AVDT BOOKKEEPING   ')
+        self.tabWidget.setCurrentWidget(self.avdtBookkeeping)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

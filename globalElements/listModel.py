@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (QMainWindow, QHBoxLayout, QWidget, QSizePolicy,
     QVBoxLayout, QFrame, QApplication, QLabel)
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
-from treeview import treeviewSearchBox
+from globalElements.treeview import treeviewSearchBox
 from globalElements import DB, functions as gf, constants
 from globalElements.widgets import buttonWidget, labelWidget
 

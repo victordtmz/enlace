@@ -138,23 +138,7 @@ class main(QMainWindow):
             #backColor="#002142"
             ) 
         
-        # self.logo = labelWidget(
-        #     align="center",
-        #     #backColor="#002142", 
-        #     padding="6px")
-        # logo = f'{constants.iconsFolder}enlace.png'
-        # self.imageAVD = QPixmap(logo)
-        # self.imageAVD = self.imageAVD.scaled(30,30,Qt.AspectRatioMode.KeepAspectRatio)
-        # self.logo.setPixmap(self.imageAVD)
         self.createButtons()
-
-        # self.btnNew = buttonWidget(text=" Nuevo", 
-        #     icon=constants.iconAdd, size=self.mainSize)
-        # self.btnDelete = buttonWidget(text=" Eliminar", 
-        #     icon=constants.iconDelete, size=self.mainSize)
-        # self.btn_cerrar = buttonWidget(text=" Cerrar", 
-        #     icon=constants.iconClose, size=self.mainSize)
-
         self.spacerLeft = spacer('    ')
         self.spacer1 = spacer(' ')
         self.spacer2 = spacer('      ')
@@ -181,8 +165,6 @@ class main(QMainWindow):
         self.titleLayoutBox = titleBox(self.mainSize)
         self.titleLayoutBox.setLayout(self.titleLayout)
 
-        
-
     def setConstants(self):
         self.evaluateSaveIndex = (1,)
         self.andOr = "and"
@@ -196,12 +178,6 @@ class main(QMainWindow):
         self.formTableValues = []
         self.horizontalLabels = ["Id"]
         
-        
-        
-        
-
-        
-
     def set_connections(self):
         #G! Connections
         self.list.treeview.selectionModel().selectionChanged.connect(self.listadoSelectionChanged)
@@ -242,6 +218,7 @@ class main(QMainWindow):
                 index +=1
         else:
             widthSizes = self.widgetsOptSizes
+
         totalExpand = sum(widthSizes)
         totalWidth = self.width()
         widthFraction = totalWidth//totalExpand
@@ -249,55 +226,6 @@ class main(QMainWindow):
         widthSizes = list(map(lambda x: x * widthFraction, widthSizes)) 
         self.splitter.setSizes(widthSizes)
 
-
-        # index = 0
-        # totalExpand = 0
-        # totalAllExpand = 0
-        # widthSizes = []
-        # for i in self.widgetsOpt:
-        #     value = int(i.getDbInfo())
-        #     i = value
-        #     if not value:widthSizes.append(0)
-        #         # self.widgetsOptSizes[index] = 0
-        #     else: widthSizes.append(self.widgetsOptSizes[index])
-        #     #to get the total expand, add the widgets to be considered
-        #     totalExpand += widthSizes[index]
-        #     totalAllExpand += self.widgetsOptSizes[index]
-        #     index += 1
-        
-        # if any(widthSizes):
-        #     widthFraction = totalWidth//totalExpand
-        #     widthSizes = list(map(lambda x: x * widthFraction, widthSizes)) 
-        #     self.splitter.setSizes(widthSizes)
-        # else:
-        #     widthFraction = totalWidth//totalExpand
-        #     widthSizes = list(map(lambda x: x * widthFraction, self.widgetsOptSizes)) 
-        #     self.splitter.setSizes(widthSizes)
-        # if any(self.widgetsOpt):
-            
-        #     pass
-        # #if all values are 0, default to all
-        # elif:
-        #     pass
-        # listValue = int(self.listOpt.getDbInfo())
-        # formValue = int(self.formOpt.getDbInfo())
-        # self.splitter.setStretchFactor(0,self.listExpand)
-        # self.splitter.setStretchFactor(1,self.formExpand)
-        # #get the total width of the widget
-        # totalWidth = self.width()
-        # #Get the stretch factors for each widget
-        # totalExpand = self.listExpand + self.formExpand
-        # #lood at the number of sections the width is devided according to expand set
-        # widthFraction = totalWidth//totalExpand
-        # listSize = widthFraction * self.listExpand
-        # formSize = widthFraction * self.formExpand
-            
-        # if listValue and not formValue:
-        #     self.splitter.setSizes([totalWidth,0])
-        # elif formValue and not listValue: 
-        #     self.splitter.setSizes([0,totalWidth])
-        # else:
-        #     self.splitter.setSizes([listSize, formSize])
 
     def setMainLayout(self):
         #g! LAYOUT ---- **** Box container for details items

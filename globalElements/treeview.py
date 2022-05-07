@@ -68,6 +68,7 @@ class treeviewSearchBox(QMainWindow):
         self.treeview.setSortingEnabled(True )
         #gets rid of the space on the left to select or expand when has children
         self.treeview.setRootIsDecorated(False)
+        self.treeview.setWordWrap(True)
         self.standardModel = QStandardItemModel() 
         # self.standardModel.invisibleRootItem().setText("")
         self.proxyModel = QSortFilterProxyModel() #w! Create filtering model 
@@ -618,10 +619,11 @@ class filesTree(QMainWindow):
     def setLineEditFileBox(self, fontSize=13):
         self.lineEditItems = lineEditFilterGroup(fontSize,"Archivo:", clearFilter=False)
         # self.lineEditItems.lbl.deleteLater()
-        self.btnOpen =  buttonWidget(text="Abrir archivo", size="h2", icon=constants.iconFolderOpen)
+        self.btnOpen =  buttonWidget(text="Abrir archivo", size="h2_", icon=constants.iconFolderOpen)
+        # self.btnOpen.setMinimumHeight(30)
         self.btnOpen.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Fixed)
         # self.btnOpen.setMinimumWidth(130)
-        self.btnLinkFile = buttonWidget(text="Vincular archivo", size="h2", icon=constants.iconLink)
+        self.btnLinkFile = buttonWidget(text="Vincular archivo", size="h2_", icon=constants.iconLink)
         self.btnLinkFile.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Fixed)
         
         self.layoutLineEditFile = QGridLayout()

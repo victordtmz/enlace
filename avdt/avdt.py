@@ -86,13 +86,13 @@ class main(QMainWindow):
         self.btnAvdtClients = buttonWidget("    Clients", "main", icon=constants.iconClient)
         self.btnAvdtAccounts = buttonWidget("    Accounts", "main", icon=constants.iconAccounts)
 
-        self.btnAvdtAccounting = buttonWidget("    Accounting", "main", icon=constants.iconAccounting)
+        self.btnAvdtBookkeeping = buttonWidget("    Accounting", "main", icon=constants.iconAccounting)
         self.btnAvdtAccountingTotals = buttonWidget("    Accounting Totals", "main", icon=constants.iconMoneyBag)
         self.btnAvdtAccountingCategories = buttonWidget("    Categories", "main", icon=constants.iconCategories)
         self.btnAvdtDiesel = buttonWidget("    Diesel", "main", icon=constants.iconFuel)
         
         self.btnAvdtMiles = buttonWidget("    Miles", "main", icon=constants.iconRoad)
-        self.btnAvdtWarehouses = buttonWidget("    Warehouses", "main", icon=constants.iconWarehouse)
+        self.btnAvdtStops = buttonWidget("    Warehouses", "main", icon=constants.iconWarehouse)
         self.btnAvdtIfta = buttonWidget("    IFTA", "main", icon=constants.iconIfta)
 
         self.btnAvdtCarriers = buttonWidget("    Carriers", "main", icon=constants.iconCarrier)
@@ -131,14 +131,14 @@ class main(QMainWindow):
         self.layoutMainGrid.addWidget(self.btnAvdtClients,3,2)
         self.layoutMainGrid.addWidget(self.btnAvdtAccounts,3,3)
 
-        self.layoutMainGrid.addWidget(self.btnAvdtAccounting,4,0)
+        self.layoutMainGrid.addWidget(self.btnAvdtBookkeeping,4,0)
         self.layoutMainGrid.addWidget(self.btnAvdtAccountingTotals,4,1)
         self.layoutMainGrid.addWidget(self.btnAvdtAccountingCategories,4,2)
         self.layoutMainGrid.addWidget(self.btnAvdtDiesel,4,3)
 
         
         self.layoutMainGrid.addWidget(self.btnAvdtMiles,5,0)
-        self.layoutMainGrid.addWidget(self.btnAvdtWarehouses,5,1)
+        self.layoutMainGrid.addWidget(self.btnAvdtStops,5,1)
         self.layoutMainGrid.addWidget(self.btnAvdtIfta,5,2)
 
         self.layoutMainGrid.addWidget(self.btnAvdtCarriers,6,0)
