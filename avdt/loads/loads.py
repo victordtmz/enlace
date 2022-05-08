@@ -13,7 +13,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
-from avdt.loads import miles, stops
+from avdt.loads import miles, stops, bookkeeping, diesel
 
 
 class main(modelMain.main):
@@ -35,6 +35,11 @@ class main(modelMain.main):
 
     def configAdditionalTabs(self):
         self.stops = ''
+        self.miles = ''
+        self.contractingBook = ''
+        self.haulingBook = ''
+        self.diesel = ''
+        #o! CONFIGURE DIESEL 
 
     def configToolbar(self):
         iconRoot = f'{constants.rootDb}\oth\icons'
@@ -52,13 +57,23 @@ class main(modelMain.main):
         
         #diesel toolbar button
         self.btnDiesel = buttonWidget('Diesel', self.mainSize, self.iconDiesel)
-        # self.btnDiesel.pressed.connect(self.dieselOpen)
+        self.btnDiesel.pressed.connect(self.dieselOpen)
         self.titleLayout.insertWidget(4, self.btnDiesel)
 
         #Miles toolbar button
         self.btnMiles = buttonWidget('Miles', self.mainSize, self.iconRoad)
         self.btnMiles.pressed.connect(self.milesOpen)
         self.titleLayout.insertWidget(5, self.btnMiles)
+
+        #contracting $$ toolbar button
+        self.btnContractingBookkeeping = buttonWidget('Contracting', self.mainSize, self.iconMoney)
+        self.btnContractingBookkeeping.pressed.connect(self.contractingBookOpen)
+        self.titleLayout.insertWidget(6, self.btnContractingBookkeeping)
+
+        #hauling $$ toolbar button
+        self.btnHaulingBookkeeping = buttonWidget('Hauling', self.mainSize, self.iconMoney)
+        self.btnHaulingBookkeeping.pressed.connect(self.haulingBookOpen)
+        self.titleLayout.insertWidget(6, self.btnHaulingBookkeeping)
 
         # #Toolbar button Contracting carrier accounting
         # self.actCCarrierAccounting = qtg.QAction('C ACCOUNTING')
@@ -359,8 +374,8 @@ class main(modelMain.main):
         if idLoad:
             #set the values for idLoad and id Carrier on List for to be used on requery
             self.stops.idLoad = idLoad
-            # self.stops.screenshotItems.carrier.setText(self.form.cCarrier.cbo.currentText())
-            # self.stops.screenshotItems.loadNo.setText(self.form.referenceNo.text())
+            self.stops.screenshotItems.carrier.setText(self.contracting.getInfo())
+            self.stops.screenshotItems.loadNo.setText(self.reference.getInfo())
         else:
             self.stops.idLoad = 0
         self.stops.requery()
@@ -372,13 +387,57 @@ class main(modelMain.main):
         idLoad = self.id_.text()
         #set items to current selection 
         if idLoad:
-            #set the values for idLoad and id Carrier on List for to be used on requery
             self.miles.idLoad = idLoad
-            # self.stops.screenshotItems.carrier.setText(self.form.cCarrier.cbo.currentText())
-            # self.stops.screenshotItems.loadNo.setText(self.form.referenceNo.text())
         else:
             self.miles.idLoad = 0
         self.miles.requery()
+
+    def contractingBookOpen(self):
+        self.contractingBook = bookkeeping.main()
+        self.tabsWidget.addTab(self.contractingBook, '   CONTRACTING $$   ')
+        self.tabsWidget.setCurrentWidget(self.contractingBook)
+        idLoad = self.id_.text()
+        idCarrier = self.contracting.getDbInfo()# DIFF WITH HAULING
+        if idLoad and idCarrier:
+            self.contractingBook.idLoad = idLoad
+            self.contractingBook.idCarrier = idCarrier
+        else:
+            self.contractingBook.idLoad = 0
+            self.contractingBook.idCarrier = 0
+        self.contractingBook.requery()
+
+    def haulingBookOpen(self):
+        self.haulingBook = bookkeeping.main()
+        self.tabsWidget.addTab(self.haulingBook, '   HAULING $$   ')
+        self.tabsWidget.setCurrentWidget(self.haulingBook)
+        idLoad = self.id_.text()
+        idCarrier = self.hauling.getDbInfo()# DIFF WITH HAULING
+        if idLoad and idCarrier:
+            self.haulingBook.idLoad = idLoad
+            self.haulingBook.idCarrier = idCarrier
+        else:
+            self.haulingBook.idLoad = 0
+            self.haulingBook.idCarrier = 0
+        self.haulingBook.requery()
+
+    def dieselOpen(self):
+        self.diesel = diesel.main()
+        self.tabsWidget.addTab(self.diesel, '   DIESEL   ')
+        self.tabsWidget.setCurrentWidget(self.diesel)
+        idLoad = self.id_.text()
+        idCarrier = self.hauling.getDbInfo()# DIFF WITH HAULING
+        if idLoad and idCarrier:
+            self.diesel.idLoad = idLoad
+            self.diesel.idCarrier = idCarrier
+            if self.diesel.addForm:
+                self.diesel.addForm.idCarrier = idCarrier
+                self.diesel.addForm.requery()
+        else:
+            self.diesel.idLoad = 0
+            self.diesel.idCarrier = 0
+            if self.diesel.addForm:
+                self.diesel.addForm.idCarrier = 0
+        self.diesel.requery()
 
     def loadSelectionChange(self):
         idLoad = self.id_.getInfo()
@@ -388,35 +447,57 @@ class main(modelMain.main):
             self.tabsWidget.setTabText(0, f'{idLoad}  |  {date}  |  {client}')
         else: self.tabsWidget.setTabText(0, 'MAIN')
         self.idLoad = idLoad
-        # idCCarrier = self.form.cCarrier.getInfo()
-        # idHCarrier = self.form.hCarrier.getInfo()
+        idCCarrier = self.contracting.getDbInfo()
+        idHCarrier = self.hauling.getDbInfo()
         
         counter = 0
         while counter < self.tabsWidget.count():
-            # if self.tabsWidget.widget(counter) == self.cCarrierAccounting:
-                
-            #     if idLoad and idCCarrier:
-            #         #set the values for idLoad and id Carrier on List for to be used on requery
-            #         self.cCarrierAccounting.accounting.list.idLoad = idLoad
-            #         self.cCarrierAccounting.accounting.list.idCarrier = idCCarrier
-            #         # self.cCarrierAccounting.form.
-            #         self.cCarrierAccounting.accounting.list.requery()
-            #         #set the filter values for the list of account transactions
-            #         self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
-            #         self.cCarrierAccounting.accounting.form.clear()
-            #         self.cCarrierAccounting.accounting.setCarrierAccount()
+            if self.tabsWidget.widget(counter) == self.contractingBook:
+                if idLoad and idCCarrier:
+                    #set the values for idLoad and id Carrier on List for to be used on requery
+                    self.contractingBook.idLoad = idLoad
+                    self.contractingBook.idCarrier = idCCarrier
+                    #set the filter values for the list of account transactions
+                    # self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
+                    # self.cCarrierAccounting.accounting.form.clear()
+                    # self.cCarrierAccounting.accounting.setCarrierAccount()
+                else: 
+                    self.contractingBook.idLoad = 0
+                    self.contractingBook.idCarrier = 0
+                self.contractingBook.requery()
             
-            # elif self.tabDetailsWidget.widget(counter) == self.hCarrierAccounting:
-            #     if idLoad and idHCarrier:
-            #         #set the values for idLoad and id Carrier on List for to be used on requery
-            #         self.hCarrierAccounting.accounting.list.idLoad = idLoad
-            #         self.hCarrierAccounting.accounting.list.idCarrier = idHCarrier
-            #         # self.cCarrierAccounting.form.
-            #         self.hCarrierAccounting.accounting.list.requery()
-            #         #set the filter values for the list of account transactions
-            #         self.hCarrierAccounting.accounting.addList.carrierFilter_.populate(idHCarrier)
-            #         self.hCarrierAccounting.accounting.form.clear()
-            #         self.hCarrierAccounting.accounting.setCarrierAccount()
+            if self.tabsWidget.widget(counter) == self.haulingBook:
+                if idLoad and idHCarrier:
+                    #set the values for idLoad and id Carrier on List for to be used on requery
+                    self.haulingBook.idLoad = idLoad
+                    self.haulingBook.idCarrier = idHCarrier
+                    #set the filter values for the list of account transactions
+                    # self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
+                    # self.cCarrierAccounting.accounting.form.clear()
+                    # self.cCarrierAccounting.accounting.setCarrierAccount()
+                else: 
+                    self.haulingBook.idLoad = 0
+                    self.haulingBook.idCarrier = 0
+                self.haulingBook.requery()
+
+            if self.tabsWidget.widget(counter) == self.diesel:
+                if idLoad and idHCarrier:
+                    #set the values for idLoad and id Carrier on List for to be used on requery
+                    self.diesel.idLoad = idLoad
+                    self.diesel.idCarrier = idHCarrier
+                    if self.diesel.addForm:
+                        self.diesel.addForm.idCarrier = idHCarrier
+                        self.diesel.addForm.requery()
+                    #set the filter values for the list of account transactions
+                    # self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
+                    # self.cCarrierAccounting.accounting.form.clear()
+                    # self.cCarrierAccounting.accounting.setCarrierAccount()
+                else: 
+                    self.diesel.idLoad = 0
+                    self.diesel.idCarrier = 0
+                    if self.diesel.addForm:
+                        self.diesel.addForm.idCarrier = 0
+                self.diesel.requery()
                 
             # elif self.tabDetailsWidget.widget(counter) == self.diesel:
             #     if idLoad and idHCarrier:
@@ -458,8 +539,8 @@ class main(modelMain.main):
             if self.tabsWidget.widget(counter) == self.stops:
                 if idLoad:
                     self.stops.idLoad = idLoad
-                    # self.stops.screenshotItems.carrier.setText(self.form.cCarrier.cbo.currentText())
-                    # self.stops.screenshotItems.loadNo.setText(self.form.referenceNo.text())
+                    self.stops.screenshotItems.carrier.setText(self.contracting.getInfo())
+                    self.stops.screenshotItems.loadNo.setText(self.reference.getInfo())
                 else:
                     self.stops.idLoad = 0
                 self.stops.requery()

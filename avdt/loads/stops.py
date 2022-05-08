@@ -475,7 +475,7 @@ class main(modelMain.main):
         else:
             self.addForm.deleteLater()
             self.addForm = False
-
+ 
 
             # self.addForm.btn_cerrar.pressed.connect(self.closeAddForm)
             #set the widget sizes for the splitter

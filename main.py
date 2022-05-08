@@ -2,7 +2,7 @@
 from avdt.loads import loads
 from globalElements.setup import load
 load()
-import sys
+import sys 
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         self.configureEnlace()
         self.configureAVDT() 
         self.showMaximized()
+
 
     def initUi(self):
         self.setWindowTitle('ENLACE LLC')
@@ -157,4 +158,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     mw = MainWindow()
     mw.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec()) 

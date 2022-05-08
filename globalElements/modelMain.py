@@ -267,7 +267,7 @@ class main(QMainWindow):
 
 
     def initList(self):
-        self.list = treeviewSearchBox()
+        self.list = treeviewSearchBox() 
     
     def configureColumns(self):
         if self.listColumnWidth:
@@ -457,8 +457,8 @@ class main(QMainWindow):
         return super().closeEvent(a0)
 
     def btn_cerrar_pressed(self):
-        #this widget shoud be used withn another widget
-        self.parentWidget().parentWidget().currentWidget().deleteLater()
+        self.deleteLater()
+        # self.parentWidget().parentWidget().currentWidget().deleteLater()
 
     def btn_nuevo_pressed(self):
         # self.newRecord = True
@@ -474,6 +474,7 @@ class main(QMainWindow):
     @abstractmethod
     def btn_delete_pressed(self):
         return
+        # self.deleteRecord()
 
     def btn_cancelar_pressed(self):
         #w!when canceling, always make sure there is a selection set, to avoid and empty or 'New' 

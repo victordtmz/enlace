@@ -28,7 +28,7 @@ class main(modelMain.main):
         # self.setGlobalVariables()
         self.configure_list()
         self.configure_form()
-        self.btnNew.deleteLater()
+        
         self.setConnections()
 
     
@@ -78,27 +78,19 @@ class main(modelMain.main):
             self.deleteRecord(text)
         else:
             self.clearForm()
-        pass
-
-    def setGlobalVariables(self):
-       # DB INFO
+        
+    def setSizes(self):
         self.size_ = "h1"
-        self.idColumn = 'id' 
-        self.tableVar = 'bookkeeping_diesel'
-        #position where index = fomvalue index(this is the list order)
-        self.listTableValuesIndexes = (0,3,4,1,2,5,6,7,8,9)
-        # self.formToDBItems = 4
-        self.titleText = "DIESEL"
-        self.widgetsOptSizes = [1,1]
-        self.listHiddenItems = (0,1,6,7,8,9)
-        self.listColumnWidth = ((2,130),(3,130),(4,130),(5,150) )
-        self.sortColumn = 1
-        self.onNewFocusWidget = 1
-        dbLogin = constants.avdtDB
-        self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        self.evaluateSaveIndex = (1,2)
-        self.andOr = 'or'
-
+        self.btnNew.deleteLater()
+    
+    def mutableVariables(self):
+        '''
+        This are separated from global so they can be changed in the subfor used in loads
+        '''
+       # DB INFO
+        # self.size_ = "h1"
+        
+        self.layoutVar = self.formLayoutSideFilesTree
         self.selectSql = '''
             SELECT
                 diesel.id AS "ID",
@@ -123,9 +115,34 @@ class main(modelMain.main):
 				AND DATE_FORMAT(bookkeeping.date_, "%m") LIKE %s
                 
                 ;'''
+        
 
+    def setGlobalVariables(self):
+       # DB INFO
+        # self.size_ = "h1"
+        self.setSizes()
+        self.idColumn = 'id' 
+        self.tableVar = 'bookkeeping_diesel'
+        #position where index = fomvalue index(this is the list order)
+        self.listTableValuesIndexes = (0,3,4,1,2,5,6,7,8,9)
+        # self.formToDBItems = 4
+        self.titleText = "DIESEL"
+        self.widgetsOptSizes = [1,1]
+        self.listHiddenItems = (0,1,6,7,8,9)
+        self.listColumnWidth = ((2,130),(3,130),(4,130),(5,150) )
+        self.sortColumn = 1
+        self.onNewFocusWidget = 1
+        dbLogin = constants.avdtDB
+        self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        self.evaluateSaveIndex = (1,2)
+        self.andOr = 'or'
         self.newRecordSql = '''INSERT INTO bookkeeping_diesel (id, gallons, jurisdiction)
         VALUES '''
+        self.mutableVariables()
+
+        
+
+        
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''

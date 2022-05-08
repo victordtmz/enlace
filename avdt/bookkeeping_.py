@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from globalElements import constants, DB, modelMain
+from globalElements import constants, DB, modelMain, treeview
 from globalElements.widgets import (labelWidget, truFalseRadioButtons, incomeExpenseRadioButtons,
     dateWidget, lineEditCurrency, textEdit, lineEdit, cboFilterGroup)
 import sys
@@ -7,22 +7,20 @@ from PyQt6 import QtWidgets as qtw
 from PyQt6 import QtCore as qtc
 from PyQt6 import QtGui as qtg 
 import locale
-import pathlib
+import pathlib 
 import os
 locale.setlocale(locale.LC_ALL,"") 
 from decimal import *
 import re
 
 
-# evaluateSaveIndex = (1,)
-# listTableValuesIndexes = (0,4,8,10,1,2,11,3,5,9)
 
 class main(modelMain.main):
     def __init__(self):
         super().__init__()
         #o! TEMP - DELETE - JUST FOR TESTING ON ITS OWN - WHEY DB IS OPERATED THEY WILL POPULATE FORM MENU
-        constants.queryIftaJuris()
-        constants.querybookkeepingTruckingCategories()
+        # constants.queryIftaJuris()
+        # constants.querybookkeepingTruckingCategories()
         #@abstract methods - def updateRecord - def requery - def btn_delete_pressed
         
         # self.setGlobalVariables()
@@ -70,24 +68,27 @@ class main(modelMain.main):
             self.deleteRecord(text)
         else:
             self.clearForm()
-        pass
-
-    def setGlobalVariables(self):
-       # DB INFO
+        
+    def setSizes(self):
         self.size_ = "h1"
-        self.idColumn = 'id' 
-        self.tableVar = 'bookkeeping'
-        self.listTableValuesIndexes = (0,4,7,9,1,2,10,3,5,8)
+    def mutableVariables(self):
+        '''
+        This are separated from global so they can be changed in the subfor used in loads
+        '''
+       # DB INFO
+        # self.size_ = "h1"
+        
+        self.layoutVar = self.formLayoutSideFilesTree
         # self.formToDBItems = 4
-        self.titleText = "BOOKKEEPING"
-        self.widgetsOptSizes = [1,1]
-        self.listHiddenItems = (4,5,6,7,8,9,10)
-        self.listColumnWidth = ((1,100),(2,100),(3,300) )
-        self.sortColumn = 1
-        self.onNewFocusWidget = 1
-        dbLogin = constants.avdtDB
-        self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        self.evaluateSaveIndex = (1,3,5)
+        # self.titleText = "BOOKKEEPING"
+        # self.widgetsOptSizes = [1,1]
+        # self.listHiddenItems = (4,5,6,7,8,9,10)
+        # self.listColumnWidth = ((1,100),(2,100),(3,300) )
+        # self.sortColumn = 1
+        # self.onNewFocusWidget = 1
+        # dbLogin = constants.avdtDB
+        # self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        # self.evaluateSaveIndex = (1,3,5)
         self.selectSql = '''
             SELECT
                 -- DISPLAY VALUES
@@ -117,10 +118,36 @@ class main(modelMain.main):
                 AND YEAR(bookkeeping.date_) LIKE %s
                 ;'''
 
+        # self.newRecordSql = '''
+        #     INSERT INTO bookkeeping (idCarrier, idCategorie,
+        #         account_, date_, amount, isIncome, description_,
+        #         anexo, isBusiness) VALUES'''
+
+    def setGlobalVariables(self):
+       # DB INFO
+        
+        # self.size_ = "h1"
+        self.setSizes()
+        self.idColumn = 'id' 
+        self.tableVar = 'bookkeeping'
+        self.listTableValuesIndexes = (0,4,7,9,1,2,10,3,5,8)
+        # self.formToDBItems = 4
+        self.titleText = "BOOKKEEPING"
+        self.widgetsOptSizes = [1,1]
+        self.listHiddenItems = (0,4,5,6,7,8,9,10)
+        self.listColumnWidth = ((1,100),(2,100),(3,300) )
+        self.sortColumn = 1
+        self.onNewFocusWidget = 1
+        dbLogin = constants.avdtDB
+        self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        self.evaluateSaveIndex = (1,3,5)
+        
+
         self.newRecordSql = '''
             INSERT INTO bookkeeping (idCarrier, idCategorie,
                 account_, date_, amount, isIncome, description_,
                 anexo, isBusiness) VALUES'''
+        self.mutableVariables()
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
@@ -139,7 +166,8 @@ class main(modelMain.main):
 
 #G! INIT MAIN FORM --------------------------------------------------------------
     def configure_form(self):
-        self.formLayoutSideFilesTree()
+        # self.formLayoutSideFilesTree()
+        self.layoutVar()
         self.filesFolder.setLineEditFileBox(self.fontSize)
         self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
         self.filesFolder.txtFilePath.setText(self.filesFolder.root)
@@ -213,7 +241,7 @@ class main(modelMain.main):
         self.layoutForm.addRow(labelWidget('Amount:', self.fontSize), self.amount)
         self.layoutForm.addRow(labelWidget('Type:', self.fontSize), self.isIncome)
         
-        self.layoutForm.addRow(labelWidget('Description', 16, True, "Blue" , "center"))
+        self.layoutForm.addRow(labelWidget('Description', 14, True, "black" , "center"))
         self.layoutForm.addRow(self.description)
         
     def getCarriers(self):
@@ -408,6 +436,20 @@ class main(modelMain.main):
     
         
 
+    def calculateTotals(self):
+        amounts = self.list.getColumnValues((2,10))#8 is business True/False
+        # total = Decimal('0.00') 
+        incomes = Decimal('0.00') 
+        expenses = Decimal('0.00') 
+        if amounts:
+            for i in amounts:
+                if i[1] == "Expense":
+                    expenses += Decimal(re.sub(r"[^\d.]","", i[0]))
+                elif i[1] == "Income":
+                    incomes += Decimal(re.sub(r"[^\d.]","", i[0]))
+            
+            return incomes, expenses
+
     def setTotals(self):
         widgets = self.list.layoutDetails.rowCount()
         if self.setTotalsOpt.isChecked():
@@ -421,17 +463,8 @@ class main(modelMain.main):
                 self.list.layoutDetails.addRow(labelWidget("Income:", 11), self.income)
                 self.list.layoutDetails.addRow(labelWidget("Expenses:", 11), self.expenses)
                 self.list.layoutDetails.addRow(labelWidget("Total:", 13, True), self.totals)
-            
-            amounts = self.list.getColumnValues((2,11))
-            if amounts:
-                total = Decimal('0.00') 
-                incomes = Decimal('0.00') 
-                expenses = Decimal('0.00') 
-                for i in amounts:
-                    if i[1] == "Expense":
-                        expenses += Decimal(re.sub(r"[^\d.]","", i[0]))
-                    elif i[1] == "Income":
-                        incomes += Decimal(re.sub(r"[^\d.]","", i[0]))
+                
+                incomes, expenses = self.calculateTotals()
                     
                 total = incomes - expenses
                 total = Decimal(total.quantize(Decimal(".01")))
