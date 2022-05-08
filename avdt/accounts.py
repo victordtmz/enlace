@@ -1,5 +1,5 @@
-from globalElements import constants
-from globalElements.accounts import main as accounts
+from globalElements import constants, accounts
+# from globalElements.accounts import accounts as accounts
 from localDB import mainModel
 from globalElements.widgets import (lineEditCopy, webWidget, dateWidget, 
     labelWidget,  textEdit, lineEdit, cboFilterGroup)
@@ -11,7 +11,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
 # from globalElements import DB as mysqlDb 
 
-class main(accounts.main):
+class main(accounts.main): 
     def __init__(self):
         super().__init__()
         # self.dbFolder = f'{constants.rootAVDT}\Carriers'
@@ -69,27 +69,27 @@ class main(accounts.main):
     #     self.layoutFormBox.setMaximumWidth(500)
     #     self.setFormElements()
 
-    def setFormElements(self):#p! Form elements
-        self.id_ = lineEdit(self.fontSize)#
-        self.id_.setReadOnly(True)
-        self.account = lineEdit(self.fontSize)
-        self.user = lineEditCopy(self.fontSize)
-        self.pwd = lineEditCopy(self.fontSize)
-        self.date_ = dateWidget(self.fontSize)
-        self.portal = webWidget(10)
-        self.notes = textEdit(self.fontSize)
-        self.notes.setMinimumHeight(300)
-        self.formItems = [self.id_, self.account, self.user,
-            self.pwd, self.date_, self.portal, self.notes]
+    # def setFormElements(self):#p! Form elements
+    #     self.id_ = lineEdit(self.fontSize)#
+    #     self.id_.setReadOnly(True)
+    #     self.account = lineEdit(self.fontSize)
+    #     self.user = lineEditCopy(self.fontSize)
+    #     self.pwd = lineEditCopy(self.fontSize)
+    #     self.date_ = dateWidget(self.fontSize)
+    #     self.portal = webWidget(10)
+    #     self.notes = textEdit(self.fontSize)
+    #     self.notes.setMinimumHeight(300)
+    #     self.formItems = [self.id_, self.account, self.user,
+    #         self.pwd, self.date_, self.portal, self.notes]
 
-        self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
-        self.layoutForm.addRow(labelWidget('Account:', self.fontSize), self.account)
-        self.layoutForm.addRow(labelWidget('User:', self.fontSize), self.user)
-        self.layoutForm.addRow(labelWidget('Password:', self.fontSize), self.pwd)
-        self.layoutForm.addRow(labelWidget('Date:', self.fontSize), self.date_)
-        self.layoutForm.addRow(labelWidget('Portal:', self.fontSize), self.portal)
-        self.layoutForm.addRow(labelWidget('Notes', 14,True, align="center"))
-        self.layoutForm.addRow(self.notes)
+    #     self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
+    #     self.layoutForm.addRow(labelWidget('Account:', self.fontSize), self.account)
+    #     self.layoutForm.addRow(labelWidget('User:', self.fontSize), self.user)
+    #     self.layoutForm.addRow(labelWidget('Password:', self.fontSize), self.pwd)
+    #     self.layoutForm.addRow(labelWidget('Date:', self.fontSize), self.date_)
+    #     self.layoutForm.addRow(labelWidget('Portal:', self.fontSize), self.portal)
+    #     self.layoutForm.addRow(labelWidget('Notes', 14,True, align="center"))
+    #     self.layoutForm.addRow(self.notes)
         
     # def setConnections(self):
     #     self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))

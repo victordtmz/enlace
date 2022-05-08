@@ -7,7 +7,7 @@ from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
     bookkeeping_categories, miles, IFTA, loads_payments, bookkeeping_totals)
-from enlace import enlace
+from enlace import enlace 
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication

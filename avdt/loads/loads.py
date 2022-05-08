@@ -13,7 +13,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
-from avdt.loads import miles, stops, bookkeeping, diesel
+from avdt.loads import miles, stops, bookkeeping, diesel, pay, invoice
 
 
 class main(modelMain.main):
@@ -39,6 +39,7 @@ class main(modelMain.main):
         self.contractingBook = ''
         self.haulingBook = ''
         self.diesel = ''
+        self.invoice = ''
         #o! CONFIGURE DIESEL 
 
     def configToolbar(self):
@@ -73,7 +74,17 @@ class main(modelMain.main):
         #hauling $$ toolbar button
         self.btnHaulingBookkeeping = buttonWidget('Hauling', self.mainSize, self.iconMoney)
         self.btnHaulingBookkeeping.pressed.connect(self.haulingBookOpen)
-        self.titleLayout.insertWidget(6, self.btnHaulingBookkeeping)
+        self.titleLayout.insertWidget(7, self.btnHaulingBookkeeping)
+
+        #PAY $$ toolbar button
+        self.btnPay = buttonWidget('Pay', self.mainSize, self.iconMoney)
+        self.btnPay.pressed.connect(self.payOpen)
+        self.titleLayout.insertWidget(8, self.btnPay)
+
+        #invoice  button
+        self.btnInvoice = buttonWidget('Invoice', self.mainSize, self.iconInvoice)
+        self.btnInvoice.pressed.connect(self.invoiceOpen)
+        self.titleLayout.insertWidget(8, self.btnInvoice)
 
         # #Toolbar button Contracting carrier accounting
         # self.actCCarrierAccounting = qtg.QAction('C ACCOUNTING')
@@ -231,6 +242,8 @@ class main(modelMain.main):
         self.layoutFormBox.setMaximumWidth(500)
         self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
         self.filesFolder.txtFilePath.setText(self.filesFolder.root)
+        self.title.deleteLater()
+        self.titleLayoutBox.setMinimumHeight(40)
 
         self.setFormElements()
 
@@ -365,6 +378,14 @@ class main(modelMain.main):
         else:
             self.filesFolder.txtFilePath.setText(self.filesFolder.root)
 
+    def payOpen(self):
+        self.pay = pay.main()
+        self.tabsWidget.addTab(self.pay, '   PAYMENTS   ')
+        self.tabsWidget.setCurrentWidget(self.pay)
+        self.pay.treeview.proxyModel.setSourceModel(self.list.proxyModel)
+        self.pay.configureColumns()
+        self.pay.setTotals()
+
     def stopsOpen(self):
         self.stops = stops.main()
         self.tabsWidget.addTab(self.stops, '   STOPS   ')
@@ -390,6 +411,18 @@ class main(modelMain.main):
             self.miles.idLoad = idLoad
         else:
             self.miles.idLoad = 0
+        self.miles.requery()
+
+    def invoiceOpen(self):
+        self.invoice = invoice.main()#r! CHANGE
+        self.tabsWidget.addTab(self.invoice, '   INVOICE   ')
+        self.tabsWidget.setCurrentWidget(self.invoice)
+        idLoad = self.id_.text()
+        #set items to current selection 
+        if idLoad:
+            self.invoice.loadFolder = self.filesFolder.txtFilePath
+        else:
+            self.invoice.loadFolder = ''
         self.miles.requery()
 
     def contractingBookOpen(self):

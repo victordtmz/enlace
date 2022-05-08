@@ -1,26 +1,31 @@
 from localDB import mainModel
-from globalElements.widgets import (lineEditCopy, webWidget, dateWidget, 
-    labelWidget,  textEdit, lineEdit)
+from globalElements import constants
+from globalElements.widgets import (lineEditCurrency, webWidget, 
+    dateWidget, labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup)
 from localDB import sqliteDB
- 
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor
+import pathlib
+import os
+  
+# tableVar = 'accounts'
 class DB(sqliteDB.avdtLocalDB): 
     def __init__(self): 
         # self.dict = {}
         # self.list = []
-        self.createTableSql = '''
-        CREATE TABLE IF NOT EXISTS accounts (
+        self.createTableSql = f'''
+        CREATE TABLE IF NOT EXISTS {self.tableVar} (
             id INTEGER PRIMARY KEY,
-            account TEXT,
-            user TEXT,
-            pwd TEXT,
-            date_ TEXT,
-            portal TEXT,
+            no_ TEXT,
+            item TEXT,
+            amount REAL,
             notes TEXT
             )
         '''
-        self.sqlFolder = 'globalElements\\accounts'
-        self.database = 'accounts.avd'
-        self.tableVar = 'accounts'
+        # self.sqlFolder = 'globalElements\\accounts'
+        self.database = 'invoice.avd'
+        self.tableVar = 'invoice'
         # self.dbFolder = f'{constants.rootAVDT}\Carriers'
 
 class main(mainModel.main):
@@ -36,6 +41,7 @@ class main(mainModel.main):
 
     def setGlobalVariables(self):
         # DB INFO
+        self.loadFolder = ''
         self.size_ = "h1" 
         self.idColumn = 'id' 
         self.listTableValuesIndexes = (0,1,2,3,4,5,6)
@@ -48,56 +54,68 @@ class main(mainModel.main):
         self.listColumnWidth = ((1,320),(2,250))
         self.sortColumn = 1
         self.onNewFocusWidget = 0
-        self.selectSql = '''
+        self.selectSql = f'''
         SELECT
             id,
-            account AS "Account",
-            user AS "User",
-            pwd AS "Password",
-            date_ AS "Date",
-            portal AS "Portal",
+            no_ AS "No.",
+            item AS "Item",
+            amount AS "Amount",
             notes AS "Notes"
-        FROM accounts;'''
+        FROM {self.tableVar};'''
         self.newRecordSql = '''
-            INSERT INTO accounts (
-                account,
-                user,
-                pwd,
-                date_,
-                portal,
-                notes
-                )
-            VALUES 
+            INSERT INTO accounts (no_, item, amount, notes) VALUES 
         '''
+    def requery(self):
+        QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
+        self.db.dbFolder = f'{self.loadFolder}\invoice'
+        try:
+            records = self.selectAll()
+        except:
+            folder = pathlib.Path(self.db.dbFolder)
+            if not folder.exists():
+                os.mkdir(self.db.dbFolder)
+            self.db.executeQuery(self.db.createTableSql)
+            records = self.selectAll()
+
+        if records:
+            self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
+            self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
+        else:
+            self.list.removeAllRows()
+        self.configureColumns()
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
+
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 
-                account = '{record[1]}',
-                user = '{record[2]}',
-                pwd = '{record[3]}',
-                date_ = '{record[4]}',
-                portal = '{record[5]}',
-                notes = '{record[6]}'
+                no_ = '{record[1]}',
+                item = '{record[2]}',
+                amount = '{record[3]}',
+                notes = '{record[4]}'
                 WHERE id =  {record[0]};'''
         self.db.executeQueryCommit(sql)
-        
+    
     def btn_delete_pressed(self):
         record = self.list.treeview.selectionModel().selectedIndexes()
         #Verificar si hay registro seleccionado
         if record:
             idVar = self.id_.text()
-            account = self.account.getInfo()
+            no_ = self.no_.getInfo()
+            item = self.item.getInfo()
+
             text = f'''Eliminar el registro:
             id: {idVar} 
-            Account.: {account}
+            No.: {no_}
+            Item: {item}
             '''
             self.deleteRecord(text)
         else:
             self.clearForm()
         
     def configure_form(self): 
-        self.formLayoutSideFilesTree()
+        self.formLayoutStraight()
         self.layoutFormBox.setMinimumWidth(450)
         self.layoutFormBox.setMaximumWidth(500)
         # self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
@@ -107,34 +125,54 @@ class main(mainModel.main):
     def setFormElements(self):#p! Form elements
         self.id_ = lineEdit(self.fontSize)#
         self.id_.setReadOnly(True)
-        self.account = lineEdit(self.fontSize)
-        self.user = lineEditCopy(self.fontSize)
-        self.pwd = lineEditCopy(self.fontSize)
-        self.date_ = dateWidget(self.fontSize)
-        self.portal = webWidget(10)
-        self.notes = textEdit(self.fontSize)
-        self.notes.setMinimumHeight(300)
-        self.formItems = [self.id_, self.account, self.user,
-            self.pwd, self.date_, self.portal, self.notes]
 
+        self.idLoad_ = lineEdit(self.fontSize)
+        self.idLoad_.setReadOnly(True)
+ 
+        self.no_ = spinbox(self.fontSize)
+        self.no_.setMinimum(1)
+
+        self.item = cboFilterGroup(
+            self.fontSize, 
+            refreshable=False, 
+            items= ["", "Line haul", "Detention", "Layover", "Lumper"],
+            clearFilter=False
+        )
+
+        self.amount = lineEditCurrency(self.fontSize)
+        self.notes = textEdit(self.fontSize)
+
+
+        #o! ALL DB ITEMS THAT NEED TO BE POPULATED
+        self.formItems = [
+            self.id_, 
+            self.idLoad_,
+            self.no_,
+            self.item, 
+            self.amount,
+            self.notes]
+        
         self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
-        self.layoutForm.addRow(labelWidget('Account:', self.fontSize), self.account)
-        self.layoutForm.addRow(labelWidget('User:', self.fontSize), self.user)
-        self.layoutForm.addRow(labelWidget('Password:', self.fontSize), self.pwd)
-        self.layoutForm.addRow(labelWidget('Date:', self.fontSize), self.date_)
-        self.layoutForm.addRow(labelWidget('Portal:', self.fontSize), self.portal)
-        self.layoutForm.addRow(labelWidget('Notes', 14,True, align="center"))
+        self.layoutForm.addRow(labelWidget('IdLoad:', self.fontSize), self.idLoad_)
+        self.layoutForm.addRow(labelWidget('No.:', self.fontSize), self.no_)
+        self.layoutForm.addRow(labelWidget('Item:', self.fontSize), self.item)
+        self.layoutForm.addRow(labelWidget('Amount:', self.fontSize), self.amount)
+        self.layoutForm.addRow(labelWidget("Notes", 14, fontColor="Blue", align="center"))
         self.layoutForm.addRow(self.notes)
         
+
     def setConnections(self):
         self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
-        # self.carrier.cbo.currentTextChanged.connect(lambda: self.formDirty(1,self.carrier.getInfo()))
-        self.account.textChanged.connect(lambda: self.formDirty(1,self.account.getInfo()))
-        self.user.lineEdit.textChanged.connect(lambda: self.formDirty(2,self.user.getInfo()))
-        self.pwd.lineEdit.textChanged.connect(lambda: self.formDirty(3,self.pwd.getInfo()))
-        self.date_.dateEdit.dateChanged.connect(lambda: self.formDirty(4,self.date_.getInfo()))
-        self.portal.lineEdit.textChanged.connect(lambda: self.formDirty(5,self.portal.getInfo()))
-        self.notes.textChanged.connect(lambda: self.formDirty(6,self.notes.getInfo()))
+        self.idLoad_.textChanged.connect(lambda: self.formDirty(1,self.idLoad_.getInfo()))
+        self.no_.textChanged.connect(lambda: self.formDirty(2, self.no_.getInfo))
+        self.item.cbo.currentTextChanged.connect(lambda: self.formDirty(3, self.item.getInfo))
+        self.amount.textChanged.connect(lambda: self.formDirty(4, self.amount.getInfo))
+        self.notes.textChanged.connect(lambda: self.formDirty(5, self.notes.getInfo()))
+        self.btnNew.pressed.connect(self.createNewRecord)
+
+    def createNewRecord(self):
+        if self.idLoad:
+            self.idLoad_.setText(str(self.idLoad))
 
 if __name__ == '__main__':
     db = DB()

@@ -1,6 +1,6 @@
-from globalElements import constants
+from globalElements import constants, accounts
 from globalElements.widgets import labelWidget,cboFilterGroup
-from globalElements.accounts import main as accounts
+# from globalElements.accounts import accounts as accounts
 # from localDB import mainModel
 # from globalElements.widgets import (lineEditCopy, webWidget, dateWidget, 
 #     labelWidget,  textEdit, lineEdit, cboFilterGroup)
