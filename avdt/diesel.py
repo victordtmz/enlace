@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from globalElements import constants, DB, mainModel, functions as gf
+from globalElements import constants, DB, functions as gf, modelMain
 from globalElements.widgets import (labelWidget, truFalseRadioButtons, 
     dateWidget, lineEditCurrency, textEdit, lineEdit, cboFilterGroup)
 import sys
@@ -17,7 +17,7 @@ import re
 # evaluateSaveIndex = (1,)
 # listTableValuesIndexes = (0,4,8,10,1,2,11,3,5,9)
 
-class main(mainModel.main):
+class main(modelMain.main):
     def __init__(self):
         super().__init__()
         #o! TEMP - DELETE - JUST FOR TESTING ON ITS OWN - WHEY DB IS OPERATED THEY WILL POPULATE FORM MENU

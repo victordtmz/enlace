@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from globalElements import DB, constants, mainModel
+from globalElements import DB, constants, modelMain
 from globalElements.widgets import dateWidget, dateEdit, labelWidget,  webWidget, textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone
 from globalElements.zipsWidget import mainUs as UsZipsWidget
 import sys
@@ -15,7 +15,7 @@ locale.setlocale(locale.LC_ALL,"")
 from decimal import *
 
 
-class main(mainModel.main):
+class main(modelMain.main):
     def __init__(self):
         super().__init__()
         

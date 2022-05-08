@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from globalElements import constants, functions, mainModel, DB, listModel
+from globalElements import constants, functions, DB, modelList, modelMain
 import sys
 from PyQt6 import QtWidgets as qtw
 from PyQt6 import QtCore as qtc
@@ -11,7 +11,7 @@ from globalElements.widgets import (buttonWidget, labelWidget, webWidget,
     textEdit, lineEdit, truFalseRadioButtons,spinbox,dateTimeEdit, 
     checkBox, spacer)
 
-class warehouses(listModel.main): 
+class warehouses(modelList.main): 
     def __init__(self):
         super().__init__()
         self.btn_cerrar.deleteLater()
@@ -121,7 +121,7 @@ class screenshot(qtw.QWidget):
         self.setAutoFillBackground(True)
         self.setPalette(pal)
 
-class main(mainModel.main):
+class main(modelMain.main):
     def __init__(self):
         super().__init__()
         

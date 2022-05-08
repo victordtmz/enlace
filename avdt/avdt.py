@@ -88,7 +88,7 @@ class main(QMainWindow):
 
         self.btnAvdtBookkeeping = buttonWidget("    Accounting", "main", icon=constants.iconAccounting)
         self.btnAvdtAccountingTotals = buttonWidget("    Accounting Totals", "main", icon=constants.iconMoneyBag)
-        self.btnAvdtAccountingCategories = buttonWidget("    Categories", "main", icon=constants.iconCategories)
+        self.btnAvdtBookkeepingCategories = buttonWidget("    Categories", "main", icon=constants.iconCategories)
         self.btnAvdtDiesel = buttonWidget("    Diesel", "main", icon=constants.iconFuel)
         
         self.btnAvdtMiles = buttonWidget("    Miles", "main", icon=constants.iconRoad)
@@ -133,7 +133,7 @@ class main(QMainWindow):
 
         self.layoutMainGrid.addWidget(self.btnAvdtBookkeeping,4,0)
         self.layoutMainGrid.addWidget(self.btnAvdtAccountingTotals,4,1)
-        self.layoutMainGrid.addWidget(self.btnAvdtAccountingCategories,4,2)
+        self.layoutMainGrid.addWidget(self.btnAvdtBookkeepingCategories,4,2)
         self.layoutMainGrid.addWidget(self.btnAvdtDiesel,4,3)
 
         

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from globalElements import DB, constants, mainModel
+from globalElements import DB, constants, modelMain
 from globalElements.widgets import (buttonWidget, dateWidget, labelWidget,  lineEditCurrency, 
     textEdit, lineEdit, cboFilterGroup, checkBox)
 import sys
@@ -16,7 +16,7 @@ from decimal import *
 from avdt.loads import stops
 
 
-class main(mainModel.main):
+class main(modelMain.main):
     def __init__(self):
         super().__init__()
         

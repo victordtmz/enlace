@@ -3,8 +3,8 @@ from localDB import mainModel
 from globalElements.widgets import labelWidget,  lineEditCurrency, textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone
 from distutils import ccompiler
 import imp
-from avdt import bookkeeping
-from avdt.bookkeeping import categories
+from avdt import bookkeeping_
+from avdt.bookkeeping_ import categories
 from localDB import sqliteDB
 from localDB.scheduleC import scheduleC
 from globalElements.widgets import cbo

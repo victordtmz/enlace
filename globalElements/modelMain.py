@@ -13,7 +13,7 @@ from globalElements.widgets import (buttonWidget, titleBox, spacer,
 import html2text
 from globalElements import DB, constants, functions as gf
 
-
+ 
 
 class main(QMainWindow):
     def __init__(self):
@@ -237,9 +237,9 @@ class main(QMainWindow):
         # self.splitter_details.addWidget(self.layout_buttons_box)
         self.detailsLayout.addWidget(self.form)
         self.detailsLayout.addWidget(self.layoutFormSaveBtnBox)
-        self.detailsBox = QFrame()
-        self.detailsBox.setFrameShape(QFrame.Shape.Box)
-        self.detailsBox.setFrameShadow(QFrame.Shadow.Raised)
+        self.detailsBox = QWidget()
+        # self.detailsBox.setFrameShape(QFrame.Shape.Box)
+        # self.detailsBox.setFrameShadow(QFrame.Shadow.Raised)
         self.detailsBox.setLayout(self.detailsLayout)
 
         #g!LAYOUT LIST
@@ -612,15 +612,16 @@ class main(QMainWindow):
                 # get all values from form and make them the same for list and formValues
                 if updateList:
                     record = self.updateListFormValues()
-                    self.list.addRecords((record,))
-                    # find the row of the item with filters applied - 
-                    if not changedSelection:
-                        itemRow = self.list.findItemFiltered(0,record[0])
-                        if itemRow:
-                            # set the index with the given row
-                            itemIndex = self.list.proxyModel.index(itemRow,0)
-                            # select the added item. 
-                            self.list.treeview.setCurrentIndex(itemIndex)
+                    self.addListRecord(record, changedSelection)
+                    # self.list.addRecords((record,))
+                    # # find the row of the item with filters applied - 
+                    # if not changedSelection:
+                    #     itemRow = self.list.findItemFiltered(0,record[0])
+                    #     if itemRow:
+                    #         # set the index with the given row
+                    #         itemIndex = self.list.proxyModel.index(itemRow,0)
+                    #         # select the added item. 
+                    #         self.list.treeview.setCurrentIndex(itemIndex)
                             #o! setting folder should not be necessary, it should set with new selection
                 self.setFilesFolder()
                 
@@ -641,6 +642,16 @@ class main(QMainWindow):
                     self.updateListRecord(record, False)
                     
     # When ID value if blank, it will evaluate it a new record is present and save it
+    def addListRecord(self,record,changedSelection):
+        self.list.addRecords((record,))
+        # find the row of the item with filters applied - 
+        if not changedSelection:
+            itemRow = self.list.findItemFiltered(0,record[0])
+            if itemRow:
+                # set the index with the given row
+                itemIndex = self.list.proxyModel.index(itemRow,0)
+                # select the added item. 
+                self.list.treeview.setCurrentIndex(itemIndex)
     def updateListRecord(self,record, selectionChanged):
         if selectionChanged:
             #c!Find and change the record 

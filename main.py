@@ -5,8 +5,8 @@ load()
 import sys
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
-from avdt import (avdt, carriers, clients_, drivers, trucks, trailers, stops, accounts, bookkeeping,
-    diesel)
+from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
+    bookkeeping_categories, miles, IFTA)
 from enlace import enlace
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
@@ -71,7 +71,10 @@ class MainWindow(QMainWindow):
         self.avdtMenu.btnAvdtClients.pressed.connect(self.avdtOpenClients)
         self.avdtMenu.btnAvdtStops.pressed.connect(self.avdtOpenStops)
         self.avdtMenu.btnAvdtBookkeeping.pressed.connect(self.avdtOpenBookkeeping)
+        self.avdtMenu.btnAvdtBookkeepingCategories.pressed.connect(self.avdtOpenBookkeepingCat)
         self.avdtMenu.btnAvdtDiesel.pressed.connect(self.avdtOpenDiesel)
+        self.avdtMenu.btnAvdtMiles.pressed.connect(self.avdtOpenMiles)
+        self.avdtMenu.btnAvdtIfta.pressed.connect(self.avdtOpenIfta)
 
     def avdtOpenLoads(self):
         self.avdtLoads = loads.main()
@@ -114,14 +117,29 @@ class MainWindow(QMainWindow):
         self.tabWidget.setCurrentWidget(self.avdtStops)
 
     def avdtOpenBookkeeping(self):
-        self.avdtBookkeeping = bookkeeping.main()
+        self.avdtBookkeeping = bookkeeping_.main()
         self.tabWidget.addTab(self.avdtBookkeeping,'    AVDT BOOKKEEPING   ')
         self.tabWidget.setCurrentWidget(self.avdtBookkeeping)
+
+    def avdtOpenBookkeepingCat(self):
+        self.avdtBookkeepingCat = bookkeeping_categories.main()
+        self.tabWidget.addTab(self.avdtBookkeepingCat,'    AVDT BOOKKEEPING CATEGORIES   ')
+        self.tabWidget.setCurrentWidget(self.avdtBookkeepingCat)
 
     def avdtOpenDiesel(self):
         self.avdtDiesel = diesel.main()
         self.tabWidget.addTab(self.avdtDiesel,'    AVDT DIESEL   ')
         self.tabWidget.setCurrentWidget(self.avdtDiesel)
+
+    def avdtOpenMiles(self):
+        self.avdtMiles = miles.main()
+        self.tabWidget.addTab(self.avdtMiles,'    AVDT MILES   ')
+        self.tabWidget.setCurrentWidget(self.avdtMiles)
+
+    def avdtOpenIfta(self):
+        self.avdtIfta = IFTA.main()
+        self.tabWidget.addTab(self.avdtIfta,'    AVDT IFTA   ')
+        self.tabWidget.setCurrentWidget(self.avdtIfta)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

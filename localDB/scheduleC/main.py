@@ -1,10 +1,6 @@
-from globalElements import constants, functions as gf
+from globalElements import functions as gf
 from localDB import mainModel
-from globalElements.widgets import labelWidget,  lineEditCurrency, textEdit, lineEdit, cboFilterGroup, spinbox, lineEditPhone
-from distutils import ccompiler
-import imp
-from avdt import bookkeeping
-from avdt.bookkeeping import categories
+from globalElements.widgets import labelWidget,  textEdit, lineEdit
 from localDB import sqliteDB
 from localDB.scheduleC import scheduleC
 from globalElements.widgets import cbo
@@ -23,12 +19,20 @@ class scheduleCbo(cbo):
         self.addItems(self.db.list)
         self.currentValues = []
 
+    # def getInfo(self):
+    #     return super().getInfo()
+    def populate(self, text):
+        sql = f'''
+            SELECT item from {self.db.tableVar}
+            WHERE id = '{text}' ''' 
+        info = self.db.selectRecords(sql)[0][0]
+        self.setCurrentText(info)
+
     def populateCurrentValues(self):
         item = self.getInfo()
-        record = self.db.selectByItem(item)[0]
+        if item: record = self.db.selectByItem(item)[0]
+        else: record = ['','','','']
         self.currentValues = record
-        # or i in record:
-        #     self.currentValues.append(i[0])
 
     def getDbInfo(self):
         v = self.getInfo()
@@ -51,6 +55,7 @@ class DB(sqliteDB.avdtLocalDB):
         self.dict = {}
         self.dictCbo = {}
         self.list = []
+        self.configDB()
     
     def configDB(self):
         self.sqlFolder = 'localDB\scheduleC'

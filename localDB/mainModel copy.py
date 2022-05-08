@@ -11,7 +11,7 @@ from globalElements.widgets import buttonWidget, labelWidget,  deleteWarningBox,
 import html2text
 from globalElements import constants, functions as gf
 
-from globalElements import mainModel
+from globalElements import modelMain
 
 
 class spacer(qtw.QLabel):
