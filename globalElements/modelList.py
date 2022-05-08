@@ -273,7 +273,8 @@ class main(QMainWindow):
 
     def btn_cerrar_pressed(self):
         #this widget shoud be used withn another widget
-        self.parentWidget().parentWidget().currentWidget().deleteLater()
+        self.deleteLater()
+        # self.parentWidget().parentWidget().currentWidget().deleteLater()
 
     def selectAll(self, parameters=0):
         # sql = self.getSQL("selectAll.sql")#make sure sql has no ending statement

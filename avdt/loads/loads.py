@@ -13,7 +13,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
-from avdt.loads import stops
+from avdt.loads import miles, stops
 
 
 class main(modelMain.main):
@@ -57,7 +57,7 @@ class main(modelMain.main):
 
         #Miles toolbar button
         self.btnMiles = buttonWidget('Miles', self.mainSize, self.iconRoad)
-        # self.btnMiles.pressed.connect(self.milesOpen)
+        self.btnMiles.pressed.connect(self.milesOpen)
         self.titleLayout.insertWidget(5, self.btnMiles)
 
         # #Toolbar button Contracting carrier accounting
@@ -365,6 +365,21 @@ class main(modelMain.main):
             self.stops.idLoad = 0
         self.stops.requery()
 
+    def milesOpen(self):
+        self.miles = miles.main()
+        self.tabsWidget.addTab(self.miles, '   MILES   ')
+        self.tabsWidget.setCurrentWidget(self.miles)
+        idLoad = self.id_.text()
+        #set items to current selection 
+        if idLoad:
+            #set the values for idLoad and id Carrier on List for to be used on requery
+            self.miles.idLoad = idLoad
+            # self.stops.screenshotItems.carrier.setText(self.form.cCarrier.cbo.currentText())
+            # self.stops.screenshotItems.loadNo.setText(self.form.referenceNo.text())
+        else:
+            self.miles.idLoad = 0
+        self.miles.requery()
+
     def loadSelectionChange(self):
         idLoad = self.id_.getInfo()
         if idLoad:
@@ -448,6 +463,13 @@ class main(modelMain.main):
                 else:
                     self.stops.idLoad = 0
                 self.stops.requery()
+
+            elif self.tabsWidget.widget(counter) == self.miles:
+                if idLoad:
+                    self.miles.idLoad = idLoad
+                else:
+                    self.miles.idLoad = 0
+                self.miles.requery()
 
             # elif self.tabDetailsWidget.widget(counter) == self.invoice:
             #     if idLoad:
