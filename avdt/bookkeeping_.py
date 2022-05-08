@@ -232,7 +232,7 @@ class main(modelMain.main):
         self.list.layoutFilter.insertRow(0, labelWidget('Carrier:', self.filterSize), self.carrierFilter)
         
         if not constants.yearsItems:
-            constants.queryYears()
+            constants.queryYears() 
         self.yearFilter = cboFilterGroup(
             fontSize= self.fontSize, 
             completionMode=qtw.QCompleter.CompletionMode.InlineCompletion,

@@ -189,9 +189,11 @@ class main(modelEmpty.main):
         self.filterYear = cboFilterGroup(
             self.fontSize, 
             refreshable=True, 
-            items= constants.yearsItems,
             clearFilter=True
-        )
+        ) 
+        self.filterYear.cbo.addItems(constants.yearsItems)
+        completer = qtw.QCompleter(constants.yearsItems)
+        self.filterYear.cbo.setCompleter(completer)
         #g! month filter
         if not constants.monthsItems:
             constants.queryMonths()

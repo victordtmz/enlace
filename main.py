@@ -6,7 +6,7 @@ import sys
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
-    bookkeeping_categories, miles, IFTA)
+    bookkeeping_categories, miles, IFTA, loads_payments, bookkeeping_totals)
 from enlace import enlace
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
@@ -75,6 +75,8 @@ class MainWindow(QMainWindow):
         self.avdtMenu.btnAvdtDiesel.pressed.connect(self.avdtOpenDiesel)
         self.avdtMenu.btnAvdtMiles.pressed.connect(self.avdtOpenMiles)
         self.avdtMenu.btnAvdtIfta.pressed.connect(self.avdtOpenIfta)
+        self.avdtMenu.btnAvdtLoadPayments.pressed.connect(self.avdtOpenLoadsPayments)
+        self.avdtMenu.btnAvdtBookkeepingTotals.pressed.connect(self.avdtOpenBookkeepingTotals)
 
     def avdtOpenLoads(self):
         self.avdtLoads = loads.main()
@@ -140,6 +142,16 @@ class MainWindow(QMainWindow):
         self.avdtIfta = IFTA.main()
         self.tabWidget.addTab(self.avdtIfta,'    AVDT IFTA   ')
         self.tabWidget.setCurrentWidget(self.avdtIfta)
+
+    def avdtOpenLoadsPayments(self):
+        self.avdtLoadsPayments = loads_payments.main()
+        self.tabWidget.addTab(self.avdtLoadsPayments,'    AVDT LOADS PAYMENTS   ')
+        self.tabWidget.setCurrentWidget(self.avdtLoadsPayments)
+
+    def avdtOpenBookkeepingTotals(self):
+        self.avdtBookkeepingTotals = bookkeeping_totals.main()
+        self.tabWidget.addTab(self.avdtBookkeepingTotals,'    AVDT BOOKKEEPING TOTALS   ')
+        self.tabWidget.setCurrentWidget(self.avdtBookkeepingTotals)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
