@@ -13,7 +13,7 @@ import locale
 
 locale.setlocale(locale.LC_ALL,"")
 from decimal import *
-from avdt.loads import miles, stops, bookkeeping, diesel, pay, invoice
+from avdt.loads import invoice, miles, stops, bookkeeping, diesel, pay
 
 
 class main(modelMain.main):
@@ -420,10 +420,12 @@ class main(modelMain.main):
         idLoad = self.id_.text()
         #set items to current selection 
         if idLoad:
-            self.invoice.loadFolder = self.filesFolder.txtFilePath
+            self.invoice.idLoad = idLoad
+            self.invoice.loadFolder = self.filesFolder.txtFilePath.getInfo()
         else:
-            self.invoice.loadFolder = ''
-        self.miles.requery()
+            self.invoice.idLoad = 0
+            # self.invoice.loadFolder = ''
+        self.invoice.requery()
 
     def contractingBookOpen(self):
         self.contractingBook = bookkeeping.main()
@@ -483,7 +485,7 @@ class main(modelMain.main):
         idCCarrier = self.contracting.getDbInfo()
         idHCarrier = self.hauling.getDbInfo()
         
-        counter = 0
+        counter = 1 #start at 1 because 0 will always be details
         while counter < self.tabsWidget.count():
             if self.tabsWidget.widget(counter) == self.contractingBook:
                 if idLoad and idCCarrier:
@@ -499,7 +501,7 @@ class main(modelMain.main):
                     self.contractingBook.idCarrier = 0
                 self.contractingBook.requery()
             
-            if self.tabsWidget.widget(counter) == self.haulingBook:
+            elif self.tabsWidget.widget(counter) == self.haulingBook:
                 if idLoad and idHCarrier:
                     #set the values for idLoad and id Carrier on List for to be used on requery
                     self.haulingBook.idLoad = idLoad
@@ -513,7 +515,7 @@ class main(modelMain.main):
                     self.haulingBook.idCarrier = 0
                 self.haulingBook.requery()
 
-            if self.tabsWidget.widget(counter) == self.diesel:
+            elif self.tabsWidget.widget(counter) == self.diesel:
                 if idLoad and idHCarrier:
                     #set the values for idLoad and id Carrier on List for to be used on requery
                     self.diesel.idLoad = idLoad
@@ -569,7 +571,7 @@ class main(modelMain.main):
             #     if self.miles.addForm:
             #         self.miles.addForm.requery()
             
-            if self.tabsWidget.widget(counter) == self.stops:
+            elif self.tabsWidget.widget(counter) == self.stops:
                 if idLoad:
                     self.stops.idLoad = idLoad
                     self.stops.screenshotItems.carrier.setText(self.contracting.getInfo())
@@ -584,6 +586,14 @@ class main(modelMain.main):
                 else:
                     self.miles.idLoad = 0
                 self.miles.requery()
+
+            elif self.tabsWidget.widget(counter) == self.invoice:
+                if idLoad:
+                    self.invoice.idLoad = idLoad
+                    self.invoice.loadFolder = self.filesFolder.txtFilePath.getInfo()
+                else:
+                    self.invoice.idLoad = 0
+                self.invoice.requery()
 
             # elif self.tabDetailsWidget.widget(counter) == self.invoice:
             #     if idLoad:

@@ -1,69 +1,113 @@
-#!/usr/bin/python3
-import sys
-from PyQt6 import QtWidgets as qtw
-from PyQt6 import QtCore as qtc
-from PyQt6 import QtGui as qtg 
-from globalElements import constants, DB, modelMain, modelList
-from globalElements.widgets import labelWidget, lineEditCurrency, textEdit, lineEdit, cboFilterGroup, spinbox
-import locale 
-locale.setlocale(locale.LC_ALL,"")
-from decimal import *
+from localDB import mainModel
+from globalElements import constants
+from globalElements.widgets import (lineEditCurrency, webWidget, 
+    dateWidget, labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup)
+from localDB import sqliteDB
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor
+import pathlib
+import os 
+  
+# tableVar = 'accounts'
+class DB(sqliteDB.avdtLocalDB): 
+    def __init__(self): 
+        # self.dict = {}
+        # self.list = []
+        
+        # self.sqlFolder = 'globalElements\\accounts'
+        self.database = 'invoice.avd'
+        self.tableVar = 'invoice'
+        self.createTableSql = f'''
+        CREATE TABLE IF NOT EXISTS {self.tableVar} (
+            id INTEGER PRIMARY KEY,
+            no_ TEXT,
+            item TEXT,
+            amount REAL,
+            notes TEXT
+            )
+        '''
+        # self.dbFolder = f'{constants.rootAVDT}\Carriers'
 
-class main(modelMain.main):
+class main(mainModel.main):
     def __init__(self):
         super().__init__()
         
-        # set addForm to False - this will be the widget to add records to the current load
-        self.addForm = False
-        self.initUi()
         self.configure_form()
         self.setConnections()
-        # self.setTotalsElements()
-        self.requery()
         
-        # self.getIdLoad()
+        
+
+    def setDBConnection(self):
+        self.db = DB()
+        self.tableVar = self.db.tableVar
 
     def setGlobalVariables(self):
         # DB INFO
-        self.size_ = "h2"
         self.idLoad = 0
-        self.idColumn = 'idLoad' 
-        self.tableVar = 'AVDT_Loads_Invoice'
-        self.sqlFolderName = "AVDT_loads_invoice"
-        self.listTableValuesIndexes = (0,1,2,3,4,5)
+        self.setDBConnection()
+        self.evaluateSaveIndex = (2,3)
+        self.loadFolder = ''
+        self.size_ = "h2" 
+        self.idColumn = 'id' 
+        self.listTableValuesIndexes = (0,1,2,3,4)
         # self.formToDBItems = 4
-        self.titleText = "Invoice Items"
-        self.listWidth = 1
-        self.formWidth = 1
-        self.listHiddenItems = (0,1,5)
-        self.listColumnWidth = ((2,40),(3,150),(4,110))
-        self.sortColumn = 2
-        self.onNewFocusWidget = 2
+        self.titleText = "INVOICE ITEMS"
+        # self.listExpand = 1
+        # self.formExpand = 1
+        self.widgetsOptSizes = [1,1]
+        self.listHiddenItems = (0,4)
+        self.listColumnWidth = ((1,60),(2,120))
+        self.sortColumn = 1
+        self.onNewFocusWidget = 0
+        self.selectSql = f'''
+        SELECT
+            id,
+            no_ AS "No.",
+            item AS "Item",
+            amount AS "Amount",
+            notes AS "Notes"
+        FROM {self.tableVar};'''
+        
+        self.newRecordSql = f'''
+            INSERT INTO {self.tableVar} (no_, item, amount, notes) VALUES 
+        '''
+    def requery(self):
+        QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
+        if self.idLoad:
+            self.db.dbFolder = f'{self.loadFolder}\invoice'
+            try:
+                records = self.selectAll()
+            except:
+                folder = pathlib.Path(self.db.dbFolder)
+                if not folder.exists():
+                    os.mkdir(self.db.dbFolder)
+                self.db.executeQuery(self.db.createTableSql)
+                records = self.selectAll()
+
+            if records:
+                self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
+                self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
+                self.configureColumns()
+            else:
+                self.list.removeAllRows()
+        else:
+            self.list.removeAllRows()
+        
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
+
 
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 
-                idLoad = '{record[1]}',
-                no_ = '{record[2]}',
-                item = '{record[3]}',
+                no_ = '{record[1]}',
+                item = '{record[2]}',
                 amount = '{record[3]}',
-                notes = '{record[3]}'
+                notes = '{record[4]}'
                 WHERE id =  {record[0]};'''
-        db.DB_MySql.run_sql_commit(sql)
-
-    def requery(self):
-        # Query will execute where idCarrier = carrier, all other filters applied locally
-        if self.idLoad:
-            qtw.QApplication.setOverrideCursor(qtg.QCursor(qtc.Qt.CursorShape.WaitCursor))
-            records = self.selectAll((self.idLoad,))# will pass the cbo value - should be 
-            self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
-            self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
-            while qtw.QApplication.overrideCursor() is not None:
-                qtw.QApplication.restoreOverrideCursor()
-        else:
-            self.list.removeAllRows()
-        self.configureColumns()
-
+        self.db.executeQueryCommit(sql)
+    
     def btn_delete_pressed(self):
         record = self.list.treeview.selectionModel().selectedIndexes()
         #Verificar si hay registro seleccionado
@@ -83,17 +127,18 @@ class main(modelMain.main):
         
     def configure_form(self): 
         self.formLayoutStraight()
-        self.layoutFormBox.setMinimumWidth(350)
-        self.layoutFormBox.setMaximumWidth(400)
-
+        self.layoutFormBox.setMinimumWidth(450)
+        self.layoutFormBox.setMaximumWidth(500)
+        # self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
+        # self.filesFolder.txtFilePath.setText(self.filesFolder.root)
         self.setFormElements()
 
     def setFormElements(self):#p! Form elements
         self.id_ = lineEdit(self.fontSize)#
         self.id_.setReadOnly(True)
 
-        self.idLoad_ = lineEdit(self.fontSize)
-        self.idLoad_.setReadOnly(True)
+        # self.idLoad_ = lineEdit(self.fontSize)
+        # self.idLoad_.setReadOnly(True)
  
         self.no_ = spinbox(self.fontSize)
         self.no_.setMinimum(1)
@@ -112,14 +157,14 @@ class main(modelMain.main):
         #o! ALL DB ITEMS THAT NEED TO BE POPULATED
         self.formItems = [
             self.id_, 
-            self.idLoad_,
+            # self.idLoad_,
             self.no_,
             self.item, 
             self.amount,
             self.notes]
         
         self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
-        self.layoutForm.addRow(labelWidget('IdLoad:', self.fontSize), self.idLoad_)
+        # self.layoutForm.addRow(labelWidget('IdLoad:', self.fontSize), self.idLoad_)
         self.layoutForm.addRow(labelWidget('No.:', self.fontSize), self.no_)
         self.layoutForm.addRow(labelWidget('Item:', self.fontSize), self.item)
         self.layoutForm.addRow(labelWidget('Amount:', self.fontSize), self.amount)
@@ -129,20 +174,61 @@ class main(modelMain.main):
 
     def setConnections(self):
         self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
-        self.idLoad_.textChanged.connect(lambda: self.formDirty(1,self.idLoad_.getInfo()))
-        self.no_.textChanged.connect(lambda: self.formDirty(2, self.no_.getInfo))
-        self.item.cbo.currentTextChanged.connect(lambda: self.formDirty(3, self.item.getInfo))
-        self.amount.textChanged.connect(lambda: self.formDirty(4, self.amount.getInfo))
-        self.notes.textChanged.connect(lambda: self.formDirty(5, self.notes.getInfo()))
-        self.btnNew.pressed.connect(self.createNewRecord)
+        # self.idLoad_.textChanged.connect(lambda: self.formDirty(1,self.idLoad_.getInfo()))
+        self.no_.textChanged.connect(lambda: self.formDirty(1, self.no_.getInfo))
+        self.item.cbo.currentTextChanged.connect(lambda: self.formDirty(2, self.item.getInfo))
+        self.amount.textChanged.connect(lambda: self.formDirty(3, self.amount.getInfo))
+        self.notes.textChanged.connect(lambda: self.formDirty(4, self.notes.getInfo()))
+        # self.btnNew.pressed.connect(self.createNewRecord)
 
-    def createNewRecord(self):
-        if self.idLoad:
-            self.idLoad_.setText(str(self.idLoad))
-
+    # def createNewRecord(self):
+    #     if self.idLoad:
+    #         self.idLoad_.setText(str(self.idLoad))
 
 if __name__ == '__main__':
-    app = qtw.QApplication(sys.argv)
-    mw = main()
-    mw.show()
-    sys.exit(app.exec())
+    db = DB()
+    
+
+    
+
+
+ #p! DO NOT DELETE - SAMPLE CODE FOR CLONING INTO DB
+    # def cloneDB(self):
+    #     dbLogin = constants.avdOld
+    #     dataBase = mysqlDb.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+    #     sql = f'''
+    #         SELECT 
+    #             accountName,
+    #             userName,
+    #             pwd,
+    #             date_,
+    #             portal,
+    #             notes
+    #         FROM AVDT_Accounts
+    #         WHERE idCarrier = 1;
+    #     '''
+    #     records = dataBase.get_records_clearNull(sql)
+    #     # records = gf.recordToSQL(records)
+    #     self.database = 'dnpfAct.db'
+    #     sql = self.getSQL('createTable.sql')
+    #     self.executeQuery(sql)
+    #     missing = []
+    #     missed = 0
+    #     recorded = 0
+    #     for i in records:
+    #         # i = gf.recordToSQL(i)
+    #         sql = f'''INSERT INTO {self.tableVar} 
+    #             (account, user, pwd, date_, portal, notes)
+    #         VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}","{i[4]}","{i[5]}")
+    #     ''' 
+    #         try:
+    #             self.executeQueryCommit(sql)
+    #             recorded += 1
+    #         except:
+    #             # print(sql)
+    #             missing.append([i[0],i[1]])
+    #             missed += 1
+                
+    #     for i in missing:
+    #         print(i)
+    #     print(missed)
