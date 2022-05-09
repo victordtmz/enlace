@@ -409,8 +409,12 @@ class truFalseRadioButtons(radioButtons):
     def getDbInfo(self):
         if self.true.isChecked():
             return "1"
-        else:
+        elif self.false.isChecked():
             return "0"
+        else:
+            return ""
+    
+    
 
 
 class incomeExpenseRadioButtons(radioButtons):

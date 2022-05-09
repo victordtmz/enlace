@@ -28,6 +28,9 @@ class addForm(bookkeeping_.main):
 
     def btn_nuevo_pressed(self):
         pass
+    
+    def carrierFilterAfterUpdate(self):
+        pass
 
 
 class main(bookkeeping_.main):

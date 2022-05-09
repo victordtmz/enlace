@@ -2,7 +2,7 @@
 
 from globalElements import DB, constants, modelMain
 from globalElements.widgets import (buttonWidget, dateWidget, labelWidget,  lineEditCurrency, 
-    textEdit, lineEdit, cboFilterGroup, checkBox)
+    textEdit, lineEdit, cboFilterGroup, checkBox, truFalseRadioButtons)
 import sys
 import os
 import pathlib
@@ -23,6 +23,7 @@ class main(modelMain.main):
         self.initUi()
         self.configToolbar()
         self.configure_form()
+        self.configure_list()
         self.setConnections()
         self.listFontSize = 10
         self.configAdditionalTabs()
@@ -123,7 +124,8 @@ class main(modelMain.main):
         # self.formExpand = 500
         self.listHiddenItems = (1,2,3,4,5,8,9,10,11,12,13,14,15,16,17,18,19)
         self.listColumnWidth = ((0,50),(6,80),(7,220))
-        self.sortColumn = 2
+        self.sortColumn = 6
+        self.sortOrder = qtc.Qt.SortOrder.DescendingOrder
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
@@ -211,7 +213,7 @@ class main(modelMain.main):
         records = self.selectAll()
         if records:
             self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
-            self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
+            self.contractingFilterApply()
         else:
             self.list.removeAllRows()
         
@@ -362,6 +364,83 @@ class main(modelMain.main):
         self.completed.toggled.connect(lambda: self.formDirty(19, self.completed.getInfo()))
 
         self.list.treeview.selectionModel().selectionChanged.connect(self.loadSelectionChange)
+
+    def configure_list(self):
+        self.proxyHauling = qtc.QSortFilterProxyModel()
+        self.proxyContracting = qtc.QSortFilterProxyModel()
+        # self.proxyYear = qtc.QSortFilterProxyModel()
+        # self.proxyMonth = qtc.QSortFilterProxyModel()
+        self.proxyClient = qtc.QSortFilterProxyModel()
+        self.proxyCompleted = qtc.QSortFilterProxyModel()
+        self.proxyPaidHauling = qtc.QSortFilterProxyModel()
+        self.proxyPaid = qtc.QSortFilterProxyModel()
+        self.proxyInvoiced = qtc.QSortFilterProxyModel()
+        self.proxyDelivered = qtc.QSortFilterProxyModel()
+
+        if not constants.carriersItems:
+            constants.queryCarriers()
+        
+
+        self.contractingFilter = cboFilterGroup(self.fontSize,
+            items=constants.carriersDict
+            )
+        self.contractingFilter.cbo.currentIndexChanged.connect(self.contractingFilterApply)
+        self.list.layoutFilter.insertRow(0, labelWidget('Contracting:', self.filterSize), self.contractingFilter)
+        
+        self.haulingFilter = cboFilterGroup(self.fontSize,
+            items=constants.carriersDict)
+        self.haulingFilter.cbo.currentIndexChanged.connect(self.haulingFilterApply)
+        self.list.layoutFilter.insertRow(0, labelWidget('Hauling:', self.filterSize), self.haulingFilter)
+
+        # if not constants.yearsItems:
+        #     constants.queryYears()
+        # self.yearFilter = cboFilterGroup(self.fontSize,
+        #     items=constants.yearsItems)
+
+        # self.list.layoutFilter.insertRow(0, labelWidget('Year:', self.filterSize), self.yearFilter)
+
+        # if not constants.monthsItems:
+        #     constants.queryMonths()
+        # self.monthFilter = cboFilterGroup(self.fontSize,
+        #     items=constants.monthsItems)
+
+        if not constants.clientsList:
+            constants.queryClients()
+        self.clientFilter = cboFilterGroup(
+            10,
+            refreshable=True,
+            items=constants.clientsDict,
+            requeryFunc=constants.queryClients)
+        self.clientFilter.cbo.currentIndexChanged.connect(self.clientFilterApply)
+
+        self.deliveredFilter =  truFalseRadioButtons(self.fontSize, filter=True)
+        self.deliveredFilter.true.toggled.connect(self.deliveredFilterApply)
+        self.deliveredFilter.false.toggled.connect(self.deliveredFilterApply)
+        self.invoicedFilter = truFalseRadioButtons(self.fontSize, filter=True)
+        self.invoicedFilter.true.toggled.connect(self.invoicedFilterApply)
+        self.invoicedFilter.false.toggled.connect(self.invoicedFilterApply)
+
+        self.paidFilter = truFalseRadioButtons(self.fontSize, filter=True)
+        self.paidFilter.true.toggled.connect(self.paidFilterApply)
+        self.paidFilter.false.toggled.connect(self.paidFilterApply)
+
+        self.paidHCarrierFilter = truFalseRadioButtons(self.fontSize, filter=True)
+        self.paidHCarrierFilter.true.toggled.connect(self.paidHCarrierFilterApply)
+        self.paidHCarrierFilter.false.toggled.connect(self.paidHCarrierFilterApply)
+
+        self.completedFilter = truFalseRadioButtons(self.fontSize, filter=True)
+        self.completedFilter.true.toggled.connect(self.completedFilterApply)
+        self.completedFilter.false.toggled.connect(self.completedFilterApply)
+
+
+        self.list.layoutHiddenFilters.addRow(labelWidget('Delivered:', self.filterSize), self.deliveredFilter)
+        self.list.layoutHiddenFilters.addRow(labelWidget('Invoiced:', self.filterSize), self.invoicedFilter)
+        self.list.layoutHiddenFilters.addRow(labelWidget('Paid:', self.filterSize), self.paidFilter)
+        self.list.layoutHiddenFilters.addRow(labelWidget('Paid H:', self.filterSize), self.paidHCarrierFilter)
+        self.list.layoutHiddenFilters.addRow(labelWidget('Completed:', self.filterSize), self.completedFilter)
+        
+        self.list.layoutHiddenFilters.addRow(labelWidget('Client:', self.filterSize), self.clientFilter)
+        # self.list.layoutHiddenFilters.addRow(labelWidget('Month:', self.filterSize), self.monthFilter)
 
     def setFilesFolder(self):
         carrier = self.contracting.getInfo()
@@ -602,6 +681,112 @@ class main(modelMain.main):
             #         self.invoice.idLoad = 0
             #     self.invoice.requery()
             counter +=1
+
+    def removeAllFilters(self):
+        # if self.yearFilter.cbo.currentText():
+        #     self.yearFilter.reSet() 
+        # if self.monthFilter.currentText():
+        #     self.monthFilter.reSet()
+        if self.hauling.currentText():
+            self.hauling.reSet()
+        if self.contracting.currentText():
+            self.contracting.reSet()
+        if self.client.currentText():
+            self.client.reSet()
+        if self.deliveredFilter.true.isChecked() or self.deliveredFilter.false.isChecked():
+            self.deliveredFilter.reSet()
+        if self.paidFilter.true.isChecked() or self.paidFilter.false.isChecked():
+            self.paidFilter.reSet()
+        if self.invoicedFilter.true.isChecked() or self.invoicedFilter.false.isChecked():
+            self.invoicedFilter.reSet()
+        if self.paidHCarrierFilter.true.isChecked() or self.paidHCarrierFilter.false.isChecked():
+            self.paidHCarrierFilter.reSet()
+        if self.completedFilter.true.isChecked() or self.completedFilter.false.isChecked():
+            self.completedFilter.reSet()
+        if self.list.filtros.txt.text():
+            self.list.filtros.txt.reSet()
+
+    def contractingFilterApply(self):
+        filterText = self.contractingFilter.getInfo()
+        self.proxyContracting.setSourceModel(self.list.standardModel)
+        self.proxyContracting.setFilterFixedString(filterText)
+        self.proxyContracting.setFilterKeyColumn(1)
+        print(f'{self.proxyContracting.rowCount()} - Contracting')
+        self.haulingFilterApply()
+
+    def haulingFilterApply(self):
+        filterText = self.haulingFilter.getInfo()
+        self.proxyHauling.setSourceModel(self.proxyContracting)
+        self.proxyHauling.setFilterFixedString(filterText)
+        self.proxyHauling.setFilterKeyColumn(2)
+        print(f'{self.proxyContracting.rowCount()} - Hauling')
+        self.clientFilterApply()
+
+    # def yearFilterApply(self):
+    #     filterText = self.haulingFilter.getInfo()
+    #     self.proxyYear.setSourceModel(self.proxyHauling)
+    #     self.proxyYear.setFilterFixedString(filterText)
+    #     self.proxyYear.setFilterKeyColumn(6)
+    #     self.monthFilterApply()
+
+    # def monthFilterApply(self):
+    #     filterText = self.monthFilter.currentText()
+    #     self.proxyMonth.setSourceModel(self.proxyYear)
+    #     self.proxyMonth.setFilterFixedString(filterText)
+    #     self.proxyMonth.setFilterKeyColumn(6)
+    #     self.clientFilterApply()
+
+    def clientFilterApply(self):
+        filterText = self.clientFilter.currentText()
+        self.proxyClient.setSourceModel(self.proxyHauling)
+        self.proxyClient.setFilterFixedString(filterText)
+        self.proxyClient.setFilterKeyColumn(7)
+        print(f'{self.proxyContracting.rowCount()} - Client')
+        self.completedFilterApply()
+
+    def completedFilterApply(self):
+        filterText = self.completedFilter.getDbInfo()
+        self.proxyCompleted.setSourceModel(self.proxyClient)
+        self.proxyCompleted.setFilterFixedString(filterText)
+        self.proxyCompleted.setFilterKeyColumn(19)
+        print(f'{self.proxyCompleted.rowCount()} - proxyCompleted')
+        self.paidHCarrierFilterApply()
+
+    def paidHCarrierFilterApply(self):
+        filterText = self.paidHCarrierFilter.getDbInfo()
+        self.proxyPaidHauling.setSourceModel(self.proxyCompleted)
+        self.proxyPaidHauling.setFilterFixedString(filterText)
+        self.proxyPaidHauling.setFilterKeyColumn(18)
+        print(f'{self.proxyPaidHauling.rowCount()} - proxyPaidHauling')
+        self.paidFilterApply()
+
+    def paidFilterApply(self):
+        filterText = self.paidFilter.getDbInfo()
+        self.proxyPaid.setSourceModel(self.proxyPaidHauling)
+        self.proxyPaid.setFilterFixedString(filterText)
+        self.proxyPaid.setFilterKeyColumn(17)
+        print(f'{self.proxyPaid.rowCount()} - proxyPaid')
+        self.invoicedFilterApply()
+
+    def invoicedFilterApply(self):
+        filterText = self.invoicedFilter.getDbInfo()
+        self.proxyInvoiced.setSourceModel(self.proxyPaid)
+        self.proxyInvoiced.setFilterFixedString(filterText)
+        self.proxyInvoiced.setFilterKeyColumn(16)
+        print(f'{self.proxyInvoiced.rowCount()} - proxyInvoiced')
+        self.deliveredFilterApply()
+
+    def deliveredFilterApply(self):
+        filterText = self.deliveredFilter.getDbInfo()
+        self.proxyDelivered.setSourceModel(self.proxyInvoiced)
+        self.proxyDelivered.setFilterFixedString(filterText)
+        self.proxyDelivered.setFilterKeyColumn(15)
+        print(f'{self.proxyDelivered.rowCount()} - proxyDelivered')
+
+        self.list.proxyModel.setSourceModel(self.proxyDelivered)
+        self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
+        print(f'{self.list.proxyModel.rowCount()} - proxyModel')
+
 
 
 if __name__ == '__main__':

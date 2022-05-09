@@ -18,15 +18,10 @@ import re
 class main(modelMain.main):
     def __init__(self):
         super().__init__()
-        #o! TEMP - DELETE - JUST FOR TESTING ON ITS OWN - WHEY DB IS OPERATED THEY WILL POPULATE FORM MENU
-        # constants.queryIftaJuris()
-        # constants.querybookkeepingTruckingCategories()
-        #@abstract methods - def updateRecord - def requery - def btn_delete_pressed
-        
-        # self.setGlobalVariables()
         self.configure_list()
         self.configure_form()
         self.setConnections()
+        self.carrierFilterAfterUpdate()
 
     
 
@@ -199,7 +194,8 @@ class main(modelMain.main):
         
 
         self.account = cboFilterGroup(
-            fontSize= self.fontSize, clearFilter=False )
+            fontSize= self.fontSize, clearFilter=False, 
+            requeryFunc=self.carrierFilterAfterUpdate )
         self.date_ = dateWidget(self.fontSize)
         self.amount = lineEditCurrency(self.fontSize)
         self.isIncome = incomeExpenseRadioButtons(self.fontSize)
@@ -359,7 +355,7 @@ class main(modelMain.main):
         #get the values from the dictionary that has the bank accounts to use it for the cbo
         if not constants.accountsItems:
             constants.queryAccounts()
-        accounts = constants.accountsDict.get(idVar)
+        accounts = constants.accountsDict.get(int(idVar))
         self.account.cbo.clear()
         self.accountFilter.cbo.clear()
         if accounts:
