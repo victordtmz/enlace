@@ -41,7 +41,7 @@ class treeviewSearchBox(QMainWindow):
         # self.actRefresh.triggered.connect
         # treeview.actRefresh.triggered.connect
 
-        self.actClearSelect = QAction('Selection')
+        self.actClearSelect = QAction('Selection') 
         self.actClearSelect.setIcon(self.iconClearSelection)
         self.actClearSelect.triggered.connect(self.selectionClear)
 

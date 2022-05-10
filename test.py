@@ -22,16 +22,23 @@ class main(treeviewSearchBox):
     def getFiles(self, path, node):
         # mainFolder = self.rootNode
         
-        for entry in os.scandir(path):
-            name = entry.name
-            record = []
-            if entry.is_dir():
-                record.append(name)
-                for entry in os.scandir(entry):
-                    if entry.is_dir():
-                        record.append(entry.name)
-                        record = list(map(self.createRecord, record))
-                        node.appendRow(record)
+        for folder in os.scandir(path):
+            if folder.is_dir():
+                for subFolder in os.scandir(folder):
+                    record = (folder.name, subFolder.name)
+                    record = list(map(self.createRecord, record))
+                    node.appendRow(record)
+
+
+            # type_ = entry.name
+            # record = []
+            # if entry.is_dir():
+            #     record.append(type_)
+            #     for entry in os.scandir(entry):
+            #         if entry.is_dir():
+            #             record.append(entry.name)
+            #             record = list(map(self.createRecord, record))
+            #             node.appendRow(record)
 
             #     # record = self.createRecord(name)
             #     # node.appendRow(record)

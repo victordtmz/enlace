@@ -7,13 +7,13 @@ from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
     bookkeeping_categories, miles, IFTA, loads_payments, bookkeeping_totals)
-from enlace import enlace 
+from enlace import enlace, juicios
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow): 
     def __init__(self):  
         super().__init__()
         self.initUi()
@@ -49,11 +49,17 @@ class MainWindow(QMainWindow):
 
     def configenlaceConnections(self):
         self.enlaceMenu.btnAccounts.pressed.connect(self.enlaceOpenAccounts)
+        self.enlaceMenu.btnJuicios.pressed.connect(self.openJuicios)
 
     def enlaceOpenAccounts(self):
         self.enlaceAccounts = enlaceAccounts.main()
         self.tabWidget.addTab(self.enlaceAccounts,'    ENLACE ACCOUNTS   ')
         self.tabWidget.setCurrentWidget(self.enlaceAccounts)
+
+    def openJuicios(self):
+        self.juicios = juicios.main()
+        self.tabWidget.addTab(self.juicios,'    JUICIOS   ')
+        self.tabWidget.setCurrentWidget(self.juicios)
     
 #AVDT 
 #------------------------------------------------------------------------

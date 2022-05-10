@@ -203,7 +203,7 @@ class main(modelMain.main):
 
         #o! ADD TO TREE
         self.anexoBox = self.filesFolder.layoutLineEditFileBox
-        self.anexo = self.filesFolder.lineEditItems.txt
+        self.anexo = self.filesFolder.lineEditItems.txt 
         # self.anexo.lineEditItems.lbl.setText('Attachment: ')
         # self.anexo.filesTree = self.filesFolder
 

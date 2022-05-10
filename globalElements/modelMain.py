@@ -549,7 +549,7 @@ class main(QMainWindow):
         record = self.list.getCurrentValues()
         values = []
         for i in self.listTableValuesIndexes:
-            values.append(record[i])
+            values.append(record[i]) 
         return values
 
 #G! CONFIGURE SQL ----------------------------------------------------------------------
