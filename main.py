@@ -135,7 +135,7 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.avdtBookkeepingCat,'    AVDT BOOKKEEPING CATEGORIES   ')
         self.tabWidget.setCurrentWidget(self.avdtBookkeepingCat)
 
-    def avdtOpenDiesel(self):
+    def avdtOpenDiesel(self): 
         self.avdtDiesel = diesel.main()
         self.tabWidget.addTab(self.avdtDiesel,'    AVDT DIESEL   ')
         self.tabWidget.setCurrentWidget(self.avdtDiesel)

@@ -2,7 +2,7 @@ from localDB import mainModel
 from globalElements import constants
 from globalElements.treeview import treeviewSearchBox
 
-from globalElements.widgets import (dateEdit, dateWidget, lineEditCurrency, standardItem, 
+from globalElements.widgets import (buttonWidget, dateEdit, dateWidget, lineEditCurrency, standardItem, 
     labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup, checkBox)
 from localDB import sqliteDB
 from PyQt6.QtWidgets import QApplication, QCompleter
@@ -77,8 +77,8 @@ class DB(sqliteDB.avdtLocalDB):
             date_ TEXT,
             description_ TEXT,
             file_ TEXT
-            )
-            --endsql'''
+            );
+        --endsql '''
         # self.dbFolder = f'{constants.rootAVDT}\Carriers'
 
 class main(mainModel.main):
@@ -100,8 +100,13 @@ class main(mainModel.main):
         self.mainFormOpt.toggled.connect(self.configureWidth)
         
         self.filesFolder.root = self.mainList.rootFolder
+        self.filesFolder.txtFilePath.setText(self.filesFolder.root)
         self.mainList.treeview.selectionModel().selectionChanged.connect(self.requery)
-        
+
+        self.btnCSV = buttonWidget('Excel', 'h1', constants.iconExcel)
+        self.titleLayout.insertWidget(5, self.btnCSV)
+        self.btnCSV.pressed.connect(self.recordsToCSV)
+        #o! CONNECT 
 
     def setDBConnection(self):
         self.db = DB()
@@ -144,6 +149,7 @@ class main(mainModel.main):
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
         if self.mainList.treeview.selectionModel().hasSelection():
             expediente = self.mainList.treeview.selectedIndexes()
+            self.title.setText(expediente[1].data())
             fileFolder = f'{expediente[0].data()}\{expediente[1].data()}'
             self.db.dbFolder = f'{self.mainList.rootFolder}\{fileFolder}'
             self.filesFolder.txtFilePath.setText(self.db.dbFolder)
@@ -233,12 +239,93 @@ class main(mainModel.main):
         self.anexo.textChanged.connect(lambda: self.formDirty(3, self.anexo.getInfo))
 
     
-    def closeEvent(self, a0: QCloseEvent):
-        # self.save_record_main(False, False)#updateList, changedSelection
-        return super().closeEvent(a0)
+    # def closeEvent(self, a0: QCloseEvent):
+    #     # self.save_record_main(False, False)#updateList, changedSelection
+    #     return super().closeEvent(a0)
 
-    def listadoSelectionChanged(self):
-        return super().listadoSelectionChanged()
+    # def listadoSelectionChanged(self):
+    #     return super().listadoSelectionChanged()
+
+    def recordsToCSV(self):
+        if self.db.dbFolder:
+            try:
+                fileHeader = ['Id', 'Fecha', 'Descripcion', 'Archivo']#'Id, Fecha, Descripcion, Archivo'
+                csvFile = f'{self.db.dbFolder}\\registros.csv'
+                records = self.selectAll()
+                with open(csvFile,'w', newline="") as csvFile:
+                    writer = csv.writer(csvFile)
+                    writer.writerow(fileHeader)
+
+                    for row in records:
+                        writer.writerow(row)
+            except PermissionError: print('Cerrar archivo e intentar nuevamente')
+        
+        # if self.mainList.treeview.selectionModel().hasSelection():
+        #     print(self.db.dbFolder)
+        #     expediente = self.mainList.treeview.selectedIndexes()
+        #     fileFolder = f'{expediente[0].data()}\{expediente[1].data()}'
+        #     self.db.dbFolder = f'{self.mainList.rootFolder}\{fileFolder}\desgloce'
+            
+           
+
+        # # Get the number of rows and columns
+        # rows = self.list.proxyModel.rowCount()
+        # if not rows:
+        #     return
+        # columns = self.list.proxyModel.columnCount()
+        # #Get a list of all the records.
+        # row = 0
+        
+        # #o!codigo para cuando no hay registros
+        # records = []
+        # while row < rows:
+        #     #pasa por cada fila
+        #     column = 0
+        #     rowValues = []
+        #     while column < columns:
+        #         #toma la informacion de cada columna
+        #         index = self.list.proxyModel.index(row, column)
+        #         cellValue = self.list.proxyModel.data(index)
+        #         rowValues.append(cellValue)
+        #         column += 1
+        #     records.append(rowValues)
+        #     row += 1
+        
+        # #Get the Horizontal labels from the treeview to use as headers
+        # fileHeader = []
+        # column = 0
+        # while column < columns:
+        #     columnNo = self.standardModel.horizontalHeaderItem(column)
+        #     if columnNo:
+        #         text = columnNo.text()
+        #         fileHeader.append(text)
+        #     column += 1
+        # #y! Write file to a csv
+        # #open a file dialog to choose file name and location
+        # filePathDialog = QFileDialog()
+        # filePathDialog.setMinimumSize(600,600)
+        # filePathDialog.setObjectName("archivo")
+        # filePath = filePathDialog.getSaveFileName(
+        #     caption="Elegir carpeta para guardar archivo",
+        #     directory = constants.oneDrive,
+        #     filter="*.csv")[0]
+
+        
+        # #if operation is not cancelled
+        # if filePath:
+        #     # filePath = filePath[0]
+        #     #verify if .csv was added or a file is to be replaced, if not, ad file extention name. 
+        #     if not filePath[-4:] == ".csv":
+        #         filePath = f"{filePath}.csv"
+        #     #write csv file
+        #     with open(filePath,'w', newline="") as csvFile:
+        #         writer = csv.writer(csvFile)
+        #         writer.writerow(fileHeader)
+
+        #         for row in records:
+        #             writer.writerow(row)
+        #     #open csv file. 
+        #     os.startfile(filePath)
         
     
 

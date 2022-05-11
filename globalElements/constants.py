@@ -55,7 +55,7 @@ iconCustomer = f"{iconsFolder}customer.png"
 iconRoad = f"{iconsFolder}road.png"
 iconWarehouse = f"{iconsFolder}warehouse.png"
 iconIfta = f"{iconsFolder}IFTA.png"
-
+iconExcel = f"{iconsFolder}excel.png"
 # # Carriers
 # # ------------------------------------------------------------
 # carriersDict = {}
