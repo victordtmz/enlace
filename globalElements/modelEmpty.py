@@ -26,7 +26,7 @@ class main(QMainWindow):
             self.setH1Settings()
         
         self.initMain()
-        self.set_connections()
+        # self.set_connections()
         self.setMainLayout()
 
 #G!GLOBAL CONFIGURATION --------------------------------
@@ -35,9 +35,9 @@ class main(QMainWindow):
         self.titleText = ""
         self.size_ = 'h1'
         
-    def createButtons(self):
-        self.btn_cerrar = buttonWidget(text=" Cerrar", 
-            icon=constants.iconClose, size=self.mainSize)
+    # def createButtons(self):
+    #     self.btn_cerrar = buttonWidget(text=" Cerrar", 
+    #         icon=constants.iconClose, size=self.mainSize)
 
     def setH2Settings(self):
         # LIST INFO
@@ -56,7 +56,7 @@ class main(QMainWindow):
             align="center",
             backColor="#134A4D") 
 
-        self.createButtons()
+        # self.createButtons()
 
         self.spacerLeft = spacer('    ','h2')
         self.spacer1 = spacer(' ','h2')
@@ -83,9 +83,9 @@ class main(QMainWindow):
             #backColor="#002142"
             ) 
         
-        self.createButtons()
-        self.spacer1 = spacer(' ')
-        self.spacerRight = spacer(' ')
+        # self.createButtons()
+        # self.spacer1 = spacer(' ')
+        # self.spacerRight = spacer(' ')
         self.configureTitleLayout()
         
     def configureTitleLayout(self):
@@ -93,16 +93,16 @@ class main(QMainWindow):
         self.titleLayout.setSpacing(0)
         self.titleLayout.setContentsMargins(0,0,0,0)
         self.titleLayout.addWidget(self.title,1)
-        self.titleLayout.addWidget(self.spacer1,1)
-        self.titleLayout.addWidget(self.btn_cerrar)
-        self.titleLayout.addWidget(self.spacerRight)
+        # self.titleLayout.addWidget(self.spacer1,1)
+        # self.titleLayout.addWidget(self.btn_cerrar)
+        # self.titleLayout.addWidget(self.spacerRight)
         
         self.titleLayoutBox = titleBox(self.mainSize)
         self.titleLayoutBox.setLayout(self.titleLayout)
         self.titleLayoutBox.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
-    def set_connections(self):
-        self.btn_cerrar.pressed.connect(self.btn_cerrar_pressed)
+    # def set_connections(self):
+    #     self.btn_cerrar.pressed.connect(self.btn_cerrar_pressed)
         
 
     def initMain(self):
@@ -110,8 +110,8 @@ class main(QMainWindow):
         self.setWindowTitle("ENLACE LLC")
         self.windowTitle().center(50)
 
-    def btn_cerrar_pressed(self):
-        self.deleteLater()
+    # def btn_cerrar_pressed(self):
+    #     self.deleteLater()
     
     def setMainLayout(self):
         self.layoutmain = QVBoxLayout()

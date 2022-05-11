@@ -1,18 +1,412 @@
+from cmath import exp
 from localDB import mainModel
-from globalElements import constants
+import sqlite3
+
+from globalElements import constants, modelEmpty
+
 from globalElements.treeview import treeviewSearchBox
 
-from globalElements.widgets import (buttonWidget, dateEdit, dateWidget, lineEditCurrency, standardItem, 
+from globalElements.widgets import (buttonWidget, dateEdit, dateWidget, lineEditCurrency, lineEditPhone, standardItem, 
     labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup, checkBox)
 from localDB import sqliteDB
-from PyQt6.QtWidgets import QApplication, QCompleter
+from PyQt6.QtWidgets import (QApplication, QCompleter, QWidget, QFormLayout, QSizePolicy)
 from PyQt6.QtCore import Qt, QSortFilterProxyModel
 from PyQt6.QtGui import QCursor, QCloseEvent
 import pathlib
 import os 
 import csv
   
-# tableVar = 'accounts'
+# class DB(sqliteDB.avdtLocalDB): 
+#     def __init__(self): 
+#         self.database = 'registros.avd'
+#         self.tableVar = 'registros'
+        
+#         self.createTableSql = f'''
+#         --sql
+#         CREATE TABLE IF NOT EXISTS {self.tableVar} (
+#             id INTEGER PRIMARY KEY,
+#             date_ TEXT,
+#             description_ TEXT,
+#             file_ TEXT
+#             );
+#         --endsql '''
+
+class detailsForm(modelEmpty.main):
+    def __init__(self):
+        super().__init__()
+        self.fontSize = 13
+        self.configureForm()
+        self.defVariables()
+        
+    
+    def setGlobalVariables(self):
+        self.titleText = "Detalles del Tramite"
+        self.size_ = 'h2'
+
+
+
+    def defVariables(self):
+        # self.db = sqliteDB.avdtLocalDB()
+        # self.db.dbFolder = ''
+        # self.db.database = 'registros.avd'
+        self.tableVar = 'detalles'
+        
+        self.createTableSql = f'''
+        --sql
+        CREATE TABLE IF NOT EXISTS {self.tableVar} (
+            id INTEGER PRIMARY KEY,
+            cliente TEXT,
+            expediente TEXT,
+            fecha_ TEXT,
+            honorarios_ REAL,
+            telefono TEXT,
+            domicilio TEXT,
+            domicilio1 TEXT,
+            ciudad TEXT,
+            estado TEXT,
+            cp TEXT,
+            descripcion TEXT
+            );
+        '''
+        
+        
+        self.selectSql = f'''
+        --sql
+        SELECT id, cliente, expediente, fecha_, honorarios_, telefono, domicilio, domicilio1,
+            ciudad, estado, cp, descripcion
+        FROM {self.tableVar};
+        '''
+
+        
+    def insertNewSql(self):
+        record = self.getInfo()
+        record.pop(0)
+        record = str(record)
+        record = record[1:-1]
+        sql = f'''
+        --sql
+        INSERT INTO {self.tableVar} (cliente, expediente, fecha_, honorarios_, telefono, domicilio, domicilio1,
+            ciudad, estado, cp, descripcion) VALUES ({record});'''
+            
+            
+        return sql
+
+    def updateRecordSql(self): 
+        record = self.getInfo()
+        sql =f'''
+        --sql
+        UPDATE {self.tableVar} SET 
+            cliente = '{record[1]}',
+            expediente = '{record[2]}',
+            fecha_ = '{record[3]}',
+            honorarios_ = '{record[4]}',
+            telefono = '{record[5]}',
+            domicilio = '{record[6]}',
+            domicilio1 = '{record[7]}',
+            ciudad = '{record[8]}',
+            estado = '{record[9]}',
+            cp = '{record[10]}',
+            descripcion = '{record[11]}'
+            WHERE id = 1;'''
+        return sql
+
+    def configureForm(self):
+        self.id_ = lineEdit(self.fontSize)
+        self.id_.setReadOnly(True)
+        self.cliente = lineEdit(self.fontSize)
+        self.expediente = lineEdit(self.fontSize)
+        self.fecha = dateWidget(self.fontSize)
+        self.honorarios = lineEditCurrency(self.fontSize)
+        self.telefono = lineEditPhone(self.fontSize)
+        self.domicilio = lineEdit(self.fontSize)
+        self.domicilio1 = lineEdit(self.fontSize)
+        self.ciudad = lineEdit(self.fontSize)
+        self.estado = lineEdit(self.fontSize)
+        self.cp = lineEdit(self.fontSize)
+        self.description = textEdit(self.fontSize)
+        self.formItems = [self.id_, self.cliente, self.expediente, self.fecha, self.honorarios, 
+            self.telefono, self.domicilio, self.domicilio1, self.ciudad, self.estado,
+            self.cp, self.description]
+
+        self.btnSave = buttonWidget('Guardar', 'h2_', constants.iconSave)
+
+        self.layout_ = QFormLayout()
+        self.layout_.addRow(labelWidget('Id:', self.fontSize) ,self.id_)
+        self.layout_.addRow(labelWidget('Cliente:', self.fontSize) ,self.cliente)
+        self.layout_.addRow(labelWidget('Expediente:', self.fontSize) ,self.expediente)
+        self.layout_.addRow(labelWidget('Fecha de inicio:', self.fontSize) ,self.fecha)
+        self.layout_.addRow(labelWidget('Honorarios:', self.fontSize) ,self.honorarios)
+        self.layout_.addRow(labelWidget('Telefono:', self.fontSize) ,self.telefono)
+        self.layout_.addRow(labelWidget('Domicilio:', self.fontSize) ,self.domicilio)
+        self.layout_.addRow(labelWidget('Domicilio:', self.fontSize) ,self.domicilio1)
+        self.layout_.addRow(labelWidget('Ciudad:', self.fontSize) ,self.ciudad)
+        self.layout_.addRow(labelWidget('Estado:', self.fontSize) ,self.estado)
+        self.layout_.addRow(labelWidget('Codigo postal:', self.fontSize) ,self.cp)
+        self.layout_.addRow(labelWidget("Descripcion", 14, True, fontColor="Black", align="center"))
+        self.layout_.addRow(self.description)
+        self.layout_.addRow(self.btnSave)
+
+        self.layoutBox = QWidget()
+        self.layoutBox.setMinimumWidth(460)
+        self.layoutBox.setLayout(self.layout_)
+
+        self.layoutmain.addWidget(self.layoutBox)
+        self.layoutmain.setAlignment(self.layoutBox, Qt.AlignmentFlag.AlignHCenter)
+
+    def populate(self, record):
+        c = 0
+        if record:
+            for i in self.formItems:
+                i.populate(str(record[c]))
+                c += 1
+
+    def getInfo(self):
+        infoList = []
+        for i in self.formItems:
+            infoList.append(i.getInfo())
+        return infoList
+
+    def clearForm(self):
+        for i in self.formItems:
+            i.reSet()
+           
+
+
+class main(mainModel.main):
+    def __init__(self):
+        super().__init__()
+        self.listFontSize = 11
+        self.rowHeight = 72
+        self.configure_form()
+        self.setConnections()
+        self.configure_mainList()
+        self.configureDetailsForm()
+        
+    
+    def createDetailsForm(self):
+        
+        if hasattr(self, 'detailsForm'):
+            self.detailsForm.deleteLater()
+            delattr(self, 'detailsForm')
+            self.listOpt.setChecked(True)
+            self.formOpt.setChecked(True)
+            self.configureWidth()
+        else:
+            self.detailsForm = detailsForm()
+            self.listOpt.setChecked(False)
+            self.formOpt.setChecked(False)
+            self.splitter.insertWidget(1,self.detailsForm)
+            self.configureWidth()
+            try:
+                records = self.db.selectOne(self.detailsForm.selectSql)
+                self.detailsForm.populate(records)
+            except:
+                self.detailsForm.clearForm()
+            self.detailsForm.btnSave.pressed.connect(self.saveDetails)
+
+    def configureDetailsForm(self):
+        self.detailsFormOpt = checkBox('Detalles del Tramite',fontSize=self.fontSize, size=self.mainSize)
+        self.detailsFormOpt.setChecked(False)
+        self.widgetsOpt.insert(1,self.detailsFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
+        self.titleLayout.insertWidget(2, self.detailsFormOpt)
+        self.detailsFormOpt.toggled.connect(self.createDetailsForm)
+
+    def configure_mainList(self):
+        self.mainList = mainTree()
+        self.splitter.insertWidget(0,self.mainList)
+        self.mainFormOpt = checkBox('Expedientes',fontSize=self.fontSize, size=self.mainSize)
+        self.mainFormOpt.setChecked(True)
+        self.widgetsOpt.insert(0,self.mainFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
+        self.titleLayout.insertWidget(1, self.mainFormOpt)
+        self.mainFormOpt.toggled.connect(self.configureWidth)
+        
+        self.filesFolder.root = self.mainList.rootFolder
+        self.filesFolder.txtFilePath.setText(self.filesFolder.root)
+        self.mainList.treeview.selectionModel().selectionChanged.connect(self.requery)
+
+        self.btnCSV = buttonWidget('Excel', 'h1', constants.iconExcel)
+        self.titleLayout.insertWidget(5, self.btnCSV)
+        self.btnCSV.pressed.connect(self.recordsToCSV)
+        #o! CONNECT 
+
+    def setDBConnection(self):
+        self.db = DB()
+        self.tableVar = self.db.tableVar
+        self.db.dbFolder = ''
+
+
+    def setGlobalVariables(self):
+        # DB INFO
+        # self.idLoad = 0
+        self.setDBConnection()
+        self.evaluateSaveIndex = (2,)
+        self.loadFolder = ''
+        self.size_ = "h1" 
+        self.idColumn = 'id' 
+        self.listTableValuesIndexes = (0,1,2,3)
+        # self.formToDBItems = 4
+        self.titleText = "JUICIOS Y TRAMITES"
+        # self.listExpand = 1
+        # self.formExpand = 1
+        self.widgetsOptSizes = [1,1,1,1]
+        self.listHiddenItems = (0,3)
+        self.listColumnWidth = ((1,120),(2,120))
+        self.sortColumn = 1
+        self.onNewFocusWidget = 0
+        self.selectSql = f'''
+        --sql
+        SELECT
+            id,
+            date_ AS "No.",
+            description_ AS "Descripcion",
+            file_ AS "Archivo"
+        FROM {self.tableVar};
+        '''
+        
+        self.newRecordSql = f'''INSERT INTO {self.tableVar} (date_, description_, file_) VALUES '''
+            
+    
+    def requery(self):
+        QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
+        if self.mainList.treeview.selectionModel().hasSelection():
+            expediente = self.mainList.treeview.selectedIndexes()
+            self.title.setText(expediente[1].data())
+            fileFolder = f'{expediente[0].data()}\{expediente[1].data()}'
+            self.db.dbFolder = f'{self.mainList.rootFolder}\{fileFolder}'
+            self.filesFolder.txtFilePath.setText(self.db.dbFolder)
+            self.db.dbFolder = f'{self.db.dbFolder}\desgloce'
+
+            #populate list of items
+            try:
+                records = self.selectAll()
+                
+            except:
+                folder = pathlib.Path(self.db.dbFolder)
+                if not folder.exists():
+                    os.mkdir(self.db.dbFolder)
+                self.db.executeQuery(self.db.createTableSql)
+                records = self.selectAll()
+
+            if records:
+                self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
+                self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
+                self.configureColumns()
+            else:
+                self.list.removeAllRows()
+
+            #populate details
+            if hasattr(self, 'detailsForm'):
+                # records = self.db.selectOne(self.detailsForm.selectSql)
+                # self.detailsForm.populate(records)
+                try:
+                    records = self.db.selectOne(self.detailsForm.selectSql)
+                    self.detailsForm.populate(records)
+                except:
+                    self.detailsForm.clearForm()
+
+        else:
+            self.list.removeAllRows()
+            self.filesFolder.txtFilePath.setText(self.filesFolder.root)
+        
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
+
+
+    def updateRecord(self, record): 
+        '''record is passed as a tuple with id'''
+        sql =f'''UPDATE {self.tableVar} SET 
+                date_ = '{record[1]}',
+                description_ = '{record[2]}',
+                file_ = '{record[3]}'
+                WHERE id =  {record[0]};'''
+        self.db.executeQueryCommit(sql)
+    
+    def configure_form(self): 
+        self.formLayoutSideFilesTree()
+        self.filesFolder.setLineEditFileBox(self.fontSize)
+        
+        self.layoutFormBox.setMinimumWidth(450)
+        self.layoutFormBox.setMaximumWidth(500)
+        # self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
+        # self.filesFolder.txtFilePath.setText(self.filesFolder.root)
+        self.setFormElements()
+
+    def setFormElements(self):#p! Form elements
+        self.id_ = lineEdit(self.fontSize)#
+        self.id_.setReadOnly(True)
+        self.date = dateWidget(self.fontSize)
+        self.description = textEdit(self.fontSize)
+        self.anexoBox = self.filesFolder.layoutLineEditFileBox
+        self.anexo = self.filesFolder.lineEditItems.txt 
+
+
+        #o! ALL DB ITEMS THAT NEED TO BE POPULATED
+        self.formItems = [self.id_, self.date, self.description, self.anexo]
+        
+        self.layoutForm.addRow(self.anexoBox)
+        self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
+        self.layoutForm.addRow(labelWidget('No.:', self.fontSize), self.date)
+        self.layoutForm.addRow(labelWidget("Descripcion", 14, True, fontColor="Black", align="center"))
+        self.layoutForm.addRow(self.description)
+    
+    def btn_delete_pressed(self):
+        record = self.list.treeview.selectionModel().selectedIndexes()
+        #Verificar si hay registro seleccionado
+        if record:
+            idVar = self.id_.text()
+            date_ = self.date.getInfo()
+            desc = self.description.getInfo()
+
+            text = f'''Eliminar el registro:
+            id: {idVar} 
+            No.: {date_}
+            Item: {desc}
+            '''
+            self.deleteRecord(text)
+        else:
+            self.clearForm()
+
+    def setConnections(self):
+        self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
+        # self.idLoad_.textChanged.connect(lambda: self.formDirty(1,self.idLoad_.getInfo()))
+        self.date.dateEdit.dateChanged.connect(lambda: self.formDirty(1, self.date.getInfo))
+        self.description.textChanged.connect(lambda: self.formDirty(2, self.description.getInfo))
+        self.anexo.textChanged.connect(lambda: self.formDirty(3, self.anexo.getInfo))
+
+    
+    # def closeEvent(self, a0: QCloseEvent):
+    #     # self.save_record_main(False, False)#updateList, changedSelection
+    #     return super().closeEvent(a0)
+
+    # def listadoSelectionChanged(self):
+    #     return super().listadoSelectionChanged()
+
+    def recordsToCSV(self):
+        if self.db.dbFolder:
+            try:
+                fileHeader = ['Id', 'Fecha', 'Descripcion', 'Archivo']#'Id, Fecha, Descripcion, Archivo'
+                csvFile = f'{self.db.dbFolder}\\registros.csv'
+                records = self.selectAll()
+                with open(csvFile,'w', newline="") as csvFile:
+                    writer = csv.writer(csvFile)
+                    writer.writerow(fileHeader)
+
+                    for row in records:
+                        writer.writerow(row)
+            except PermissionError: print('Cerrar archivo e intentar nuevamente')
+
+    def saveDetails(self):
+        if self.db.dbFolder:
+            if self.detailsForm.id_.text(): sql = self.detailsForm.updateRecordSql()
+            else: sql = self.detailsForm.insertNewSql()
+            try:
+                self.db.executeQueryCommit(sql)
+            except sqlite3.OperationalError:
+                self.db.executeQuery(self.detailsForm.createTableSql)
+                self.db.executeQueryCommit(sql)
+            
+        
+    
 class mainTree(treeviewSearchBox):
     def __init__(self, fontSize=11, sortColumn=1, sortOrder=Qt.SortOrder.AscendingOrder):
         super().__init__(fontSize, sortColumn, sortOrder)
@@ -29,9 +423,6 @@ class mainTree(treeviewSearchBox):
         self.filterTipo.cbo.currentTextChanged.connect(self.applyFilterTipo)
     
     def configureTree(self):
-        # self.getFiles(self.rootFolder, self.rootNode)
-        # self.treeview.setRootIsDecorated(True)
-        # self.treeview.setAllColumnsShowFocus(True)
         self.standardModel.setHorizontalHeaderLabels(['Tipo', 'Expediente'])
         self.setColumnsWith(((0,110),(2,200)))
         self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios'
@@ -81,253 +472,8 @@ class DB(sqliteDB.avdtLocalDB):
         --endsql '''
         # self.dbFolder = f'{constants.rootAVDT}\Carriers'
 
-class main(mainModel.main):
-    def __init__(self):
-        super().__init__()
-        self.listFontSize = 11
-        self.rowHeight = 72
-        self.configure_form()
-        self.setConnections()
-        self.configure_mainList()
-        
-    def configure_mainList(self):
-        self.mainList = mainTree()
-        self.splitter.insertWidget(0,self.mainList)
-        self.mainFormOpt = checkBox('Expedientes',fontSize=self.fontSize, size=self.mainSize)
-        self.mainFormOpt.setChecked(True)
-        self.widgetsOpt.insert(0,self.mainFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
-        self.titleLayout.insertWidget(1, self.mainFormOpt)
-        self.mainFormOpt.toggled.connect(self.configureWidth)
-        
-        self.filesFolder.root = self.mainList.rootFolder
-        self.filesFolder.txtFilePath.setText(self.filesFolder.root)
-        self.mainList.treeview.selectionModel().selectionChanged.connect(self.requery)
-
-        self.btnCSV = buttonWidget('Excel', 'h1', constants.iconExcel)
-        self.titleLayout.insertWidget(5, self.btnCSV)
-        self.btnCSV.pressed.connect(self.recordsToCSV)
-        #o! CONNECT 
-
-    def setDBConnection(self):
-        self.db = DB()
-        self.tableVar = self.db.tableVar
-        self.db.dbFolder = ''
 
 
-    def setGlobalVariables(self):
-        # DB INFO
-        self.idLoad = 0
-        self.setDBConnection()
-        self.evaluateSaveIndex = (2,)
-        self.loadFolder = ''
-        self.size_ = "h1" 
-        self.idColumn = 'id' 
-        self.listTableValuesIndexes = (0,1,2,3)
-        # self.formToDBItems = 4
-        self.titleText = "JUICIOS Y TRAMITES"
-        # self.listExpand = 1
-        # self.formExpand = 1
-        self.widgetsOptSizes = [1,1,1]
-        self.listHiddenItems = (0,3)
-        self.listColumnWidth = ((1,120),(2,120))
-        self.sortColumn = 1
-        self.onNewFocusWidget = 0
-        self.selectSql = f'''
-        --sql
-        SELECT
-            id,
-            date_ AS "No.",
-            description_ AS "Descripcion",
-            file_ AS "Archivo"
-        FROM {self.tableVar};
-        '''
-        
-        self.newRecordSql = f'''INSERT INTO {self.tableVar} (date_, description_, file_) VALUES '''
-            
-    
-    def requery(self):
-        QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
-        if self.mainList.treeview.selectionModel().hasSelection():
-            expediente = self.mainList.treeview.selectedIndexes()
-            self.title.setText(expediente[1].data())
-            fileFolder = f'{expediente[0].data()}\{expediente[1].data()}'
-            self.db.dbFolder = f'{self.mainList.rootFolder}\{fileFolder}'
-            self.filesFolder.txtFilePath.setText(self.db.dbFolder)
-            self.db.dbFolder = f'{self.db.dbFolder}\desgloce'
-
-            try:
-                records = self.selectAll()
-            except:
-                folder = pathlib.Path(self.db.dbFolder)
-                if not folder.exists():
-                    os.mkdir(self.db.dbFolder)
-                self.db.executeQuery(self.db.createTableSql)
-                records = self.selectAll()
-
-            if records:
-                self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
-                self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
-                self.configureColumns()
-            else:
-                self.list.removeAllRows()
-        else:
-            self.list.removeAllRows()
-        
-        while QApplication.overrideCursor() is not None:
-            QApplication.restoreOverrideCursor()
-
-
-    def updateRecord(self, record): 
-        '''record is passed as a tuple with id'''
-        sql =f'''UPDATE {self.tableVar} SET 
-                date_ = '{record[1]}',
-                description_ = '{record[2]}',
-                file_ = '{record[3]}'
-                WHERE id =  {record[0]};'''
-        self.db.executeQueryCommit(sql)
-    
-    def configure_form(self): 
-        self.formLayoutSideFilesTree()
-        self.filesFolder.setLineEditFileBox(self.fontSize)
-        
-        self.layoutFormBox.setMinimumWidth(450)
-        self.layoutFormBox.setMaximumWidth(500)
-        # self.filesFolder.root = f'{constants.rootAVDT}\Carriers'
-        # self.filesFolder.txtFilePath.setText(self.filesFolder.root)
-        self.setFormElements()
-
-    def setFormElements(self):#p! Form elements
-        self.id_ = lineEdit(self.fontSize)#
-        self.id_.setReadOnly(True)
-        self.date = dateWidget(self.fontSize)
-        self.description = textEdit(self.fontSize)
-        self.anexoBox = self.filesFolder.layoutLineEditFileBox
-        self.anexo = self.filesFolder.lineEditItems.txt 
-
-
-        #o! ALL DB ITEMS THAT NEED TO BE POPULATED
-        self.formItems = [self.id_, self.date, self.description, self.anexo]
-        
-        self.layoutForm.addRow(self.anexoBox)
-        self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
-        self.layoutForm.addRow(labelWidget('No.:', self.fontSize), self.date)
-        self.layoutForm.addRow(labelWidget("Notes", 14, fontColor="Blue", align="center"))
-        self.layoutForm.addRow(self.description)
-    
-    def btn_delete_pressed(self):
-        record = self.list.treeview.selectionModel().selectedIndexes()
-        #Verificar si hay registro seleccionado
-        if record:
-            idVar = self.id_.text()
-            date_ = self.date.getInfo()
-            desc = self.description.getInfo()
-
-            text = f'''Eliminar el registro:
-            id: {idVar} 
-            No.: {date_}
-            Item: {desc}
-            '''
-            self.deleteRecord(text)
-        else:
-            self.clearForm()
-
-    def setConnections(self):
-        self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
-        # self.idLoad_.textChanged.connect(lambda: self.formDirty(1,self.idLoad_.getInfo()))
-        self.date.dateEdit.dateChanged.connect(lambda: self.formDirty(1, self.date.getInfo))
-        self.description.textChanged.connect(lambda: self.formDirty(2, self.description.getInfo))
-        self.anexo.textChanged.connect(lambda: self.formDirty(3, self.anexo.getInfo))
-
-    
-    # def closeEvent(self, a0: QCloseEvent):
-    #     # self.save_record_main(False, False)#updateList, changedSelection
-    #     return super().closeEvent(a0)
-
-    # def listadoSelectionChanged(self):
-    #     return super().listadoSelectionChanged()
-
-    def recordsToCSV(self):
-        if self.db.dbFolder:
-            try:
-                fileHeader = ['Id', 'Fecha', 'Descripcion', 'Archivo']#'Id, Fecha, Descripcion, Archivo'
-                csvFile = f'{self.db.dbFolder}\\registros.csv'
-                records = self.selectAll()
-                with open(csvFile,'w', newline="") as csvFile:
-                    writer = csv.writer(csvFile)
-                    writer.writerow(fileHeader)
-
-                    for row in records:
-                        writer.writerow(row)
-            except PermissionError: print('Cerrar archivo e intentar nuevamente')
-        
-        # if self.mainList.treeview.selectionModel().hasSelection():
-        #     print(self.db.dbFolder)
-        #     expediente = self.mainList.treeview.selectedIndexes()
-        #     fileFolder = f'{expediente[0].data()}\{expediente[1].data()}'
-        #     self.db.dbFolder = f'{self.mainList.rootFolder}\{fileFolder}\desgloce'
-            
-           
-
-        # # Get the number of rows and columns
-        # rows = self.list.proxyModel.rowCount()
-        # if not rows:
-        #     return
-        # columns = self.list.proxyModel.columnCount()
-        # #Get a list of all the records.
-        # row = 0
-        
-        # #o!codigo para cuando no hay registros
-        # records = []
-        # while row < rows:
-        #     #pasa por cada fila
-        #     column = 0
-        #     rowValues = []
-        #     while column < columns:
-        #         #toma la informacion de cada columna
-        #         index = self.list.proxyModel.index(row, column)
-        #         cellValue = self.list.proxyModel.data(index)
-        #         rowValues.append(cellValue)
-        #         column += 1
-        #     records.append(rowValues)
-        #     row += 1
-        
-        # #Get the Horizontal labels from the treeview to use as headers
-        # fileHeader = []
-        # column = 0
-        # while column < columns:
-        #     columnNo = self.standardModel.horizontalHeaderItem(column)
-        #     if columnNo:
-        #         text = columnNo.text()
-        #         fileHeader.append(text)
-        #     column += 1
-        # #y! Write file to a csv
-        # #open a file dialog to choose file name and location
-        # filePathDialog = QFileDialog()
-        # filePathDialog.setMinimumSize(600,600)
-        # filePathDialog.setObjectName("archivo")
-        # filePath = filePathDialog.getSaveFileName(
-        #     caption="Elegir carpeta para guardar archivo",
-        #     directory = constants.oneDrive,
-        #     filter="*.csv")[0]
-
-        
-        # #if operation is not cancelled
-        # if filePath:
-        #     # filePath = filePath[0]
-        #     #verify if .csv was added or a file is to be replaced, if not, ad file extention name. 
-        #     if not filePath[-4:] == ".csv":
-        #         filePath = f"{filePath}.csv"
-        #     #write csv file
-        #     with open(filePath,'w', newline="") as csvFile:
-        #         writer = csv.writer(csvFile)
-        #         writer.writerow(fileHeader)
-
-        #         for row in records:
-        #             writer.writerow(row)
-        #     #open csv file. 
-        #     os.startfile(filePath)
-        
-    
 
 if __name__ == '__main__':
     db = DB()

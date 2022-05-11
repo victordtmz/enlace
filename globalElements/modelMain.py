@@ -203,6 +203,7 @@ class main(QMainWindow):
         self.configureWidth
 
     def configureWidth(self):
+        #dbInfor will give you a 1 if checked and a 0 if not checked
         widgetsOpt = list(map(lambda x: int(x.getDbInfo()), self.widgetsOpt))
         # widthSizes = []
         # index = 0

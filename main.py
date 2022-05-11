@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         self.configureEnlace()
         self.configureAVDT() 
         self.showMaximized()
+        # self.otherConnections()
 
 
     def initUi(self):
@@ -60,6 +61,7 @@ class MainWindow(QMainWindow):
         self.juicios = juicios.main()
         self.tabWidget.addTab(self.juicios,'    JUICIOS   ')
         self.tabWidget.setCurrentWidget(self.juicios)
+        self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
     
 #AVDT 
 #------------------------------------------------------------------------
@@ -159,6 +161,15 @@ class MainWindow(QMainWindow):
         self.avdtBookkeepingTotals = bookkeeping_totals.main()
         self.tabWidget.addTab(self.avdtBookkeepingTotals,'    AVDT BOOKKEEPING TOTALS   ')
         self.tabWidget.setCurrentWidget(self.avdtBookkeepingTotals)
+
+# OTHER FUNCTIONS
+# _______________________________________________________________________________________
+    # def otherConnections(self):
+    #     self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
+
+    def updateJuiciosTab(self):
+        index = self.tabWidget.currentIndex()
+        self.tabWidget.setTabText(index, self.juicios.title.text())
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
