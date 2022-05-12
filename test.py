@@ -8,6 +8,7 @@ from globalElements.treeview import treeviewSearchBox
 from globalElements.widgets import standardItem
 from globalElements import constants
 from localDB.states import estados
+from enlace.traducciones01 import traduccionesCopyDB
 
 # class main(treeviewSearchBox):
 #     def __init__(self, fontSize=13, sortColumn=1, sortOrder=Qt.SortOrder.AscendingOrder):
@@ -26,8 +27,9 @@ if __name__ == '__main__':
     # app = cloneDb.Clone()
     # app.cloneDB() 
     #o! SQLITE TESTING
-    db = estados.DB()
+    traduccionesCopyDB.cloneDB()
+    # db.C
     # db.selectEstados('México')
-    db.selectCiudades('México', 'Guanajuato')
+    # db.selectCiudades('México', 'Guanajuato')
     # db.createTable()
     # db.cloneDB()

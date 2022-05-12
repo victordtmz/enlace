@@ -429,14 +429,14 @@ class main(QMainWindow):
     def populateForm(self, record):#record 
         c = 0
         for i in self.formItems:
-            if i:
-                if record[c]: 
-                    try:
-                        i.populate(record[c])
-                    except Exception as e: 
-                        print(str(e))
-                else:
-                    i.reSet()
+            # if i:
+            if record[c]: 
+                try:
+                    i.populate(record[c])
+                except Exception as e: 
+                    print(str(e))
+            else:
+                i.reSet()
             c+=1
     
     #sets the form values compared at saving to empty string
@@ -549,9 +549,10 @@ class main(QMainWindow):
     def get_list_db_values(self):
         record = self.list.getCurrentValues()
         values = []
-        for i in self.listTableValuesIndexes:
-            values.append(record[i]) 
-        return values
+        if record:
+            for i in self.listTableValuesIndexes:
+                values.append(record[i]) 
+            return values
 
 #G! CONFIGURE SQL ----------------------------------------------------------------------
     

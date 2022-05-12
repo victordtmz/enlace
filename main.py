@@ -7,12 +7,12 @@ from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
     bookkeeping_categories, miles, IFTA, loads_payments, bookkeeping_totals)
-from enlace import enlace, juicios, servicios
+from enlace import enlace, juicios, servicios, traducciones
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
-from enlace.traducciones import procedencia
+# from enlace.traducciones import procedencia
 
 class MainWindow(QMainWindow): 
     def __init__(self):  
@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
         self.servicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateServicosTab)
 
     def openTraducciones(self):
-        self.traducciones = procedencia.main()
+        self.traducciones = traducciones.main()
         self.tabWidget.addTab(self.traducciones,'    TRADUCCIONES   ')
         self.tabWidget.setCurrentWidget(self.traducciones)
     

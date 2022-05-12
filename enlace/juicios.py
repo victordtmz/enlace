@@ -183,39 +183,6 @@ class main(mainModel.main):
         self.configureDetailsForm()
         self.configureWidth()
         
-    
-    # def createDetailsForm(self):
-    #     if self.detailsFormOpt.isChecked():
-    #         self.detailsForm = detailsForm()
-    #         self.widgetsOptSizes.append(1)
-    #         self.widgetsOpt.insert(1,self.detailsFormOpt)
-    #         self.splitter.insertWidget(1,self.detailsForm)
-    #         try:
-    #             records = self.db.selectOne(self.detailsForm.selectSql)
-    #             self.detailsForm.populate(records)
-    #         except:
-    #             self.detailsForm.clearForm()
-    #         self.detailsForm.btnSave.pressed.connect(self.saveDetails)
-    #     else:
-    #         self.widgetsOptSizes.pop()
-    #         self.detailsForm.deleteLater()
-    #         delattr(self, 'detailsForm')
-    #         self.widgetsOpt.remove(self.detailsFormOpt)
-    #         # self.listOpt.setChecked(True)
-    #         # self.formOpt.setChecked(True)
-            
-
-    #     self.configureWidth()
-        
-        # if hasattr(self, 'detailsForm'):
-        #     self.detailsForm.deleteLater()
-        #     
-        #     self.listOpt.setChecked(True)
-        #     self.formOpt.setChecked(True)
-        #     self.configureWidth()
-        
-            
-
     def configureDetailsForm(self):
         self.detailsFormOpt = checkBox('Detalles del Tramite',fontSize=self.fontSize, size=self.mainSize)
         self.detailsFormOpt.setChecked(False)

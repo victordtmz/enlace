@@ -4,6 +4,7 @@ from localDB.sqliteDB import avdtLocalDB
 
 #prepare mysqlDb
 avdtDB = ('u210833393_AVDT', 'u210833393_victorMtz', 'Abogado2020$')
+traduccionesDB = ('u210833393_traducciones', 'u210833393_victor', 'Abogado2020$')
 avdOld = ('u210833393_AVD','u210833393_VictorMartinez','Abogado2020')
 mysqlDB = DB.DB(avdtDB[0], avdtDB[1], avdtDB[2])
 

@@ -225,7 +225,13 @@ class cbo(QComboBox):
             self.completer_name.setCompletionMode(completionMode)
             self.setCompleter(self.completer_name) 
             
-        
+    def insertNewItems(self, items):
+        self.clear()
+        self.addItems(items)
+        completer_name = QCompleter(items)
+        completer_name.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
+        self.setCompleter(completer_name)
 
     def wheelEvent(self, e: QWheelEvent) -> None:
         e.ignore()
@@ -299,6 +305,14 @@ class cboFilterGroup(QWidget):
             self.btnRequery.pressed.connect(self.requery)
             self.requeryFunct = requeryFunc
     
+    def insertNewItems(self, items):
+        self.cbo.insertNewItems(items)
+        # self.cbo.addItems(items)
+        # completer_name = QCompleter(items)
+        # completer_name.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        # completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
+        # self.cbo.setCompleter(completer_name)
+
     def requery(self):
         self.requeryFunct()
         self.cbo.clear()
