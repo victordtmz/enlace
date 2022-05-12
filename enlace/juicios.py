@@ -257,13 +257,14 @@ class main(mainModel.main):
         --sql
         SELECT
             id,
-            date_ AS "No.",
+            date_ AS "Fecha",
+             title AS "Titulo",
             description_ AS "Descripcion",
             file_ AS "Archivo"
         FROM {self.tableVar};
         '''
         
-        self.newRecordSql = f'''INSERT INTO {self.tableVar} (date_, description_, file_) VALUES '''
+        self.newRecordSql = f'''INSERT INTO {self.tableVar} (date_, title, description_, file_) VALUES '''
             
     
     def requery(self):
@@ -316,8 +317,9 @@ class main(mainModel.main):
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 
                 date_ = '{record[1]}',
-                description_ = '{record[2]}',
-                file_ = '{record[3]}'
+                title = '{record[2]}',
+                description_ = '{record[3]}',
+                file_ = '{record[4]}'
                 WHERE id =  {record[0]};'''
         self.db.executeQueryCommit(sql)
     
@@ -335,17 +337,19 @@ class main(mainModel.main):
         self.id_ = lineEdit(self.fontSize)#
         self.id_.setReadOnly(True)
         self.date = dateWidget(self.fontSize)
+        self.title_ = lineEdit(self.fontSize)
         self.description = textEdit(self.fontSize)
         self.anexoBox = self.filesFolder.layoutLineEditFileBox
         self.anexo = self.filesFolder.lineEditItems.txt 
 
 
         #o! ALL DB ITEMS THAT NEED TO BE POPULATED
-        self.formItems = [self.id_, self.date, self.description, self.anexo]
+        self.formItems = [self.id_, self.date, self.title_, self.description, self.anexo]
         
         self.layoutForm.addRow(self.anexoBox)
         self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
-        self.layoutForm.addRow(labelWidget('No.:', self.fontSize), self.date)
+        self.layoutForm.addRow(labelWidget('Fecha:', self.fontSize), self.date)
+        self.layoutForm.addRow(labelWidget('Titulo:', self.fontSize), self.title_)
         self.layoutForm.addRow(labelWidget("Descripcion", 14, True, fontColor="Black", align="center"))
         self.layoutForm.addRow(self.description)
     
@@ -355,11 +359,13 @@ class main(mainModel.main):
         if record:
             idVar = self.id_.text()
             date_ = self.date.getInfo()
+            title = self.title_.getInfo()
             desc = self.description.getInfo()
 
             text = f'''Eliminar el registro:
             id: {idVar} 
-            No.: {date_}
+            Fecha: {date_}
+            Titulo: {title}
             Item: {desc}
             '''
             self.deleteRecord(text)
@@ -369,10 +375,10 @@ class main(mainModel.main):
     def setConnections(self):
         self.id_.textChanged.connect(lambda: self.formDirty(0,self.id_.getInfo()))
         # self.idLoad_.textChanged.connect(lambda: self.formDirty(1,self.idLoad_.getInfo()))
-        self.date.dateEdit.dateChanged.connect(lambda: self.formDirty(1, self.date.getInfo))
-        self.description.textChanged.connect(lambda: self.formDirty(2, self.description.getInfo))
-        self.anexo.textChanged.connect(lambda: self.formDirty(3, self.anexo.getInfo))
-
+        self.title_.textChanged.connect(lambda: self.formDirty(1, self.title_.getInfo()))
+        self.date.dateEdit.dateChanged.connect(lambda: self.formDirty(2, self.date.getInfo))
+        self.description.textChanged.connect(lambda: self.formDirty(3, self.description.getInfo))
+        self.anexo.textChanged.connect(lambda: self.formDirty(4, self.anexo.getInfo))
     
     # def closeEvent(self, a0: QCloseEvent):
     #     # self.save_record_main(False, False)#updateList, changedSelection
@@ -384,7 +390,7 @@ class main(mainModel.main):
     def recordsToCSV(self):
         if self.db.dbFolder:
             try:
-                fileHeader = ['Id', 'Fecha', 'Descripcion', 'Archivo']#'Id, Fecha, Descripcion, Archivo'
+                fileHeader = ['Id', 'Fecha', 'Titulo', 'Descripcion', 'Archivo']#'Id, Fecha, Descripcion, Archivo'
                 csvFile = f'{self.db.dbFolder}\\registros.csv'
                 records = self.selectAll()
                 with open(csvFile,'w', newline="") as csvFile:
@@ -466,6 +472,7 @@ class DB(sqliteDB.avdtLocalDB):
         CREATE TABLE IF NOT EXISTS {self.tableVar} (
             id INTEGER PRIMARY KEY,
             date_ TEXT,
+            title TEXT,
             description_ TEXT,
             file_ TEXT
             );

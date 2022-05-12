@@ -7,7 +7,7 @@ from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
     bookkeeping_categories, miles, IFTA, loads_payments, bookkeeping_totals)
-from enlace import enlace, juicios
+from enlace import enlace, juicios, servicios
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
@@ -51,6 +51,7 @@ class MainWindow(QMainWindow):
     def configenlaceConnections(self):
         self.enlaceMenu.btnAccounts.pressed.connect(self.enlaceOpenAccounts)
         self.enlaceMenu.btnJuicios.pressed.connect(self.openJuicios)
+        self.enlaceMenu.btnServicios.pressed.connect(self.openServicios)
 
     def enlaceOpenAccounts(self):
         self.enlaceAccounts = enlaceAccounts.main()
@@ -62,6 +63,12 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.juicios,'    JUICIOS   ')
         self.tabWidget.setCurrentWidget(self.juicios)
         self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
+
+    def openServicios(self):
+        self.servicios = servicios.main()
+        self.tabWidget.addTab(self.servicios,'    JUICIOS   ')
+        self.tabWidget.setCurrentWidget(self.servicios)
+        self.servicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateServicosTab)
     
 #AVDT 
 #------------------------------------------------------------------------
@@ -170,6 +177,10 @@ class MainWindow(QMainWindow):
     def updateJuiciosTab(self):
         index = self.tabWidget.currentIndex()
         self.tabWidget.setTabText(index, self.juicios.title.text())
+
+    def updateServicosTab(self):
+        index = self.tabWidget.currentIndex()
+        self.tabWidget.setTabText(index, self.servicios.title.text())
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
