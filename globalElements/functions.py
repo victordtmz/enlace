@@ -92,7 +92,7 @@ def getRecordsFromCSV(fileName):
         records = str(records)
         records = records.replace('[','(')
         records = records.replace(']',')')
-        records = records[1:-1]
+        records = records[1:-1] 
     
     return records, header
 

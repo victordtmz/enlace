@@ -141,7 +141,7 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.avdtStops,'    AVDT WAREHOUSES   ')
         self.tabWidget.setCurrentWidget(self.avdtStops)
 
-    def avdtOpenBookkeeping(self):
+    def avdtOpenBookkeeping(self): 
         self.avdtBookkeeping = bookkeeping_.main()
         self.tabWidget.addTab(self.avdtBookkeeping,'    AVDT BOOKKEEPING   ')
         self.tabWidget.setCurrentWidget(self.avdtBookkeeping)

@@ -144,42 +144,4 @@ if __name__ == '__main__':
 
 
  #p! DO NOT DELETE - SAMPLE CODE FOR CLONING INTO DB
-    # def cloneDB(self):
-    #     dbLogin = constants.avdOld
-    #     dataBase = mysqlDb.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-    #     sql = f'''
-    #         SELECT 
-    #             accountName,
-    #             userName,
-    #             pwd,
-    #             date_,
-    #             portal,
-    #             notes
-    #         FROM AVDT_Accounts
-    #         WHERE idCarrier = 1;
-    #     '''
-    #     records = dataBase.get_records_clearNull(sql)
-    #     # records = gf.recordToSQL(records)
-    #     self.database = 'dnpfAct.db'
-    #     sql = self.getSQL('createTable.sql')
-    #     self.executeQuery(sql)
-    #     missing = []
-    #     missed = 0
-    #     recorded = 0
-    #     for i in records:
-    #         # i = gf.recordToSQL(i)
-    #         sql = f'''INSERT INTO {self.tableVar} 
-    #             (account, user, pwd, date_, portal, notes)
-    #         VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}","{i[4]}","{i[5]}")
-    #     ''' 
-    #         try:
-    #             self.executeQueryCommit(sql)
-    #             recorded += 1
-    #         except:
-    #             # print(sql)
-    #             missing.append([i[0],i[1]])
-    #             missed += 1
-                
-    #     for i in missing:
-    #         print(i)
-    #     print(missed)
+    # des

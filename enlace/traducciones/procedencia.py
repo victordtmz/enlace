@@ -127,7 +127,7 @@ class main(modelMain.main):
         self.id_ = lineEdit(self.fontSize)#
         self.id_.setReadOnly(True)
         self.carrier = cboFilterGroup(self.fontSize, 
-            refreshable=True,
+            refreshable=True, 
             items=constants.carriersDict,
             requeryFunc=constants.queryCarriers) #lineEdit(self.fontSize)
         self.no = lineEdit(self.fontSize)
