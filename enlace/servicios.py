@@ -133,35 +133,38 @@ class main(mainModel.main):
         self.setConnections()
         self.configure_mainList()
         self.configureDetailsForm()
+        self.configureWidth()
         
     
-    def createDetailsForm(self):
+    # def createDetailsForm(self):
         
-        if hasattr(self, 'detailsForm'):
-            self.detailsForm.deleteLater()
-            delattr(self, 'detailsForm')
-            self.listOpt.setChecked(True)
-            self.formOpt.setChecked(True)
-            self.configureWidth()
-        else:
-            self.detailsForm = detailsForm()
-            self.listOpt.setChecked(False)
-            self.formOpt.setChecked(False)
-            self.splitter.insertWidget(1,self.detailsForm)
-            self.configureWidth()
-            try:
-                records = self.db.selectOne(self.detailsForm.selectSql)
-                self.detailsForm.populate(records)
-            except:
-                self.detailsForm.clearForm()
-            self.detailsForm.btnSave.pressed.connect(self.saveDetails)
+    #     if hasattr(self, 'detailsForm'):
+    #         self.detailsForm.deleteLater()
+    #         delattr(self, 'detailsForm')
+    #         self.listOpt.setChecked(True)
+    #         self.formOpt.setChecked(True)
+    #         self.configureWidth()
+    #     else:
+    #         self.detailsForm = detailsForm()
+    #         # self.listOpt.setChecked(False)
+    #         # self.formOpt.setChecked(False)
+    #         self.splitter.insertWidget(1,self.detailsForm)
+    #         self.configureWidth()
+    #         try:
+    #             records = self.db.selectOne(self.detailsForm.selectSql)
+    #             self.detailsForm.populate(records)
+    #         except:
+    #             self.detailsForm.clearForm()
+    #         self.detailsForm.btnSave.pressed.connect(self.saveDetails)
 
     def configureDetailsForm(self):
         self.detailsFormOpt = checkBox('Detalles del Tramite',fontSize=self.fontSize, size=self.mainSize)
         self.detailsFormOpt.setChecked(False)
         self.widgetsOpt.insert(1,self.detailsFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
         self.titleLayout.insertWidget(2, self.detailsFormOpt)
-        self.detailsFormOpt.toggled.connect(self.createDetailsForm)
+        self.detailsFormOpt.toggled.connect(self.configureWidth)
+        self.detailsForm = detailsForm()
+        self.splitter.insertWidget(1,self.detailsForm)
 
     def configure_mainList(self):
         self.mainList = mainTree()

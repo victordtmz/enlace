@@ -181,35 +181,51 @@ class main(mainModel.main):
         self.setConnections()
         self.configure_mainList()
         self.configureDetailsForm()
+        self.configureWidth()
         
     
-    def createDetailsForm(self):
+    # def createDetailsForm(self):
+    #     if self.detailsFormOpt.isChecked():
+    #         self.detailsForm = detailsForm()
+    #         self.widgetsOptSizes.append(1)
+    #         self.widgetsOpt.insert(1,self.detailsFormOpt)
+    #         self.splitter.insertWidget(1,self.detailsForm)
+    #         try:
+    #             records = self.db.selectOne(self.detailsForm.selectSql)
+    #             self.detailsForm.populate(records)
+    #         except:
+    #             self.detailsForm.clearForm()
+    #         self.detailsForm.btnSave.pressed.connect(self.saveDetails)
+    #     else:
+    #         self.widgetsOptSizes.pop()
+    #         self.detailsForm.deleteLater()
+    #         delattr(self, 'detailsForm')
+    #         self.widgetsOpt.remove(self.detailsFormOpt)
+    #         # self.listOpt.setChecked(True)
+    #         # self.formOpt.setChecked(True)
+            
+
+    #     self.configureWidth()
         
-        if hasattr(self, 'detailsForm'):
-            self.detailsForm.deleteLater()
-            delattr(self, 'detailsForm')
-            self.listOpt.setChecked(True)
-            self.formOpt.setChecked(True)
-            self.configureWidth()
-        else:
-            self.detailsForm = detailsForm()
-            self.listOpt.setChecked(False)
-            self.formOpt.setChecked(False)
-            self.splitter.insertWidget(1,self.detailsForm)
-            self.configureWidth()
-            try:
-                records = self.db.selectOne(self.detailsForm.selectSql)
-                self.detailsForm.populate(records)
-            except:
-                self.detailsForm.clearForm()
-            self.detailsForm.btnSave.pressed.connect(self.saveDetails)
+        # if hasattr(self, 'detailsForm'):
+        #     self.detailsForm.deleteLater()
+        #     
+        #     self.listOpt.setChecked(True)
+        #     self.formOpt.setChecked(True)
+        #     self.configureWidth()
+        
+            
 
     def configureDetailsForm(self):
         self.detailsFormOpt = checkBox('Detalles del Tramite',fontSize=self.fontSize, size=self.mainSize)
         self.detailsFormOpt.setChecked(False)
-        self.widgetsOpt.insert(1,self.detailsFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
+        # = [self.mainFormOpt,self.listOpt, self.formOpt]
         self.titleLayout.insertWidget(2, self.detailsFormOpt)
-        self.detailsFormOpt.toggled.connect(self.createDetailsForm)
+        self.detailsFormOpt.toggled.connect(self.configureWidth)
+        self.detailsForm = detailsForm()
+        self.widgetsOptSizes.append(1)
+        self.widgetsOpt.insert(1,self.detailsFormOpt)
+        self.splitter.insertWidget(1,self.detailsForm)
 
     def configure_mainList(self):
         self.mainList = mainTree()
@@ -243,14 +259,14 @@ class main(mainModel.main):
         self.loadFolder = ''
         self.size_ = "h1" 
         self.idColumn = 'id' 
-        self.listTableValuesIndexes = (0,1,2,3)
+        self.listTableValuesIndexes = (0,1,2,3,4)
         # self.formToDBItems = 4
         self.titleText = "JUICIOS Y TRAMITES"
         # self.listExpand = 1
         # self.formExpand = 1
-        self.widgetsOptSizes = [1,1,1,1]
-        self.listHiddenItems = (0,3)
-        self.listColumnWidth = ((1,120),(2,120))
+        self.widgetsOptSizes = [1,1,1]
+        self.listHiddenItems = (0,3,4)
+        self.listColumnWidth = ((1,100),(2,120))
         self.sortColumn = 1
         self.onNewFocusWidget = 0
         self.selectSql = f'''
@@ -258,7 +274,7 @@ class main(mainModel.main):
         SELECT
             id,
             date_ AS "Fecha",
-             title AS "Titulo",
+            title AS "Titulo",
             description_ AS "Descripcion",
             file_ AS "Archivo"
         FROM {self.tableVar};

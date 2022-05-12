@@ -12,6 +12,7 @@ from enlace import enlace, juicios, servicios
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
+from enlace.traducciones import procedencia
 
 class MainWindow(QMainWindow): 
     def __init__(self):  
@@ -52,6 +53,7 @@ class MainWindow(QMainWindow):
         self.enlaceMenu.btnAccounts.pressed.connect(self.enlaceOpenAccounts)
         self.enlaceMenu.btnJuicios.pressed.connect(self.openJuicios)
         self.enlaceMenu.btnServicios.pressed.connect(self.openServicios)
+        self.enlaceMenu.btnTranslate.pressed.connect(self.openTraducciones)
 
     def enlaceOpenAccounts(self):
         self.enlaceAccounts = enlaceAccounts.main()
@@ -69,6 +71,11 @@ class MainWindow(QMainWindow):
         self.tabWidget.addTab(self.servicios,'    JUICIOS   ')
         self.tabWidget.setCurrentWidget(self.servicios)
         self.servicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateServicosTab)
+
+    def openTraducciones(self):
+        self.traducciones = procedencia.main()
+        self.tabWidget.addTab(self.traducciones,'    TRADUCCIONES   ')
+        self.tabWidget.setCurrentWidget(self.traducciones)
     
 #AVDT 
 #------------------------------------------------------------------------
