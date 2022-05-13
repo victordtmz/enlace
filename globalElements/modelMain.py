@@ -385,8 +385,8 @@ class main(QMainWindow):
         self.hBoxLayout = QHBoxLayout()
         self.hBoxLayout.setContentsMargins(0,0,0,0)
         self.hBoxLayout.setSpacing(0)
-        self.hBoxLayout.addWidget(self.scrollBox,2)
-        self.hBoxLayout.addWidget(self.filesFolder,1)
+        self.hBoxLayout.addWidget(self.scrollBox)
+        self.hBoxLayout.addWidget(self.filesFolder)
         self.hBoxLayout.setAlignment(self.filesFolder,Qt.AlignmentFlag.AlignTop)
         self.form.setLayout(self.hBoxLayout)
 

@@ -24,6 +24,7 @@ class main(accounts.main):
         self.filesFolder.txtFilePath.setText(self.filesFolder.root)
         self.configure_list()
         self.title.setText('Personal Accounts')
+        self.showMaximized()
         self.requery() 
     
     def setProgramDetails(self):
@@ -35,11 +36,14 @@ class main(accounts.main):
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
         member = self.familyFilter.getInfo()
         if member:
-            self.db.dbFolder = f'{self.root}\{member}'
+            self.db.dbFolder = f'{self.root}\{member}\db'
             try:
                 records = self.selectAll()
             except:
                 # sql = self.db.getSQL('createTable.sql')
+                folder = pathlib.Path(self.db.dbFolder)
+                if not folder.exists():
+                    os.mkdir(self.db.dbFolder)
                 self.db.executeQuery(self.db.createTableSql)
                 records = self.selectAll()
 

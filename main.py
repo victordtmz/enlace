@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
 
     def openServicios(self):
         self.servicios = servicios.main()
-        self.tabWidget.addTab(self.servicios,'    JUICIOS   ')
+        self.tabWidget.addTab(self.servicios,'    SERVICIOS   ')
         self.tabWidget.setCurrentWidget(self.servicios)
         self.servicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateServicosTab)
 
