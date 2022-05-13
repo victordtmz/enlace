@@ -209,7 +209,7 @@ class main(modelMain.main):
                 fecha = '{record[4]}',
                 hojas = '{record[5]}',
                 costo = '{record[6]}',
-                destion = '{record[7]}',
+                destino = '{record[7]}',
                 idioma = '{record[8]}',
                 pais = '{record[9]}',
                 estado = '{record[10]}',
@@ -548,6 +548,16 @@ class main(modelMain.main):
         tradId = tradId[0][0]
         self.requery()
         self.list.selectFirstItem()
+
+    def getListInfo(self):
+        record = super().getListInfo()
+        fecha = self.fecha.dateEdit.date()
+        year = fecha.year()
+        folio = self.folio.getInfo()
+        folio = str(folio).zfill(4)
+        folioVar = f'{folio}/{str(year)}'
+        record.insert(2, folioVar)
+        return record
 
 
         
