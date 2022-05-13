@@ -138,6 +138,7 @@ class main(modelMain.main):
         self.requery()
         self.showMaximized()
         self.configureWidth()
+        self.configureFormsFolder()
 
     def setGlobalVariables(self):
         # DB INFO
@@ -285,7 +286,7 @@ class main(modelMain.main):
         if pais:
             estados = db.selectEstados(pais)
             estados.insert(0,'')
-            self.estado.addItems(estados)
+            self.estado.insertNewItems(estados)
 
     def populateCiudades(self):
         pais = self.pais.getInfo()
@@ -294,7 +295,7 @@ class main(modelMain.main):
             db = estadosDB()
             ciudades = db.selectCiudades(pais, estado)
             ciudades.insert(0,'')
-            self.ciudad.addItems(ciudades)
+            self.ciudad.insertNewItems(ciudades)
 
     def populateOrigen(self):
         a = '''--sql'''
@@ -558,6 +559,16 @@ class main(modelMain.main):
         folioVar = f'{folio}/{str(year)}'
         record.insert(2, folioVar)
         return record
+
+    def configureFormsFolder(self):
+        self.btnForms = buttonWidget('Formatos', 'h1', constants.iconFolder)
+        self.btnForms.pressed.connect(self.openFormsFolder)
+        self.titleLayout.insertWidget(4, self.btnForms)
+
+    def openFormsFolder(self):
+        folder = f'{constants.oneDrive}\Despacho\Traducciones\Formatos'
+        os.startfile(folder)
+        
 
 
         

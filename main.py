@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
     def avdtOpenBookkeeping(self): 
         self.avdtBookkeeping = bookkeeping_.main()
         self.tabWidget.addTab(self.avdtBookkeeping,'    AVDT BOOKKEEPING   ')
-        self.tabWidget.setCurrentWidget(self.avdtBookkeeping)
+        self.tabWidget.setCurrentWidget(self.avdtBookkeeping) 
 
     def avdtOpenBookkeepingCat(self):
         self.avdtBookkeepingCat = bookkeeping_categories.main()

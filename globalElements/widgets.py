@@ -230,7 +230,7 @@ class cbo(QComboBox):
         self.addItems(items)
         completer_name = QCompleter(items)
         completer_name.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
+        # completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
         self.setCompleter(completer_name)
 
     def wheelEvent(self, e: QWheelEvent) -> None:
@@ -319,7 +319,7 @@ class cboFilterGroup(QWidget):
         self.cbo.addItems(self.items)
         self.completer_name = QCompleter(self.items)
         self.completer_name.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        self.completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
+        # self.completer_name.setCompletionMode(QCompleter.CompletionMode.InlineCompletion)
         self.cbo.setCompleter(self.completer_name)
 
     def btn_pressed(self):
