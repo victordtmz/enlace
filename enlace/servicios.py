@@ -366,7 +366,7 @@ class mainTree(treeviewSearchBox):
     def __init__(self, fontSize=11, sortColumn=1, sortOrder=Qt.SortOrder.AscendingOrder):
         super().__init__(fontSize, sortColumn, sortOrder)
         self.fontSize = fontSize
-        self.configureTree()
+        self.configureTree() 
         self.createFilters()
         self.getFiles(self.rootFolder, self.rootNode)
 
