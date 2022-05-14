@@ -402,7 +402,8 @@ class mainTree(treeviewSearchBox):
         self.fontSize = fontSize
         self.configureTree()
         self.createFilters()
-        self.getFiles(self.rootFolder, self.rootNode)
+        self.requery()
+        # self.getFiles(self.rootFolder, self.rootNode)
 
     def createFilters(self):
         self.proxyTipo = QSortFilterProxyModel()
@@ -416,16 +417,16 @@ class mainTree(treeviewSearchBox):
         self.setColumnsWith(((0,110),(2,200)))
         self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios'
 
-    def getFiles(self, path, node):
+    def requery(self):
         tipoFolders = ['']
-        for folder in os.scandir(path):
+        for folder in os.scandir(self.rootFolder):
             if folder.is_dir():
                 #add items for filter 
                 tipoFolders.append(folder.name)
                 for subFolder in os.scandir(folder):
                     record = (folder.name, subFolder.name)
                     record = list(map(self.createRecord, record))
-                    node.appendRow(record)
+                    self.rootNode.appendRow(record)
         #config filter
         tipoFolders.sort()
         self.filterTipo.cbo.addItems(tipoFolders)
