@@ -165,6 +165,7 @@ class main(mainModel.main):
         self.detailsFormOpt.toggled.connect(self.configureWidth)
         self.detailsForm = detailsForm()
         self.splitter.insertWidget(1,self.detailsForm)
+        self.detailsForm.btnSave.pressed.connect(self.saveDetails)
 
     def configure_mainList(self):
         self.mainList = mainTree()
@@ -268,6 +269,13 @@ class main(mainModel.main):
             QApplication.restoreOverrideCursor()
 
 
+    def insertNewRecord(self, record):
+        sql = f'''INSERT INTO {self.tableVar} 
+            (date_, title, description_, file_) VALUES 
+            ('{record[1]}','{record[2]}','{record[3]}','{record[4]}')'''
+        idVar = self.db.insertNewRecord(sql)
+        return idVar
+        
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 

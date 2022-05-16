@@ -187,12 +187,13 @@ class main(mainModel.main):
         self.detailsFormOpt = checkBox('Detalles del Tramite',fontSize=self.fontSize, size=self.mainSize)
         self.detailsFormOpt.setChecked(False)
         # = [self.mainFormOpt,self.listOpt, self.formOpt]
-        self.titleLayout.insertWidget(2, self.detailsFormOpt)
+        self.titleLayout.insertWidget(4, self.detailsFormOpt)
         self.detailsFormOpt.toggled.connect(self.configureWidth)
         self.detailsForm = detailsForm()
         self.widgetsOptSizes.append(1)
-        self.widgetsOpt.insert(1,self.detailsFormOpt)
-        self.splitter.insertWidget(1,self.detailsForm)
+        self.widgetsOpt.insert(3,self.detailsFormOpt)
+        self.splitter.insertWidget(3,self.detailsForm)
+        self.detailsForm.btnSave.pressed.connect(self.saveDetails)
 
     def configure_mainList(self):
         self.mainList = mainTree()
@@ -247,7 +248,7 @@ class main(mainModel.main):
         FROM {self.tableVar};
         '''
         
-        self.newRecordSql = f'''INSERT INTO {self.tableVar} (date_, title, description_, file_) VALUES '''
+        
             
     
     def requery(self):
@@ -295,7 +296,13 @@ class main(mainModel.main):
         while QApplication.overrideCursor() is not None:
             QApplication.restoreOverrideCursor()
 
-
+    def insertNewRecord(self, record):
+        sql = f'''INSERT INTO {self.tableVar} 
+            (date_, title, description_, file_) VALUES 
+            ('{record[1]}','{record[2]}','{record[3]}','{record[4]}')'''
+        idVar = self.db.insertNewRecord(sql)
+        return idVar
+    
     def updateRecord(self, record): 
         '''record is passed as a tuple with id'''
         sql =f'''UPDATE {self.tableVar} SET 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from avdt.loads import loads
 from globalElements.setup import load
-load() 
+load()  
 import sys 
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
