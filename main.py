@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from avdt.loads import loads
-from globalElements.setup import load
-load()  
+from globalElements import setup 
+# setup.load()  
 import sys 
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
@@ -13,6 +13,7 @@ from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
 # from enlace.traducciones import procedencia
+
 
 class MainWindow(QMainWindow): 
     def __init__(self):  
@@ -182,8 +183,14 @@ class MainWindow(QMainWindow):
     #     self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
 
     def updateJuiciosTab(self):
-        index = self.tabWidget.currentIndex()
-        self.tabWidget.setTabText(index, self.juicios.title.text())
+        listIndex = self.juicios.mainList.treeview.selectionModel().selectedIndexes()
+        expediente = listIndex[1].data()
+        # self.juicios.title.text()
+        tabIndex = self.tabWidget.currentIndex()
+        # try:
+        self.tabWidget.setTabText(tabIndex, expediente)
+        # except:
+        #     pass
 
     def updateServicosTab(self):
         index = self.tabWidget.currentIndex()

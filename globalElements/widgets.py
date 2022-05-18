@@ -1009,7 +1009,8 @@ class tabWidget(QTabWidget):
 
     def close_tab_requested(self, intVar):
         if intVar:
-            self.widget(intVar).deleteLater()
+            self.removeTab(intVar)
+            # self.widget(intVar).deleteLater()
 
 class standardItem(QStandardItem):
     def __init__(self,  txt='',fontSize = 13, rowHeight=42, colorVar ='#000000'):

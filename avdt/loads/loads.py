@@ -132,7 +132,7 @@ class main(modelMain.main):
         self.selectSql = '''
             SELECT 
                 loads.id, 
-                contracting.name_ AS "Contractin",
+                contracting.name_ AS "Contracting",
                 hauling.name_ AS "Hauling",
                 trucks.no_ AS "Truck",
                 trailers.no_ AS "Trailer",
@@ -211,8 +211,30 @@ class main(modelMain.main):
     def requery(self):
         qtw.QApplication.setOverrideCursor(qtg.QCursor(qtc.Qt.CursorShape.WaitCursor))
         records = self.selectAll()
+        self.list.removeAllRows()
         if records:
-            self.list.requery(records, self.listFontSize, self.rowHeight, "Black")
+            recordsDict = {}
+            for i in records:
+                if i[2] in recordsDict:
+                    recordsDict[i[2]].append(i)
+                else: 
+                    recordsDict[i[2]] = [i]
+
+            if 'DNP FREIGHT LLC' in recordsDict:
+                self.list.addRecords(recordsDict['DNP FREIGHT LLC'], self.listFontSize, self.rowHeight, 'Blue')
+                del recordsDict['DNP FREIGHT LLC']
+
+            if 'AVD TRUCKING LLC' in recordsDict:
+                self.list.addRecords(recordsDict['AVD TRUCKING LLC'], self.listFontSize, self.rowHeight, 'Black')
+                del recordsDict['AVD TRUCKING LLC']
+
+            if 'T M CALVILLO TRANSPORT' in recordsDict:
+                self.list.addRecords(recordsDict['T M CALVILLO TRANSPORT'], self.listFontSize, self.rowHeight, 'Green')
+                del recordsDict['T M CALVILLO TRANSPORT']
+
+            for v in recordsDict.values():
+                self.list.addRecords(v, self.listFontSize, self.rowHeight, "Black")
+            
             self.contractingFilterApply()
         else:
             self.list.removeAllRows()
@@ -711,7 +733,7 @@ class main(modelMain.main):
         self.proxyContracting.setSourceModel(self.list.standardModel)
         self.proxyContracting.setFilterFixedString(filterText)
         self.proxyContracting.setFilterKeyColumn(1)
-        print(f'{self.proxyContracting.rowCount()} - Contracting')
+        # print(f'{self.proxyContracting.rowCount()} - Contracting')
         self.haulingFilterApply()
 
     def haulingFilterApply(self):
@@ -719,7 +741,7 @@ class main(modelMain.main):
         self.proxyHauling.setSourceModel(self.proxyContracting)
         self.proxyHauling.setFilterFixedString(filterText)
         self.proxyHauling.setFilterKeyColumn(2)
-        print(f'{self.proxyContracting.rowCount()} - Hauling')
+        # print(f'{self.proxyContracting.rowCount()} - Hauling')
         self.clientFilterApply()
 
     # def yearFilterApply(self):
@@ -741,7 +763,7 @@ class main(modelMain.main):
         self.proxyClient.setSourceModel(self.proxyHauling)
         self.proxyClient.setFilterFixedString(filterText)
         self.proxyClient.setFilterKeyColumn(7)
-        print(f'{self.proxyContracting.rowCount()} - Client')
+        # print(f'{self.proxyContracting.rowCount()} - Client')
         self.completedFilterApply()
 
     def completedFilterApply(self):
@@ -749,7 +771,7 @@ class main(modelMain.main):
         self.proxyCompleted.setSourceModel(self.proxyClient)
         self.proxyCompleted.setFilterFixedString(filterText)
         self.proxyCompleted.setFilterKeyColumn(19)
-        print(f'{self.proxyCompleted.rowCount()} - proxyCompleted')
+        # print(f'{self.proxyCompleted.rowCount()} - proxyCompleted')
         self.paidHCarrierFilterApply()
 
     def paidHCarrierFilterApply(self):
@@ -757,7 +779,7 @@ class main(modelMain.main):
         self.proxyPaidHauling.setSourceModel(self.proxyCompleted)
         self.proxyPaidHauling.setFilterFixedString(filterText)
         self.proxyPaidHauling.setFilterKeyColumn(18)
-        print(f'{self.proxyPaidHauling.rowCount()} - proxyPaidHauling')
+        # print(f'{self.proxyPaidHauling.rowCount()} - proxyPaidHauling')
         self.paidFilterApply()
 
     def paidFilterApply(self):
@@ -765,7 +787,7 @@ class main(modelMain.main):
         self.proxyPaid.setSourceModel(self.proxyPaidHauling)
         self.proxyPaid.setFilterFixedString(filterText)
         self.proxyPaid.setFilterKeyColumn(17)
-        print(f'{self.proxyPaid.rowCount()} - proxyPaid')
+        # print(f'{self.proxyPaid.rowCount()} - proxyPaid')
         self.invoicedFilterApply()
 
     def invoicedFilterApply(self):
@@ -773,7 +795,7 @@ class main(modelMain.main):
         self.proxyInvoiced.setSourceModel(self.proxyPaid)
         self.proxyInvoiced.setFilterFixedString(filterText)
         self.proxyInvoiced.setFilterKeyColumn(16)
-        print(f'{self.proxyInvoiced.rowCount()} - proxyInvoiced')
+        # print(f'{self.proxyInvoiced.rowCount()} - proxyInvoiced')
         self.deliveredFilterApply()
 
     def deliveredFilterApply(self):
@@ -781,11 +803,11 @@ class main(modelMain.main):
         self.proxyDelivered.setSourceModel(self.proxyInvoiced)
         self.proxyDelivered.setFilterFixedString(filterText)
         self.proxyDelivered.setFilterKeyColumn(15)
-        print(f'{self.proxyDelivered.rowCount()} - proxyDelivered')
+        # print(f'{self.proxyDelivered.rowCount()} - proxyDelivered')
 
         self.list.proxyModel.setSourceModel(self.proxyDelivered)
         self.list.search_afterUpdate(self.sortColumn, self.sortOrder)
-        print(f'{self.list.proxyModel.rowCount()} - proxyModel')
+        # print(f'{self.list.proxyModel.rowCount()} - proxyModel')
 
 
 
