@@ -87,28 +87,6 @@ class main(modelMain.main):
         self.btnInvoice.pressed.connect(self.invoiceOpen)
         self.titleLayout.insertWidget(8, self.btnInvoice)
 
-        # #Toolbar button Contracting carrier accounting
-        # self.actCCarrierAccounting = qtg.QAction('C ACCOUNTING')
-        # self.actCCarrierAccounting.setIcon(self.iconAccounting)
-        # # self.actCCarrierAccounting.triggered.connect(self.cCarrierAccountingOpen)
-        # #toolbar button hauling carrier accounting
-        # self.actHCarrierAccounting = qtg.QAction('H ACCOUNTING')
-        # self.actHCarrierAccounting.setIcon(self.iconAccounting)
-        # # self.actHCarrierAccounting.triggered.connect(self.hCarrierAccountingOpen)
-        
-
-        
-
-        # #Invoice toolbar button
-        # self.actInvoice = qtg.QAction('INVOICE ITEMS')
-        # self.actInvoice.setIcon(self.iconInvoice)
-        # # self.actInvoice.triggered.connect(self.invoiceOpen)
-
-        # #toolbar button hauling carrier accounting
-        # self.actLoadsPay = qtg.QAction('PAY INFO')
-        # self.actLoadsPay.setIcon(self.iconMoney)
-        # # self.actLoadsPay.triggered.connect(self.loadsPayOpen)
-
     def setGlobalVariables(self):
         # DB INFO
         self.size_ = "h1"
@@ -129,6 +107,7 @@ class main(modelMain.main):
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        a = '''--sql'''
         self.selectSql = '''
             SELECT 
                 loads.id, 
@@ -162,6 +141,7 @@ class main(modelMain.main):
                 ORDER BY loads.contractDate DESC
                 ;
         '''
+        a = '''--sql'''
         self.newRecordSql = ''' INSERT INTO loads (idContracting, idHauling, idTruck,
             idTrailer, idDriver, idClient, idClientAgent, contractDate, referenceNo,
             rate, amountPaid, datePaid, notes, delivered, invoiced, paid, paidHCarrier, 
@@ -387,11 +367,20 @@ class main(modelMain.main):
 
         self.list.treeview.selectionModel().selectionChanged.connect(self.loadSelectionChange)
 
+    def getListInfo(self):
+        # self.listTableValuesIndexes = (0,1,2,3,4,5,7,8,6,9,10,11,12,13,14,15,16,17,18,19)
+        #No. 6 is date as it comes from the DB (select statement)
+        #no. 8 when it goes back to the DB (order in db) - this is the order of collection in super()
+        infoList = super().getListInfo()
+        date = infoList.pop(8)
+        infoList.insert(6, date)
+        return infoList
+
+    
+    
     def configure_list(self):
         self.proxyHauling = qtc.QSortFilterProxyModel()
         self.proxyContracting = qtc.QSortFilterProxyModel()
-        # self.proxyYear = qtc.QSortFilterProxyModel()
-        # self.proxyMonth = qtc.QSortFilterProxyModel()
         self.proxyClient = qtc.QSortFilterProxyModel()
         self.proxyCompleted = qtc.QSortFilterProxyModel()
         self.proxyPaidHauling = qtc.QSortFilterProxyModel()
@@ -413,18 +402,6 @@ class main(modelMain.main):
             items=constants.carriersDict)
         self.haulingFilter.cbo.currentIndexChanged.connect(self.haulingFilterApply)
         self.list.layoutFilter.insertRow(0, labelWidget('Hauling:', self.filterSize), self.haulingFilter)
-
-        # if not constants.yearsItems:
-        #     constants.queryYears()
-        # self.yearFilter = cboFilterGroup(self.fontSize,
-        #     items=constants.yearsItems)
-
-        # self.list.layoutFilter.insertRow(0, labelWidget('Year:', self.filterSize), self.yearFilter)
-
-        # if not constants.monthsItems:
-        #     constants.queryMonths()
-        # self.monthFilter = cboFilterGroup(self.fontSize,
-        #     items=constants.monthsItems)
 
         if not constants.clientsList:
             constants.queryClients()
@@ -593,10 +570,6 @@ class main(modelMain.main):
                     #set the values for idLoad and id Carrier on List for to be used on requery
                     self.contractingBook.idLoad = idLoad
                     self.contractingBook.idCarrier = idCCarrier
-                    #set the filter values for the list of account transactions
-                    # self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
-                    # self.cCarrierAccounting.accounting.form.clear()
-                    # self.cCarrierAccounting.accounting.setCarrierAccount()
                 else: 
                     self.contractingBook.idLoad = 0
                     self.contractingBook.idCarrier = 0
@@ -607,10 +580,6 @@ class main(modelMain.main):
                     #set the values for idLoad and id Carrier on List for to be used on requery
                     self.haulingBook.idLoad = idLoad
                     self.haulingBook.idCarrier = idHCarrier
-                    #set the filter values for the list of account transactions
-                    # self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
-                    # self.cCarrierAccounting.accounting.form.clear()
-                    # self.cCarrierAccounting.accounting.setCarrierAccount()
                 else: 
                     self.haulingBook.idLoad = 0
                     self.haulingBook.idCarrier = 0
@@ -624,10 +593,6 @@ class main(modelMain.main):
                     if self.diesel.addForm:
                         self.diesel.addForm.idCarrier = idHCarrier
                         self.diesel.addForm.requery()
-                    #set the filter values for the list of account transactions
-                    # self.cCarrierAccounting.accounting.addList.carrierFilter_.populate(idCCarrier)
-                    # self.cCarrierAccounting.accounting.form.clear()
-                    # self.cCarrierAccounting.accounting.setCarrierAccount()
                 else: 
                     self.diesel.idLoad = 0
                     self.diesel.idCarrier = 0
@@ -635,43 +600,6 @@ class main(modelMain.main):
                         self.diesel.addForm.idCarrier = 0
                 self.diesel.requery()
                 
-            # elif self.tabDetailsWidget.widget(counter) == self.diesel:
-            #     if idLoad and idHCarrier:
-            #         #set the values for idLoad and id Carrier on List for to be used on requery
-            #         self.diesel.displayForm.idLoad = idLoad
-            #         self.diesel.displayForm.idCarrier = idHCarrier
-            #         if self.diesel.addForm: #if hasattr(self.diesel, "addForm"):
-            #             self.diesel.addForm.idCarrier = idHCarrier
-            #             self.diesel.addForm.idLoad = idLoad
-
-                # else:
-                #     self.diesel.displayForm.idLoad = 0
-                #     self.diesel.displayForm.idCarrier = 0
-                #     # if hasattr(self.diesel, "addForm"):
-                #     if self.diesel.addForm:
-                #         self.diesel.addForm.idCarrier = 0
-                #         self.diesel.addForm.idLoad = 0
-
-                # self.diesel.displayForm.requery()
-                # if self.diesel.addForm:
-                # # if hasattr(self.diesel, "addForm"):
-                #     self.diesel.addForm.requery()
-            
-            # elif self.tabDetailsWidget.widget(counter) == self.miles:
-            #     if idLoad:
-            #         #set the values for idLoad and id Carrier on List for to be used on requery
-            #         self.miles.idLoad = idLoad
-            #         if self.miles.addForm: #if hasattr(self.diesel, "addForm"):
-            #             self.miles.addForm.idLoad = idLoad
-            #     else:
-            #         self.miles.idLoad = 0
-            #         if self.miles.addForm:
-            #             self.miles.addForm.idLoad = 0
-
-            #     self.miles.requery()
-            #     if self.miles.addForm:
-            #         self.miles.addForm.requery()
-            
             elif self.tabsWidget.widget(counter) == self.stops:
                 if idLoad:
                     self.stops.idLoad = idLoad
@@ -695,20 +623,9 @@ class main(modelMain.main):
                 else:
                     self.invoice.idLoad = 0
                 self.invoice.requery()
-
-            # elif self.tabDetailsWidget.widget(counter) == self.invoice:
-            #     if idLoad:
-            #         self.invoice.idLoad = idLoad
-            #     else:
-            #         self.invoice.idLoad = 0
-            #     self.invoice.requery()
             counter +=1
 
     def removeAllFilters(self):
-        # if self.yearFilter.cbo.currentText():
-        #     self.yearFilter.reSet() 
-        # if self.monthFilter.currentText():
-        #     self.monthFilter.reSet()
         if self.hauling.currentText():
             self.hauling.reSet()
         if self.contracting.currentText():
@@ -743,20 +660,6 @@ class main(modelMain.main):
         self.proxyHauling.setFilterKeyColumn(2)
         # print(f'{self.proxyContracting.rowCount()} - Hauling')
         self.clientFilterApply()
-
-    # def yearFilterApply(self):
-    #     filterText = self.haulingFilter.getInfo()
-    #     self.proxyYear.setSourceModel(self.proxyHauling)
-    #     self.proxyYear.setFilterFixedString(filterText)
-    #     self.proxyYear.setFilterKeyColumn(6)
-    #     self.monthFilterApply()
-
-    # def monthFilterApply(self):
-    #     filterText = self.monthFilter.currentText()
-    #     self.proxyMonth.setSourceModel(self.proxyYear)
-    #     self.proxyMonth.setFilterFixedString(filterText)
-    #     self.proxyMonth.setFilterKeyColumn(6)
-    #     self.clientFilterApply()
 
     def clientFilterApply(self):
         filterText = self.clientFilter.currentText()

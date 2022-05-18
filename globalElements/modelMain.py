@@ -449,10 +449,8 @@ class main(QMainWindow):
         for i in self.formItems:
             i.reSet()
         self.formTableValues.clear()
-    #Y! FORM FUNCTIONS ^^^^^^^^^^ FORM FUNCTIONS ^^^^^^^^^^ FORM FUNCTIONS ^^^^^^^^^^ FORM FUNCTIONS 
-#P! FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^ FORM ^^^^^^^^^^
 
-#G! BUTTON ACTIONS  -------------------------------------------------
+
     def closeEvent(self, a0: QCloseEvent) -> None:
         self.save_record_main(False, False)#updateList, changedSelection
         return super().closeEvent(a0)
@@ -523,6 +521,7 @@ class main(QMainWindow):
         any discrepancies wont work and the method must be modified when an instance is created. 
         '''
         evaluateItems = []
+        #this is used when not all items in the form match to the list
         if self.formToDBItems:
             for i in range(self.formToDBItems):
                 widget = self.formItems[i]

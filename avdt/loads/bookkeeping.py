@@ -5,7 +5,7 @@ from avdt import bookkeeping_
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QCursor
 from PyQt6.QtCore import Qt
-from globalElements.widgets import checkBox, spacer
+from globalElements.widgets import checkBox, spacer 
 
 class addForm(bookkeeping_.main):
     def __init__(self):
@@ -78,6 +78,7 @@ class main(bookkeeping_.main):
         # self.sortColumn = 1
         # self.onNewFocusWidget = 1
         # self.evaluateSaveIndex = (1,3,5)
+        a = '''--sql'''
         self.selectSql = '''
             SELECT
                 -- DISPLAY VALUES

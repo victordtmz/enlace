@@ -263,7 +263,7 @@ class main(mainModel.main):
 
             #populate list of items
             try:
-                records = self.selectAll()
+                records = self.selectAll() 
                 
             except:
                 folder = pathlib.Path(self.db.dbFolder)
@@ -423,8 +423,10 @@ class mainTree(treeviewSearchBox):
         self.standardModel.setHorizontalHeaderLabels(['Tipo', 'Expediente'])
         self.setColumnsWith(((0,110),(2,200)))
         self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios'
+        self.actRefresh.triggered.connect(self.requery)
 
     def requery(self):
+        self.removeAllRows()
         tipoFolders = ['']
         for folder in os.scandir(self.rootFolder):
             if folder.is_dir():

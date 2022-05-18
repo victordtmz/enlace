@@ -183,8 +183,11 @@ class MainWindow(QMainWindow):
     #     self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
 
     def updateJuiciosTab(self):
-        listIndex = self.juicios.mainList.treeview.selectionModel().selectedIndexes()
-        expediente = listIndex[1].data()
+        if self.juicios.mainList.treeview.selectionModel().hasSelection():
+            listIndex = self.juicios.mainList.treeview.selectionModel().selectedIndexes()
+            if listIndex:
+                expediente = listIndex[1].data()
+        else: expediente = "    Juicios    "
         # self.juicios.title.text()
         tabIndex = self.tabWidget.currentIndex()
         # try:

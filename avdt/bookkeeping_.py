@@ -84,6 +84,7 @@ class main(modelMain.main):
         # dbLogin = constants.avdtDB
         # self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
         # self.evaluateSaveIndex = (1,3,5)
+        a = '''--sql'''
         self.selectSql = '''
             SELECT
                 -- DISPLAY VALUES
@@ -129,7 +130,7 @@ class main(modelMain.main):
         # self.formToDBItems = 4
         self.titleText = "BOOKKEEPING"
         self.widgetsOptSizes = [1,1]
-        self.listHiddenItems = (0,4,5,6,7,8,9,10)
+        self.listHiddenItems = ()#(0,4,5,6,7,8,9,10)
         self.listColumnWidth = ((1,100),(2,100),(3,300) )
         self.sortColumn = 1
         self.onNewFocusWidget = 1
@@ -343,7 +344,8 @@ class main(modelMain.main):
         self.anexo.textChanged.connect(lambda: self.formDirty(8,self.anexo.getInfo()))
         self.business.true.toggled.connect(lambda: self.formDirty(9,self.business.getInfo()))
         
-        
+    
+
     def carrierFilterAfterUpdate(self):
         # self.requery()
         #after updating the carrier filter - carrier should be selected and accounts populated on form
@@ -374,10 +376,6 @@ class main(modelMain.main):
     
     
     
-    #p! DATABASE FUNCTIONS ------------------------------
-    
-
-
     def getListInfo(self):
         i0 = self.id_.getInfo()
         i1 = self.date_.getInfo()
@@ -385,13 +383,12 @@ class main(modelMain.main):
         i3 = self.description.getInfo()
         i4 = str(self.carrier.getDbInfo())
         i5 = self.anexo.getInfo()
-        i6 = str(self.date_.dateEdit.date().year()) 
-        i7 = str(self.date_.dateEdit.date().toString('MM'))
-        i8 = self.categorie.getInfo()
-        i9 = self.business.getInfo()
-        i10 = self.account.getInfo()
-        i11 = self.isIncome.getInfo()
-        record = ([i0, i1,i2,i3,i4,i5,i6,i7,i8,i9,i10,i11])
+        i6 = str(self.date_.dateEdit.date().toString('MM'))
+        i7 = self.categorie.getInfo()
+        i8 = self.business.getInfo()
+        i9 = self.account.getInfo()
+        i10 = self.isIncome.getInfo()
+        record = ([i0, i1,i2,i3,i4,i5,i6,i7,i8,i9,i10])
         return record
     
     

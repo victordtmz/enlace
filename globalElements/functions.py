@@ -83,18 +83,27 @@ def recordToSQL(record = ["",]):
             i = i.replace('\\','\\\\')
         newRecord.append(i)
     return newRecord
-        
-def getRecordsFromCSV(fileName):
+
+def getRecordsFromCSV(fileName) -> list:
+    '''
+    getRecordsFromCSV(fileName) --> Takes a csv file, gets all the records and formats them to be inserted
+    into a mysql table.
+    Parameters:
+    fileName: path to a csv file with headers, since it will remove the first row and return the remaining records. 
+    Returns:
+    tupple with header and a set of records as string, to be uploaded to a table. 
+    '''
     with open(file=fileName, mode='r', newline="", encoding="utf-8") as f:
         csvRecords = csv.reader(f)
         header = next(csvRecords)
         records = [record for record in csvRecords]
+        noRecords = len(records)
         records = str(records)
         records = records.replace('[','(')
         records = records.replace(']',')')
         records = records[1:-1] 
     
-    return records, header
+    return records, header, noRecords
 
 def setNullToString(records):
     recordsList = []
