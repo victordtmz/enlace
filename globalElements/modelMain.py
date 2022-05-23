@@ -69,8 +69,8 @@ class main(QMainWindow):
             icon=constants.iconAdd, size=self.mainSize)
         self.btnDelete = buttonWidget(text=" Eliminar", 
             icon=constants.iconDelete, size=self.mainSize)
-        self.btn_cerrar = buttonWidget(text=" Cerrar", 
-            icon=constants.iconClose, size=self.mainSize)
+        # self.btn_cerrar = buttonWidget(text=" Cerrar", 
+        #     icon=constants.iconClose, size=self.mainSize)
 
         self.listOpt = checkBox('List   ',fontSize=self.fontSize, size=self.mainSize)
         self.listOpt.setChecked(True)
@@ -159,7 +159,7 @@ class main(QMainWindow):
         self.titleLayout.addWidget(self.spacer2)
         self.titleLayout.addWidget(self.btnDelete)
         self.titleLayout.addWidget(self.spacer1,1)
-        self.titleLayout.addWidget(self.btn_cerrar)
+        # self.titleLayout.addWidget(self.btn_cerrar)
         self.titleLayout.addWidget(self.spacerRight)
         
         self.titleLayoutBox = titleBox(self.mainSize)
@@ -181,7 +181,7 @@ class main(QMainWindow):
     def set_connections(self):
         #G! Connections
         self.list.treeview.selectionModel().selectionChanged.connect(self.listadoSelectionChanged)
-        self.btn_cerrar.pressed.connect(self.btn_cerrar_pressed)
+        # self.btn_cerrar.pressed.connect(self.btn_cerrar_pressed)
         self.btnSave.pressed.connect(self.btn_save_pressed)
         self.btnCancel.pressed.connect(self.btn_cancelar_pressed)
         self.btnDelete.clicked.connect(self.btn_delete_pressed) 
@@ -455,8 +455,8 @@ class main(QMainWindow):
         self.save_record_main(False, False)#updateList, changedSelection
         return super().closeEvent(a0)
 
-    def btn_cerrar_pressed(self):
-        self.deleteLater()
+    # def btn_cerrar_pressed(self):
+    #     self.deleteLater()
         # self.parentWidget().parentWidget().currentWidget().deleteLater()
 
     def btn_nuevo_pressed(self):

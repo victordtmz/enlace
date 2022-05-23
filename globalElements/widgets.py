@@ -263,7 +263,8 @@ class cbo(QComboBox):
         if self.sourceType is list:
             text = currentText
         elif self.sourceType is dict:
-            text = self.items[currentText]
+            try: text = self.items[currentText]
+            except KeyError: text = '' 
         else:
             text = self.sourceType
         return text

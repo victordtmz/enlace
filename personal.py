@@ -12,7 +12,9 @@ from PyQt6.QtWidgets import QApplication
 
 class main(accounts.main):
     def __init__(self):
+        
         super().__init__()
+        self.showMaximized()
         # self.listExpand = 1
         # self.formExpand = 1
         self.widgetsOptSizes = [1,1]
@@ -24,8 +26,9 @@ class main(accounts.main):
         self.filesFolder.txtFilePath.setText(self.filesFolder.root)
         self.configure_list()
         self.title.setText('Personal Accounts')
-        self.showMaximized()
+        
         self.requery() 
+        
     
     def setProgramDetails(self):
         self.setWindowTitle('FAMILY DOCS')

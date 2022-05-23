@@ -31,6 +31,7 @@ class warehouses(modelList.main):
         # self.sqlFolderName = "AVDT_warehouses"
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        a = '''--sql'''
         self.selectSql = '''
             SELECT 
                 id AS "ID", 
@@ -176,6 +177,7 @@ class main(modelMain.main):
         self.sortColumn = 3
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
+        a = '''--sql'''
         self.newRecordSql = '''
                 INSERT INTO loads_stops (
                     idLoad,

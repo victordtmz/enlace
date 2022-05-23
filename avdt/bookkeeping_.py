@@ -16,6 +16,11 @@ import re
 
 
 class main(modelMain.main):
+    """Main form that contains all transactions for the different trucking companies
+
+    Args:
+        modelMain (_type_): inherits from main model. 
+    """
     def __init__(self):
         super().__init__()
         self.configure_list()
@@ -23,17 +28,16 @@ class main(modelMain.main):
         self.setConnections()
         self.carrierFilterAfterUpdate()
 
-    
+    def __repr__(self) -> str:
+        return '''Bookkeeping main form, includes the list and form to change values'''
 
     def requery(self): 
-        # Query will execute where idCarrier = carrier, all other filters applied locally
-        #1. Get all records
+        '''Removes all current rows, queries from database filtering by year and carrier
+        all other filters are aplied locally in tree'''
         idCarrier = self.carrierFilter.getDbInfo()
-
         year = self.yearFilter.getInfo()
         if not year:
             year = '%'
-        
         if idCarrier:
             qtw.QApplication.setOverrideCursor(qtg.QCursor(qtc.Qt.CursorShape.WaitCursor))
             records = self.selectAll((int(idCarrier), year))# will pass the cbo value - should be 
@@ -41,8 +45,6 @@ class main(modelMain.main):
                 isIncomeColumn=10,isBusinessColumn= 8, sizeVar=self.listFontSize, rowHeight= self.rowHeight)
             while qtw.QApplication.overrideCursor() is not None:
                 qtw.QApplication.restoreOverrideCursor()
-            #2. populate accounts filterCbo
-            
             self.monthFilterApply()
         else:
             self.list.removeAllRows()
@@ -70,20 +72,7 @@ class main(modelMain.main):
         '''
         This are separated from global so they can be changed in the subfor used in loads
         '''
-       # DB INFO
-        # self.size_ = "h1"
-        
         self.layoutVar = self.formLayoutSideFilesTree
-        # self.formToDBItems = 4
-        # self.titleText = "BOOKKEEPING"
-        # self.widgetsOptSizes = [1,1]
-        # self.listHiddenItems = (4,5,6,7,8,9,10)
-        # self.listColumnWidth = ((1,100),(2,100),(3,300) )
-        # self.sortColumn = 1
-        # self.onNewFocusWidget = 1
-        # dbLogin = constants.avdtDB
-        # self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
-        # self.evaluateSaveIndex = (1,3,5)
         a = '''--sql'''
         self.selectSql = '''
             SELECT
@@ -114,25 +103,32 @@ class main(modelMain.main):
                 AND YEAR(bookkeeping.date_) LIKE %s
                 ;'''
 
-        # self.newRecordSql = '''
-        #     INSERT INTO bookkeeping (idCarrier, idCategorie,
-        #         account_, date_, amount, isIncome, description_,
-        #         anexo, isBusiness) VALUES'''
-
     def setGlobalVariables(self):
+        """Variables that are unique to this instance of the mainModel object used to create the
+        combination of List/Form.
+
+        self.listTableValuesIndexes -- contains the indexes of the elements to populate the form in order
+        Example: date might be the 4th item on the DB, but needs to be displayed as item 1 in the screen, 
+        the index value 4 will be placed in position 1 of this list.
+        """
        # DB INFO
         
         # self.size_ = "h1"
         self.setSizes()
         self.idColumn = 'id' 
         self.tableVar = 'bookkeeping'
+        # contains the indexes of the elements to populate the form in order
+        # Example: date might be the 4th item on the DB, but needs to be displayed as item 1 in the screen, 
+        # the index value 4 will be placed in position 1 of this list.
         self.listTableValuesIndexes = (0,4,7,9,1,2,10,3,5,8)
         # self.formToDBItems = 4
         self.titleText = "BOOKKEEPING"
         self.widgetsOptSizes = [1,1]
-        self.listHiddenItems = ()#(0,4,5,6,7,8,9,10)
+        self.listHiddenItems = (0,4,5,6,7,8,9,10)
         self.listColumnWidth = ((1,100),(2,100),(3,300) )
         self.sortColumn = 1
+        self.sortOrder = qtc.Qt.SortOrder.DescendingOrder
+        
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB
         self.db = DB.DB(dbLogin[0],dbLogin[1],dbLogin[2])
@@ -146,7 +142,13 @@ class main(modelMain.main):
         self.mutableVariables()
 
     def updateRecord(self, record): 
-        '''record is passed as a tuple with id'''
+        """Creates the SQL use to update the record on the MySql database and then
+        executes the query. 
+
+        Args:
+            record (tuple): Tuple that contains the values in the same order as the re set 
+            in the DB table, id(0) is used to locate the record.
+        """
         sql =f'''UPDATE {self.tableVar} SET 
                 idCarrier = '{record[1]}',
                 idCategorie = '{record[2]}',
@@ -162,6 +164,9 @@ class main(modelMain.main):
 
 #G! INIT MAIN FORM --------------------------------------------------------------
     def configure_form(self):
+        """Contains the configuration to all the elements of the form part of the 
+        object
+        """
         # self.formLayoutSideFilesTree()
         self.layoutVar()
         self.filesFolder.setLineEditFileBox(self.fontSize)
@@ -170,6 +175,20 @@ class main(modelMain.main):
         self.setFormElements()
 
     def setFormElements(self):#p! Form elements
+        """Defines all the widgets that are going to be used in the form, 
+        at a minimum, there must be one widget per object or data element from
+        the database.
+
+        The widgets are also organized in a Form Layout to be displaid on the screen.
+
+        The widgets that will display tha database values are organized in a list (self.formItems)
+        so the database values can be extracted and used to update the record o create new records.
+
+        self.formItems.  Contains the widgets in the same order as the DB Table, so the extraction of information
+        does not have to be re arranged to save to the DB.  The list might not contain the values in order for the 
+        population of the widgets when a new record is selected 
+        -- self.listTableValuesIndexes -- is used to place the index of the items in the order of population.
+        """
         self.id_ = lineEdit(self.fontSize)#
         self.id_.setReadOnly(True)
         
@@ -246,7 +265,9 @@ class main(modelMain.main):
             constants.queryCarriers()
         self.carriers = constants.carriersDict.copy()
         del self.carriers['']
+    
     def configure_list(self):
+        self.rowHeight = 72
         self.getCarriers()
         self.carrierFilter = cboFilterGroup(
             fontSize= self.fontSize, 
@@ -379,7 +400,7 @@ class main(modelMain.main):
     def getListInfo(self):
         i0 = self.id_.getInfo()
         i1 = self.date_.getInfo()
-        i2 = self.amount.getInfo()
+        i2 = self.amount.text()
         i3 = self.description.getInfo()
         i4 = str(self.carrier.getDbInfo())
         i5 = self.anexo.getInfo()

@@ -236,6 +236,7 @@ class main(mainModel.main):
         self.listHiddenItems = (0,3,4)
         self.listColumnWidth = ((1,100),(2,120))
         self.sortColumn = 1
+        self.sortOrder = Qt.SortOrder.DescendingOrder
         self.onNewFocusWidget = 0
         self.selectSql = f'''
         --sql

@@ -15,7 +15,6 @@ class addForm(bookkeeping_.main):
         self.formOpt.deleteLater()
         self.btnDelete.deleteLater()
         self.title.deleteLater()
-        self.btn_cerrar.deleteLater()
         self.titleLayoutBox.setMinimumHeight(50)
         self.btnNew.setText('Agregar a este viaje')
 
