@@ -151,7 +151,7 @@ class detailsForm(modelEmpty.main):
         self.layoutBox.setLayout(self.layout_)
 
         self.layoutmain.addWidget(self.layoutBox)
-        self.layoutmain.setAlignment(self.layoutBox, Qt.AlignmentFlag.AlignHCenter)
+        self.layoutmain.setAlignment(self.layoutBox, Qt.AlignmentFlag.AlignHCenter) 
 
     def populate(self, record):
         c = 0
@@ -423,7 +423,7 @@ class mainTree(treeviewSearchBox):
     def configureTree(self):
         self.standardModel.setHorizontalHeaderLabels(['Tipo', 'Expediente'])
         self.setColumnsWith(((0,110),(2,200)))
-        self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios'
+        self.rootFolder = f'{constants.oneDrive}\enlace\Juicios'
         self.actRefresh.triggered.connect(self.requery)
 
     def requery(self):

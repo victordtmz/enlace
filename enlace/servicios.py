@@ -136,35 +136,14 @@ class main(mainModel.main):
         self.configureWidth()
         
     
-    # def createDetailsForm(self):
-        
-    #     if hasattr(self, 'detailsForm'):
-    #         self.detailsForm.deleteLater()
-    #         delattr(self, 'detailsForm')
-    #         self.listOpt.setChecked(True)
-    #         self.formOpt.setChecked(True)
-    #         self.configureWidth()
-    #     else:
-    #         self.detailsForm = detailsForm()
-    #         # self.listOpt.setChecked(False)
-    #         # self.formOpt.setChecked(False)
-    #         self.splitter.insertWidget(1,self.detailsForm)
-    #         self.configureWidth()
-    #         try:
-    #             records = self.db.selectOne(self.detailsForm.selectSql)
-    #             self.detailsForm.populate(records)
-    #         except:
-    #             self.detailsForm.clearForm()
-    #         self.detailsForm.btnSave.pressed.connect(self.saveDetails)
-
     def configureDetailsForm(self):
         self.detailsFormOpt = checkBox('Detalles del Tramite',fontSize=self.fontSize, size=self.mainSize)
         self.detailsFormOpt.setChecked(False)
-        self.widgetsOpt.insert(1,self.detailsFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
-        self.titleLayout.insertWidget(2, self.detailsFormOpt)
+        self.widgetsOpt.insert(3,self.detailsFormOpt)# = [self.mainFormOpt,self.listOpt, self.formOpt]
+        self.titleLayout.insertWidget(4, self.detailsFormOpt)
         self.detailsFormOpt.toggled.connect(self.configureWidth)
         self.detailsForm = detailsForm()
-        self.splitter.insertWidget(1,self.detailsForm)
+        self.splitter.insertWidget(3,self.detailsForm)
         self.detailsForm.btnSave.pressed.connect(self.saveDetails)
 
     def configure_mainList(self):
@@ -199,7 +178,7 @@ class main(mainModel.main):
         self.loadFolder = ''
         self.size_ = "h1" 
         self.idColumn = 'id' 
-        self.listTableValuesIndexes = (0,1,2,3)
+        self.listTableValuesIndexes = (0,1,2,3,4)
         # self.formToDBItems = 4
         self.titleText = "SERVICIOS DEL DESPACHO"
         # self.listExpand = 1
@@ -376,10 +355,11 @@ class mainTree(treeviewSearchBox):
         self.fontSize = fontSize
         self.configureTree() 
         self.createFilters()
-        self.getFiles(self.rootFolder, self.rootNode)
+        self.requery()
+        # self.getFiles(self.rootFolder, self.rootNode)
 
-    def requery(self):
-        self.getFiles(self.rootFolder, self.rootNode)
+    # def requery(self):
+    #     self.getFiles(self.rootFolder, self.rootNode)
         
     def createFilters(self):
         self.proxyTipo = QSortFilterProxyModel()
@@ -391,18 +371,19 @@ class mainTree(treeviewSearchBox):
     def configureTree(self):
         self.standardModel.setHorizontalHeaderLabels(['Tipo', 'Servicio'])
         self.setColumnsWith(((0,110),(2,200)))
-        self.rootFolder = f'{constants.oneDrive}\Despacho\Enlace_servicios\Servicios'
+        self.rootFolder = f'{constants.oneDrive}\enlace\Servicios'
 
-    def getFiles(self, path, node):
+    def requery(self):
+        
         tipoFolders = ['']
-        for folder in os.scandir(path):
+        for folder in os.scandir(self.rootFolder):
             if folder.is_dir():
                 #add items for filter 
                 tipoFolders.append(folder.name)
                 for subFolder in os.scandir(folder):
                     record = (folder.name, subFolder.name)
                     record = list(map(self.createRecord, record))
-                    node.appendRow(record)
+                    self.rootNode.appendRow(record)
         #config filter
         tipoFolders.sort()
         self.filterTipo.cbo.addItems(tipoFolders)
