@@ -721,7 +721,7 @@ class filesTree(QMainWindow):
     
     def folderOpen(self):
         try:
-            os.startfile(self.filesDir)
+            os.startfile(self.filesDir) 
         except FileNotFoundError:
             os.startfile(self.root)
         except:

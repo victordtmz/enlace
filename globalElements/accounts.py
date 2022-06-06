@@ -111,7 +111,7 @@ class main(mainModel.main):
         self.user = lineEditCopy(self.fontSize)
         self.pwd = lineEditCopy(self.fontSize)
         self.date_ = dateWidget(self.fontSize)
-        self.portal = webWidget(10)
+        self.portal = webWidget(self.fontSize)
         self.notes = textEdit(self.fontSize)
         self.notes.setMinimumHeight(300)
         self.formItems = [self.id_, self.account, self.user,

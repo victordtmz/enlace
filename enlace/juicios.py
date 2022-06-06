@@ -1,4 +1,5 @@
 from cmath import exp
+from tabnanny import check
 from localDB import mainModel
 import sqlite3
 
@@ -7,7 +8,7 @@ from globalElements import constants, modelEmpty
 from globalElements.treeview import treeviewSearchBox
 
 from globalElements.widgets import (buttonWidget, dateEdit, dateWidget, lineEditCurrency, lineEditPhone, standardItem, 
-    labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup, checkBox)
+    labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup, checkBox, webWidget)
 from localDB import sqliteDB
 from PyQt6.QtWidgets import (QApplication, QCompleter, QWidget, QFormLayout, QSizePolicy)
 from PyQt6.QtCore import Qt, QSortFilterProxyModel
@@ -209,8 +210,14 @@ class main(mainModel.main):
         self.mainList.treeview.selectionModel().selectionChanged.connect(self.requery)
 
         self.btnCSV = buttonWidget('Excel', 'h1', constants.iconExcel)
+        self.btnActivos = buttonWidget('Activos', 'h1', constants.iconFolderOpen)
+        self.btnInactivos = buttonWidget('Inactivos', 'h1', constants.iconFolderOpen)
         self.titleLayout.insertWidget(5, self.btnCSV)
+        self.titleLayout.insertWidget(5, self.btnInactivos)
+        self.titleLayout.insertWidget(5, self.btnActivos)
         self.btnCSV.pressed.connect(self.recordsToCSV)
+        self.btnActivos.pressed.connect(self.activosFolderOpen)
+        self.btnInactivos.pressed.connect(self.inactivosFolderOpen)
         #o! CONNECT 
 
     def setDBConnection(self):
@@ -256,8 +263,20 @@ class main(mainModel.main):
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
         if self.mainList.treeview.selectionModel().hasSelection():
             expediente = self.mainList.treeview.selectedIndexes()
-            self.title.setText(expediente[1].data())
-            fileFolder = f'{expediente[0].data()}\{expediente[1].data()}'
+            tipo = expediente[0].data()
+            # website = ''
+            match tipo.lower():
+                case "administrativo":
+                    website = 'https://serviciosdigitales.tjagto.gob.mx/tribunalelectronicoweb/Secciones/Servicios/SeguridadServicios.aspx'
+                case "civil":
+                    website = 'https://poderjudicial-gto.gob.mx/modules.php?name=Servicios_virtuales&file=registro&func=login_suscriptor'
+                case _:
+                    website = 'enlacellc.com'
+            self.webWidget.populate(website)
+
+            
+            # self.title.setText(expediente[1].data())
+            fileFolder = f'{tipo}\{expediente[1].data()}'
             self.db.dbFolder = f'{self.mainList.rootFolder}\{fileFolder}'
             self.filesFolder.txtFilePath.setText(self.db.dbFolder)
             self.db.dbFolder = f'{self.db.dbFolder}\desgloce'
@@ -336,7 +355,11 @@ class main(mainModel.main):
 
         #o! ALL DB ITEMS THAT NEED TO BE POPULATED
         self.formItems = [self.id_, self.date, self.title_, self.description, self.anexo]
+
+        #Web widget para informacion de la pagina del juzgado o donde se lleva el tramite
+        self.webWidget = webWidget(self.fontSize)
         
+        self.layoutForm.addRow(self.webWidget)
         self.layoutForm.addRow(self.anexoBox)
         self.layoutForm.addRow(labelWidget('Id:', self.fontSize), self.id_)
         self.layoutForm.addRow(labelWidget('Fecha:', self.fontSize), self.date)
@@ -378,6 +401,13 @@ class main(mainModel.main):
     # def listadoSelectionChanged(self):
     #     return super().listadoSelectionChanged()
 
+    def activosFolderOpen(self):
+        os.startfile(f'{constants.oneDrive}\enlace\Juicios')
+
+    def inactivosFolderOpen(self):
+        os.startfile(f'{constants.oneDrive}\enlace\Juicios_archivados')
+
+
     def recordsToCSV(self):
         if self.db.dbFolder:
             try:
@@ -415,20 +445,28 @@ class mainTree(treeviewSearchBox):
 
     def createFilters(self):
         self.proxyTipo = QSortFilterProxyModel()
-        self.filterTipo = cboFilterGroup(self.fontSize,
-        refreshable=False)
+        self.filterTipo = cboFilterGroup(self.fontSize,refreshable=False)
+        self.filterActivo = checkBox()
+        self.filterActivo.toggled.connect(self.requery)
         self.layoutFilter.insertRow(0, labelWidget('Tipo:', self.fontSize), self.filterTipo)
+        self.layoutFilter.insertRow(0, labelWidget('Inactivos:', self.fontSize), self.filterActivo)
         self.filterTipo.cbo.currentTextChanged.connect(self.applyFilterTipo)
     
     def configureTree(self):
         self.standardModel.setHorizontalHeaderLabels(['Tipo', 'Expediente'])
         self.setColumnsWith(((0,110),(2,200)))
-        self.rootFolder = f'{constants.oneDrive}\enlace\Juicios'
+        self.rootFolder = f'{constants.oneDrive}\enlace'
         self.actRefresh.triggered.connect(self.requery)
+        
 
     def requery(self):
         self.removeAllRows()
         tipoFolders = ['']
+        if self.filterActivo.isChecked():
+            self.rootFolder = f'{constants.oneDrive}\enlace\Juicios_archivados'
+        else:
+            self.rootFolder = f'{constants.oneDrive}\enlace\Juicios'
+
         for folder in os.scandir(self.rootFolder):
             if folder.is_dir():
                 #add items for filter 

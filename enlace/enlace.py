@@ -69,11 +69,6 @@ class main(QMainWindow):
 
     def setGridLayout(self):
         self.layoutMainGrid = QGridLayout()
-        # self.layoutMainGrid.setHorizontalSpacing(50)
-        # self.layoutMainGrid.setVerticalSpacing(100)
-        # self.layoutMainGrid.setContentsMargins(0,0,0,0)
-        # self.layoutMainGrid.addWidget(self.layoutTitleBox,0,0,1,4)
-        # self.layoutMainGrid.setAlignment(self.layoutTitleBox,qtc.Qt.AlignmentFlag.AlignJustify)
         self.layoutMainGrid.addWidget(self.btnJuicios,1,0)
         self.layoutMainGrid.addWidget(self.btnTranslate,1,1)
         self.layoutMainGrid.addWidget(self.btnServicios,1,2)
@@ -91,11 +86,6 @@ class main(QMainWindow):
 
         self.layoutMainBox.setLayout(self.layoutMainGridTitle)
         
-
-        
-
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mw = main()

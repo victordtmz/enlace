@@ -909,8 +909,24 @@ class lineEditCopy(QWidget):
     def getInfo(self):
         return self.lineEdit.getInfo()
 class webWidget(lineEditCopy):
+    """Widget that contains 3 widgets:
+    lineEdit => QlineEdit - with DB methods to populate, reset, getdata
+        this widget may contain the link, if is shorter than 40 char, else
+        the owrds 'Vínculo - Página Web' will appear
+    btnCopyLink => Button - Copy lineEdit content to clipboard
+    btnWeb => Button - Opens web link in browser.
+
+    self.link element holds the link - when populated. 
+
+    USE TE populate FUNCTION for propper operation. 
+
+    Args:
+        lineEditCopy (lineEdit witth copy button): Contains widgets of the 3 on self
+        the lineEdit and btnCopyLink
+    """
     def __init__(self, fontSize = 13):
         super().__init__(fontSize)
+        self.link = ''
         self.btnWeb = buttonWidget(size="icon",icon= constants.iconWeb)
         self.setStyleSheet('''QLineEdit
                         {
@@ -922,10 +938,25 @@ class webWidget(lineEditCopy):
 
         self.btnWeb.pressed.connect(self.btnWebPressed)
         
+    def __repr__(self) -> str:
+        return "global webWidget"
+    
+    def populate(self, text):
+        self.link = text
+        print(self.link)
+        print(len(self.link))
+        if len(text) > 40:
+             self.lineEdit.populate('Vínculo - Página Web')
+        else: 
+            self.lineEdit.populate(text)
+
     def btnWebPressed(self):
-        link = self.lineEdit.text()
-        if link:
-            webbrowser.open(link)
+        """Opens link in web browser - link might be different than showing lineEdit
+        """
+        if not self.link:
+            self.link = self.lineEdit.text()
+        if self.link:
+            webbrowser.open(self.link)
 
 class checkBox(QCheckBox):
     def __init__(self, text='', fontSize = 13, size=''):

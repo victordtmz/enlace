@@ -5,8 +5,8 @@ from localDB.sqliteDB import avdtLocalDB
 
 #prepare mysqlDb
 avdtDB = db_credentials.avdtDB
-traduccionesDB = db_credentials.avdtDB 
-avdOld = db_credentials.avdtDB 
+traduccionesDB = db_credentials.traduccionesDB 
+avdOld = db_credentials.avdOld
 mysqlDB = DB.DB(avdtDB[0], avdtDB[1], avdtDB[2])
 
 #program paths
