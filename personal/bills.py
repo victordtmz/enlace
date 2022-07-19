@@ -1,4 +1,3 @@
-
 from localDB import mainModel
 import sqlite3
 
@@ -6,12 +5,12 @@ from globalElements import constants, modelEmpty
 
 from globalElements.treeview import treeviewSearchBox
 
-from globalElements.widgets import (buttonWidget, dateWidget, lineEditCurrency, lineEditPhone, standardItem, 
-    labelWidget,  textEdit, lineEdit, cboFilterGroup, checkBox, webWidget)
+from globalElements.widgets import (buttonWidget, dateEdit, dateWidget, lineEditCurrency, lineEditPhone, standardItem, 
+    labelWidget,  textEdit, lineEdit, spinbox, cboFilterGroup, checkBox, webWidget)
 from localDB import sqliteDB
-from PyQt6.QtWidgets import (QApplication, QCompleter, QWidget, QFormLayout)
+from PyQt6.QtWidgets import (QApplication, QCompleter, QWidget, QFormLayout, QSizePolicy)
 from PyQt6.QtCore import Qt, QSortFilterProxyModel
-from PyQt6.QtGui import QCursor
+from PyQt6.QtGui import QCursor, QCloseEvent
 import pathlib
 import os 
 import csv

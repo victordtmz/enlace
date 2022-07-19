@@ -16,10 +16,6 @@ rootDb = f'{oneDrive}\db'
 othFolder =f'{rootDb}\oth'
 #AVDT Root folders
 rootAVDT = f'{oneDrive}\AVDTrucking'
-# rootCarriersAVDT = f'{rootAVDT}\Carriers'
-# iconsFolder = f'{othFolder}/icons'
-
-#avdt DB
 
 
 #icons
@@ -60,21 +56,9 @@ iconIfta = f"{iconsFolder}IFTA.png"
 iconExcel = f"{iconsFolder}excel.png"
 # # Carriers
 # # ------------------------------------------------------------
-# carriersDict = {}
-# carriersList = []
-# def queryCarriers():
-#     sql = f'''SELECT 
-#             id, 
-#             IFNULL(name_,'')
-#             FROM carriers 
-#         ;'''
-#     records = mysqlDB.get_records(sql)
-#     carriersDict.clear()
-#     carriersDict[""] = 0
-#     for i in records:
-        
-#         carriersDict[i[1]] = i[0]
-#         carriersList.append(i[1])
+
+
+
 
 # clients
 # ------------------------------------------------------------
@@ -273,6 +257,3 @@ def queryIftaJuris():
     for i in records:
         iftaJuris.insert(0, i[0])
     iftaJuris.insert(1, '')
-
-
-

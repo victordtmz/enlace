@@ -9,7 +9,7 @@ class avdtLocalDB():
         self.database = 'avdt.db' 
         self.dbFolder = f'{oneDrive}\db\oth\localDB' 
 
-    def createSqliteConnection(self):
+    def createSqliteConnection(self): 
         self.connection = sqlite3.connect(f'{self.dbFolder}\{self.database}')
         self.cursor = self.connection.cursor()
         

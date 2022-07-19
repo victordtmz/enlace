@@ -1,0 +1,90 @@
+#!/usr/bin/python3
+from globalElements import constants
+from globalElements.widgets import buttonWidget, labelWidget
+import sys
+from PyQt6.QtWidgets import (QWidget,QMainWindow,QHBoxLayout,
+    QVBoxLayout, QGridLayout, QApplication, QSizePolicy)
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
+
+class blackSquare(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet('''
+            QWidget {
+                background-color:#003365;
+                };
+
+            ''')#142,170,219 #84ABBE
+
+
+class main(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUi()
+        self.setGridLayout()
+        self.setCentralWidget(self.layoutMainBox)
+        self.show()
+    
+
+    def initUi(self):
+        self.createItemsEnlace()
+        self.layoutMainBox = QWidget()
+        self.setStyleSheet('''
+            QMainWindow {
+                background-color:#BEBEBE;
+                };
+
+            ''')
+        
+    def createItemsEnlace(self):
+        self.title = labelWidget(
+            text="FAMILIA", 
+            fontSize=45,
+            fontColor="White",
+            align="center",
+            backColor="#002142") 
+        self.logo = labelWidget(
+            align="center",
+            backColor="#002142", 
+            padding="6px") 
+        self.imageAVD = QPixmap(f'{constants.othFolder}\icons\\family.png')
+        self.imageAVD = self.imageAVD.scaled(60, 60, Qt.AspectRatioMode.KeepAspectRatio)
+        self.logo.setPixmap(self.imageAVD)
+
+        self.btnBills = buttonWidget("    Bills", "main", icon=constants.iconAccounting)
+        self.btnAccounts =buttonWidget("    Accounts", "main", icon=constants.iconAccounts)
+        # self.btnAccounting =buttonWidget("    Accounting", "main", icon=constants.iconAccounting)
+        # self.btnServicios =buttonWidget("    Servicios", "main", icon=constants.iconCustomer)
+        # self.btnAccounts = buttonWidget("    Accounts", "main", icon=constants.iconAccounts)
+
+        self.layoutTitleBox= QWidget()
+        self.layoutTitleBox.setMaximumHeight(100)
+        self.layoutTitle = QHBoxLayout() 
+        self.layoutTitle.setSpacing(0)
+        self.layoutTitle.setContentsMargins(0,0,0,0)
+        self.layoutTitle.addWidget(self.logo,1)
+        self.layoutTitle.addWidget(self.title,10)
+        self.layoutTitleBox.setLayout(self.layoutTitle)
+
+    def setGridLayout(self):
+        self.layoutMainGrid = QGridLayout()
+        self.layoutMainGrid.addWidget(self.btnBills,1,0)
+        self.layoutMainGrid.addWidget(self.btnAccounts,1,1)
+
+
+        self.layoutItemsWidget = QWidget()
+        self.layoutItemsWidget.setLayout(self.layoutMainGrid)
+
+        self.layoutMainGridTitle = QVBoxLayout()
+        self.layoutMainGridTitle.setContentsMargins(0,0,0,0)
+        self.layoutMainGridTitle.addWidget(self.layoutTitleBox)
+        self.layoutMainGridTitle.addWidget(self.layoutItemsWidget)
+
+
+        self.layoutMainBox.setLayout(self.layoutMainGridTitle)
+        
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    mw = main()
+    sys.exit(app.exec())

@@ -1,17 +1,18 @@
 #!/usr/bin/python3
 from avdt.loads import loads
-from globalElements import setup 
 # setup.load()  
 import sys 
 from globalElements import constants
 from enlace.accounts import main as enlaceAccounts
 from avdt import (avdt, bookkeeping_, carriers, clients_, drivers, trucks, trailers, stops, accounts, diesel,
     bookkeeping_categories, miles, IFTA, loads_payments, bookkeeping_totals)
-from enlace import enlace, juicios, servicios, traducciones
+from enlace import enlace, servicios, traducciones
 # from avdt.accounts import main as accounts
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
+
+from enlace import juicios
 # from enlace.traducciones import procedencia
 
 
