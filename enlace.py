@@ -11,7 +11,7 @@ from enlace import enlace, servicios, traducciones
 from globalElements.widgets import tabWidget
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QApplication
 from PyQt6.QtGui import QIcon
-
+import subprocess
 from enlace import juicios
 # from enlace.traducciones import procedencia
 
@@ -63,10 +63,12 @@ class MainWindow(QMainWindow):
         self.tabWidget.setCurrentWidget(self.enlaceAccounts)
 
     def openJuicios(self):
-        self.juicios = juicios.main()
-        self.tabWidget.addTab(self.juicios,'    JUICIOS   ')
-        self.tabWidget.setCurrentWidget(self.juicios)
-        self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
+        juicios_path = f'{constants.ROOT_DB}\Juicios.exe'
+        subprocess.Popen([juicios_path])
+        # self.juicios = juicios.main()
+        # self.tabWidget.addTab(self.juicios,'    JUICIOS   ')
+        # self.tabWidget.setCurrentWidget(self.juicios)
+        # self.juicios.mainList.treeview.selectionModel().selectionChanged.connect(self.updateJuiciosTab)
 
     def openServicios(self):
         self.servicios = servicios.main()

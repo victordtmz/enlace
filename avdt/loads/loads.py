@@ -44,7 +44,7 @@ class main(modelMain.main):
         #o! CONFIGURE DIESEL 
 
     def configToolbar(self):
-        iconRoot = f'{constants.rootDb}\oth\icons'
+        iconRoot = f'{constants.ROOT_DB}\oth\icons'
         self.iconAccounting = qtg.QIcon(f'{iconRoot}\\bank-account.png')
         self.iconDiesel = qtg.QIcon(f'{iconRoot}\\fuel.png')
         self.iconMoney = qtg.QIcon(f'{iconRoot}\moneyBag.png')

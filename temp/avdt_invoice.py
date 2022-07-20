@@ -6,7 +6,7 @@ class PDF(FPDF):
         self.add_font('orbitron','',f'{constants.othFolder}/fonts/orbitron/Orbitron-Regular.ttf')
     
     def header(self):
-        logo = f'{constants.rootDb}/oth/icons/enlace.png'
+        logo = f'{constants.ROOT_DB}/oth/icons/enlace.png'
         self.image(logo, 5, 5, 10)
         self.set_font('orbitron', size=14)
         self.set_xy(16,7)
@@ -35,7 +35,7 @@ pdf.configureElements()
 #add page
 pdf.add_page()
 # pdf.set_font('helvetica','',16)
-logo = f'{constants.rootDb}/oth/icons/enlace.png'
+logo = f'{constants.ROOT_DB}/oth/icons/enlace.png'
 pdf.image(logo, 5, 5, 10)
 pdf.set_font('orbitron', size=14)
 pdf.set_xy(16,7)

@@ -19,7 +19,7 @@ class main(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.iconAVD = QIcon(f'{constants.rootDb}oth/icons/enlace.png')#o!modify
+        self.iconAVD = QIcon(f'{constants.ROOT_DB}oth/icons/enlace.png')#o!modify
         self.newSelectionId = ""
         self.initUi()
         

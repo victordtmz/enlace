@@ -127,7 +127,7 @@ class main(modelMain.main):
         self.listHiddenItems = (0,4,5,6,7,8,9,10)
         self.listColumnWidth = ((1,100),(2,100),(3,300) )
         self.sortColumn = 1
-         = qtc.Qt.SortOrder.DescendingOrder
+        self.sortOrder = qtc.Qt.SortOrder.DescendingOrder
         
         self.onNewFocusWidget = 1
         dbLogin = constants.avdtDB

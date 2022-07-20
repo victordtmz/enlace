@@ -12,15 +12,15 @@ mysqlDB = DB.DB(avdtDB[0], avdtDB[1], avdtDB[2])
 #program paths
 oneDrive = os.path.expanduser('~\OneDrive')
 rootEnlace = f'{oneDrive}\enlace'
-rootDb = f'{oneDrive}\db'
-othFolder =f'{rootDb}\oth'
+ROOT_DB = f'{oneDrive}\db'
+othFolder =f'{ROOT_DB}\oth'
 #AVDT Root folders
 rootAVDT = f'{oneDrive}\AVDTrucking'
 
 
 #icons
 #----------------------------------------------
-iconsFolder = f"{rootDb}\oth\icons\\"
+iconsFolder = f"{ROOT_DB}\oth\icons\\"
 iconClearFilter = f"{iconsFolder}clear-filter.png"
 iconEraser = f"{iconsFolder}eraser.png"
 iconRefresh = f"{iconsFolder}refresh.png"

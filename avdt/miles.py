@@ -494,7 +494,7 @@ class main(modelEmpty.main):
         self.configToolbar()
     
     def configToolbar(self):
-        iconRoot = f'{constants.rootDb}\oth\icons'
+        iconRoot = f'{constants.ROOT_DB}\oth\icons'
         self.iconRoad = qtg.QIcon(f'{iconRoot}\\road.png')
         self.iconLocation = qtg.QIcon(f'{iconRoot}\\placeholder.png')
 

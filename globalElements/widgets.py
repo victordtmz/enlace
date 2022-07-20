@@ -22,7 +22,7 @@ globalFontSize = 13
 globalFont_ = QFont(globalFontStyle, globalFontSize)
 #w! START ---------------------------- LABELS
 def printContants():
-    print(constants.rootDb)
+    print(constants.ROOT_DB)
 
 class spacer(QLabel):
     def __init__(self, text='', size="h1"):
@@ -345,7 +345,7 @@ class cboFilterGroup(QWidget):
 
 
 #w! RADIO BUTTONS ------------------------- START
-class radioButtons(QGroupBox):
+class radioButtons(QGroupBox): 
     def __init__(self, style = False):
         super().__init__()
         self.itemsList = []
@@ -428,9 +428,6 @@ class truFalseRadioButtons(radioButtons):
             return "0"
         else:
             return ""
-    
-    
-
 
 class incomeExpenseRadioButtons(radioButtons):
     def __init__(self, fontSize = 12, style = False, filter = False):
@@ -956,7 +953,7 @@ class webWidget(lineEditCopy):
         if not self.link:
             self.link = self.lineEdit.text()
         if self.link:
-            webbrowser.open(self.link)
+            webbrowser.open(self.link) 
 
 class checkBox(QCheckBox):
     def __init__(self, text='', fontSize = 13, size=''):
